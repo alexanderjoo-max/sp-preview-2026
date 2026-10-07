@@ -84,6 +84,17 @@
     .actionbar { display: grid; grid-template-columns: 1fr 1fr 1fr 1fr 52px; gap: 8px; position: fixed; left: 0; right: 0; bottom: 0; z-index: 70; padding: 10px 12px calc(10px + env(safe-area-inset-bottom)); background: rgba(11, 9, 14, .95); backdrop-filter: blur(16px); border-top: 1px solid var(--line); }
     .actionbar .btn { height: 46px; padding: 0 8px; font-size: 13.5px; }
   }
+  .menu-cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 12px; }
+  .menu-card { border-radius: 12px; overflow: hidden; border: 1px solid var(--line); background: var(--surface); }
+  .mc-head { display: flex; justify-content: space-between; align-items: center; padding: 12px 14px; background: linear-gradient(90deg, rgba(232, 20, 42, .22), rgba(232, 20, 42, .04)); border-bottom: 1px solid rgba(232, 20, 42, .25); font-weight: 700; font-size: 14px; }
+  .menu-card.alt .mc-head { background: linear-gradient(90deg, rgba(212, 168, 71, .22), rgba(212, 168, 71, .04)); border-bottom-color: rgba(212, 168, 71, .25); }
+  .mc-head small { color: var(--muted); font-weight: 500; font-size: 12px; }
+  .mc-row { position: relative; display: flex; justify-content: space-between; align-items: center; padding: 11px 14px; font-size: 14px; }
+  .mc-row:nth-child(even) { background: rgba(255, 255, 255, .035); }
+  .mc-row .dur { color: var(--text-2); }
+  .mc-row .pp { font-weight: 800; font-size: 15.5px; font-variant-numeric: tabular-nums; }
+  .menu-card.alt .mc-row .pp { color: var(--gold); }
+  .tagpop { position: absolute; left: 50%; transform: translateX(-50%); font-size: 9.5px; font-weight: 800; text-transform: uppercase; letter-spacing: .05em; color: var(--deal); background: var(--deal-bg); padding: 2px 7px; border-radius: 4px; }
 </style>
 </head>
 <body>
@@ -137,7 +148,7 @@
         <section class="blk" id="overview"><h2>About</h2><div class="prose"><p>${D.about}</p></div>
           <div class="amen" style="margin-top:18px">${D.amenities.map(a => `<span>${icon('check')}${a}</span>`).join('')}</div></section>
         ${D.deal ? `<section class="blk" id="deal"><h2>SwanPass deal</h2><div class="deal-box"><div class="eyebrow" style="color:var(--deal)">Exclusive · ${D.deal.expires}</div><div class="t" style="margin-top:6px">${esc(D.deal.title)}</div><p class="muted" style="margin:8px 0 14px">${D.deal.detail}</p><div class="row" style="flex-wrap:wrap"><button class="btn btn-red btn-sm">${icon('ticket')} Show at counter</button><a class="btn btn-ghost btn-sm" href="account/index.html#pass">Add to my pass</a></div></div></section>` : ''}
-        <section class="blk" id="prices"><h2>Prices</h2>${D.menu.map(g => `<div class="menu-group"><h3>${g.group}</h3>${g.items.map(it => `<div class="menu-row"><span>${it.dur} min</span><span class="lead"></span><b>฿${it.price.toLocaleString()}</b></div>`).join('')}</div>`).join('')}
+        <section class="blk" id="prices"><h2>Prices</h2><div class="menu-cards">${D.menu.map((g, gi) => `<div class="menu-card ${gi ? 'alt' : ''}"><div class="mc-head"><span>${gi ? '🛁' : '💆'} ${g.group}</span><small>${g.items.length} options</small></div>${g.items.map((it, ii) => `<div class="mc-row"><span class="dur">⏱ ${it.dur} min</span><span class="pp">฿${it.price.toLocaleString()}</span>${ii === 0 ? '<span class="tagpop">Popular</span>' : ''}</div>`).join('')}</div>`).join('')}</div>
           <p class="muted" style="font-size:13px;margin-top:14px">Prices confirmed by the venue on 12 Sep 2026. Tips not included. ${note('Menu is structured data (group → duration → price) in one currency per venue. It also generates the “How much does it cost?” FAQ answer and the priceRange in the schema markup.')}</p></section>
         <section class="blk" id="staff"><h2>Staff</h2><div class="staff-grid" style="grid-template-columns:repeat(auto-fill,minmax(130px,1fr))">${D.photos.slice(1, 7).map(p => `<button class="staff"><img src="${p}" alt="" loading="lazy"><span class="reveal">${icon('eye')}</span></button>`).join('')}</div></section>
         <section class="blk" id="reviews"><h2>Reviews</h2>
