@@ -73,22 +73,41 @@ const saved = () => store.get('saved', ['don-quixote', 'jelly-pop-bangkok', 'nom
 const toggleSaved = slug => { const s = saved(); const i = s.indexOf(slug); i > -1 ? s.splice(i, 1) : s.push(slug); store.set('saved', s); return i === -1; };
 
 /* ---------- header / footer / tab bar ---------- */
+const NAV = [['search', '🔎', 'Explore', 'search.html'], ['map', '🗺️', 'Map', 'map.html'], ['deals', '🏷️', 'Deals', 'deals.html'], ['guides', '📍', 'Cities', 'place.html?country=th'], ['best', '🏆', 'Best', 'best.html'], ['staff', '👩', 'Staff', 'staff.html']];
 function header(active) {
-  const nav = [['search', 'Explore', 'search.html'], ['map', 'Map', 'map.html'], ['deals', 'Deals', 'deals.html'], ['best', 'Best of', 'best.html'], ['staff', 'Staff', 'staff.html'], ['guides', 'Guides', 'place.html?country=th']];
   return `<header class="hdr"><div class="wrap">
+    <button class="icon-btn hamb" data-drawer aria-label="Open menu">${icon('list')}</button>
     <a class="logo" href="${ROOT}index.html" aria-label="SwanPass home">${LOGO}</a>
     <button class="loc-pill" data-open="loc" aria-label="Change city"><span class="flag">${locFlag()}</span><span class="t">${esc(locLabel())}</span>${icon('chevron')}</button>
     <button class="search-trigger" data-open="search">${icon('search')}<span>Search venues, areas, deals…</span><kbd>/</kbd></button>
-    <nav class="nav">${nav.map(([k, t, h]) => `<a href="${ROOT}${h}" class="${k === active ? 'on' : ''}">${t}</a>`).join('')}</nav>
+    <nav class="nav">${NAV.map(([k, e, t, h]) => `<a href="${ROOT}${h}" class="${k === active ? 'on' : ''}"><span class="em">${e}</span>${t}</a>`).join('')}</nav>
     <div class="hdr-actions">
-      <a class="btn btn-ghost btn-sm desktop-only" href="${ROOT}shop/index.html">For business</a>
+      <a class="btn btn-ghost btn-sm desktop-only" href="${ROOT}shop/index.html">➕ List your business</a>
       <a class="avatar" href="${ROOT}account/index.html" aria-label="Your account">AJ</a>
     </div>
-  </div></header>`;
+  </div></header>
+  <div class="drawer-ov" data-drawer-close></div>
+  <aside class="drawer" aria-label="Menu">
+    <div class="row between" style="margin-bottom:10px"><a class="logo" href="${ROOT}index.html">${LOGO}</a><button class="icon-btn" data-drawer-close aria-label="Close">${icon('close')}</button></div>
+    <button class="loc-pill" data-open="loc" style="width:100%;max-width:none;margin-bottom:8px"><span class="flag">${locFlag()}</span><span class="t">${esc(locLabel())}</span>${icon('chevron')}</button>
+    ${NAV.map(([k, e, t, h]) => `<a class="dlink ${k === active ? 'on' : ''}" href="${ROOT}${h}"><span class="em">${e}</span>${t}</a>`).join('')}
+    <div class="dlabel">Categories</div>
+    ${CATEGORIES.map(c => `<a class="dlink" href="${ROOT}search.html?cat=${c.slug}"><span class="em">${CAT_EMOJI[c.slug]}</span>${c.name}</a>`).join('')}
+    <div class="dlabel">You</div>
+    <a class="dlink" href="${ROOT}account/index.html">👤 My account</a><a class="dlink" href="${ROOT}account/index.html#saved">❤️ Saved</a><a class="dlink" href="${ROOT}account/index.html#pass">🎟️ Member pass</a>
+    <div class="dlabel">Business</div>
+    <a class="dlink" href="${ROOT}shop/index.html">➕ List your business</a><a class="dlink" href="#">📝 Blog</a><a class="dlink" href="#">💬 Feedback</a>
+  </aside>`;
 }
+const CAT_EMOJI = { massage: '💋', soapy: '🧼', 'go-go': '👯', 'gentlemens-clubs': '💃', 'red-light': '📍', freelancers: '❤️', ktv: '🎤', lgbtq: '🏳️‍🌈' };
+document.addEventListener('click', e => {
+  if (e.target.closest('[data-drawer]')) document.body.classList.add('drawer-open');
+  if (e.target.closest('[data-drawer-close]') || (e.target.closest('.drawer [data-open]'))) document.body.classList.remove('drawer-open');
+});
+document.addEventListener('keydown', e => { if (e.key === 'Escape') document.body.classList.remove('drawer-open'); });
 function tabbar(active) {
-  const t = [['search', 'Explore', 'compass', 'search.html'], ['map', 'Map', 'map', 'map.html'], ['deals', 'Deals', 'tag', 'deals.html'], ['saved', 'Saved', 'heart', 'account/index.html#saved'], ['account', 'Account', 'user', 'account/index.html']];
-  return `<nav class="tabbar" aria-label="Main">${t.map(([k, l, i, h]) => `<a href="${ROOT}${h}" class="${k === active ? 'on' : ''}">${icon(i)}${l}</a>`).join('')}</nav>`;
+  const t = [['search', '🔎', 'Explore', 'search.html'], ['map', '🗺️', 'Map', 'map.html'], ['deals', '🏷️', 'Deals', 'deals.html'], ['best', '🏆', 'Best', 'best.html'], ['account', '👤', 'Account', 'account/index.html']];
+  return `<nav class="tabbar" aria-label="Main">${t.map(([k, e, l, h]) => `<a href="${ROOT}${h}" class="${k === active ? 'on' : ''}"><span class="em">${e}</span>${l}</a>`).join('')}</nav>`;
 }
 function footer() {
   const cities = CITIES.filter(c => c.count >= 20).slice(0, 8);
@@ -119,9 +138,9 @@ function card(l, opts = {}) {
     </div>
     <div class="card-body">
       <div class="card-title"><span>${esc(l.name)}</span>${l.verified ? tick : ''}</div>
-      <div class="card-meta">${l.rating ? `<span class="rating">${starIcon}${l.rating.toFixed(1)}</span><span class="num">(${l.reviews})</span><span class="dot"></span>` : '<span>No reviews yet</span><span class="dot"></span>'}<span>${esc(l.cat.replace('’', "'"))}</span></div>
-      <div class="card-meta"><span class="open-dot ${l.openNow ? '' : 'closed'}"></span><span>${l.openNow ? 'Open' : 'Opens ' + l.hours.opens + ':00'}</span><span class="dot"></span><span>${esc(l.areaName || l.cityName)}</span></div>
-      ${l.deal ? `<div class="card-deal">${icon('tag')}${esc(l.deal)}</div>` : ''}
+      <div class="card-meta">${l.rating ? `<span class="rating">${starIcon}${l.rating.toFixed(1)}</span><span class="num">(${l.reviews})</span><span class="dot"></span>` : '<span>No reviews yet</span><span class="dot"></span>'}<span>${CAT_EMOJI[l.catSlug] || ''} ${esc(l.cat.replace('’', "'"))}</span></div>
+      <div class="card-meta"><span class="open-dot ${l.openNow ? '' : 'closed'}"></span><span>${l.openNow ? 'Open' : 'Opens ' + l.hours.opens + ':00'}</span><span class="dot"></span><span>📍 ${esc(l.areaName || l.cityName)}</span></div>
+      ${l.deal ? `<div class="card-deal">🏷️ ${esc(l.deal)}</div>` : ''}
     </div></a>`;
 }
 document.addEventListener('click', e => {
@@ -360,7 +379,7 @@ function directory({ el, title, preset = {}, render = card, gridClass = 'grid-ca
         ${areas.length ? `<div class="ms-label" style="margin:12px 0 4px;font-size:10.5px">Areas in ${cityOf(S.city).name}</div>${areas.map(a => `<label class="fcheck"><input type="checkbox" data-area="${a.slug}" ${S.areas.includes(a.slug) ? 'checked' : ''}>${a.name}<span class="n">${countBy(l => l.area === a.slug, 'area')}</span></label>`).join('')}` : ''}
       </div></details>
       <details class="fgroup" open><summary>Category</summary><div class="fbody">
-        ${CATEGORIES.map(c => `<label class="fcheck"><input type="checkbox" data-cat="${c.slug}" ${S.cats.includes(c.slug) ? 'checked' : ''}>${c.name}${c.isNew ? ' <span class="chip-new">NEW</span>' : ''}<span class="n">${countBy(l => l.catSlug === c.slug, 'cat')}</span></label>`).join('')}
+        ${CATEGORIES.map(c => `<label class="fcheck"><input type="checkbox" data-cat="${c.slug}" ${S.cats.includes(c.slug) ? 'checked' : ''}>${CAT_EMOJI[c.slug]} ${c.name}${c.isNew ? ' <span class="chip-new">NEW</span>' : ''}<span class="n">${countBy(l => l.catSlug === c.slug, 'cat')}</span></label>`).join('')}
       </div></details>
       <details class="fgroup" open><summary>Show only</summary><div class="fbody">
         <label class="toggle-row">Open now<input type="checkbox" class="switch" data-flag="openNow" ${S.openNow ? 'checked' : ''}></label>
@@ -379,7 +398,7 @@ function directory({ el, title, preset = {}, render = card, gridClass = 'grid-ca
       </div></details>`;
   };
 
-  let limit = 24;
+  let limit = 36;
   const draw = () => {
     const r = results();
     $('#d-title', el).textContent = typeof title === 'function' ? title(S) : title;
@@ -387,7 +406,7 @@ function directory({ el, title, preset = {}, render = card, gridClass = 'grid-ca
     $('#d-grid', el).innerHTML = r.length ? withTierHeads(r.slice(0, limit), render) : `<div class="empty" style="grid-column:1/-1"><h3>No venues match</h3><p>Try removing a filter or widening the area.</p><button class="btn btn-ghost btn-sm" data-reset>Clear all filters</button></div>`;
     $('#d-more', el).style.display = r.length > limit ? '' : 'none';
     $('#d-filters', el).innerHTML = filtersHTML();
-    $('#d-cats', el).innerHTML = `<button class="chip ${!S.cats.length ? 'on' : ''}" data-chipcat="">All</button>` + CATEGORIES.map(c => `<button class="chip ${S.cats.includes(c.slug) ? 'on' : ''}" data-chipcat="${c.slug}">${c.name}</button>`).join('');
+    $('#d-cats', el).innerHTML = `<button class="chip ${!S.cats.length ? 'on' : ''}" data-chipcat="">🔥 All</button>` + CATEGORIES.map(c => `<button class="chip ${S.cats.includes(c.slug) ? 'on' : ''}" data-chipcat="${c.slug}">${CAT_EMOJI[c.slug]} ${c.name}</button>`).join('');
     const act = [];
     S.areas.forEach(a => act.push([`area:${a}`, AREAS[S.city].find(x => x.slug === a).name]));
     S.cats.forEach(c => act.push([`cat:${c}`, CATEGORIES.find(x => x.slug === c).name]));

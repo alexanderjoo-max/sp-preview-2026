@@ -473,3 +473,105 @@ body.no-notes .note { display: none; }
 @media (max-width: 1280px) { .hdr .btn.desktop-only { display: none; } }
 .toast { position: fixed; bottom: 90px; left: 50%; transform: translate(-50%, 20px); z-index: 300; padding: 12px 18px; border-radius: 10px; background: #fff; color: #0a0a0a; font-weight: 600; font-size: 14px; opacity: 0; transition: .25s; pointer-events: none; }
 .toast.show { opacity: 1; transform: translate(-50%, 0); }
+
+/* ==========================================================================
+   COMPACT PASS — denser grids and type, emoji nav, always-available menu
+   ========================================================================== */
+body { font-size: 13.5px; }
+.section { padding: 32px 0; }
+.sec-head { margin-bottom: 14px; }
+.sec-head p { font-size: 13px; margin-top: 2px; }
+h1.display { font-size: clamp(30px, 4.2vw, 48px); }
+h2.display { font-size: clamp(18px, 1.8vw, 22px); gap: 8px; }
+h2.display::before { height: 18px; }
+.lede { font-size: 15px; }
+.eyebrow { font-size: 10.5px; }
+.link-arrow { font-size: 13px; }
+.btn { height: 38px; padding: 0 14px; font-size: 13.5px; }
+.btn-sm { height: 30px; padding: 0 11px; font-size: 12.5px; }
+.chip { height: 32px; padding: 0 12px; font-size: 13px; gap: 5px; }
+
+/* cards: 5–6 across on desktop */
+.grid-cards { grid-template-columns: repeat(auto-fill, minmax(196px, 1fr)); gap: 12px; }
+.scroller { grid-auto-columns: minmax(196px, 214px); gap: 12px; }
+.card { border-radius: 10px; }
+.card:hover { transform: translateY(-2px); }
+.card-media { aspect-ratio: 4 / 3.1; }
+.card-badges { top: 7px; left: 7px; gap: 4px; }
+.badge { height: 18px; padding: 0 6px; font-size: 8.5px; }
+.card-save { width: 30px; height: 30px; top: 6px; right: 6px; }
+.card-save .ico { width: 15px; height: 15px; }
+.card-price { font-size: 11px; padding: 2px 7px; right: 7px; bottom: 7px; }
+.card-body { padding: 9px 10px 10px; gap: 3px; }
+.card-title { font-size: 13.5px; }
+.card-meta { font-size: 11.5px; gap: 4px; }
+.rating .star { width: 12px; height: 12px; }
+.card-deal { font-size: 11.5px; padding-top: 5px; }
+.verified-tick { width: 14px; height: 14px; }
+.tile { aspect-ratio: 3 / 3.6; border-radius: 10px; }
+.tile-body { padding: 12px; }
+.tile-body .display { font-size: 19px; }
+.tile-body p { font-size: 12px; }
+.tile-stats { font-size: 11.5px; margin-top: 6px; }
+.area-grid { grid-template-columns: repeat(auto-fill, minmax(165px, 1fr)); gap: 8px; }
+.area-chip { padding: 10px 13px; }
+.area-chip b { font-size: 13.5px; }
+.staff-grid { grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 8px; }
+.dir { grid-template-columns: 236px 1fr; gap: 22px; padding-top: 16px; }
+.fcheck { padding: 5px 6px; font-size: 13px; }
+.fgroup { padding: 12px 0; }
+.toggle-row { padding: 6px; font-size: 13px; }
+.results-head h1 { font-size: 19px; }
+.tier-head { font-size: 11px; margin: 4px 0 -4px; }
+.hero { padding: 44px 0 36px; }
+.hero .lede { margin: 10px 0 20px; }
+.hero-search > button { padding: 6px 14px; }
+.hero-search .btn { padding: 0 20px; }
+.stat b { font-size: 22px; }
+.ftr { padding: 36px 0 100px; }
+
+/* header: emoji nav like the live site + hamburger always available */
+.hdr .wrap { gap: 10px; }
+.hamb { width: 36px; height: 36px; }
+.logo img.logo-img { height: 26px; }
+.nav a { padding: 7px 9px; font-size: 13.5px; display: inline-flex; gap: 5px; align-items: center; }
+.nav .em, .dlink .em, .tabbar .em { font-size: 15px; line-height: 1; }
+.search-trigger { max-width: 340px; height: 38px; }
+.loc-pill { height: 36px; font-size: 13px; }
+.drawer { position: fixed; top: 0; left: 0; bottom: 0; z-index: 120; width: 290px; max-width: 86vw; overflow: auto; padding: 14px; background: var(--bg-2); border-right: 1px solid var(--line); transform: translateX(-100%); transition: transform .22s; display: flex; flex-direction: column; gap: 1px; }
+.drawer-ov { position: fixed; inset: 0; z-index: 110; background: rgba(0, 0, 0, .6); opacity: 0; pointer-events: none; transition: opacity .2s; }
+body.drawer-open .drawer { transform: none; }
+body.drawer-open .drawer-ov { opacity: 1; pointer-events: auto; }
+.dlink { display: flex; align-items: center; gap: 10px; padding: 9px 10px; border-radius: 8px; font-size: 14px; font-weight: 550; color: var(--text-2); }
+.dlink:hover, .dlink.on { background: var(--surface-2); color: var(--text); }
+.dlabel { font-size: 10.5px; font-weight: 800; letter-spacing: .12em; text-transform: uppercase; color: var(--muted); padding: 14px 10px 4px; }
+.tabbar a .em { font-size: 20px; filter: grayscale(.6); opacity: .8; }
+.tabbar a.on .em { filter: none; opacity: 1; }
+
+/* tablet (721–1100): top nav hidden → bottom tab bar, same as phones */
+@media (max-width: 1100px) {
+  body { padding-bottom: 68px; }
+  .tabbar { display: grid; grid-template-columns: repeat(5, 1fr); position: fixed; left: 0; right: 0; bottom: 0; z-index: 70; height: calc(60px + env(safe-area-inset-bottom)); padding-bottom: env(safe-area-inset-bottom); background: rgba(10, 10, 10, .94); backdrop-filter: blur(18px); border-top: 1px solid var(--line); }
+  .tabbar a { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; font-size: 10.5px; font-weight: 600; color: var(--muted); }
+  .tabbar a.on { color: var(--text); }
+  .mock-bar { bottom: 72px; }
+}
+@media (max-width: 720px) {
+  .grid-cards { grid-template-columns: 1fr 1fr; gap: 8px; }
+  .scroller { grid-auto-columns: 44%; gap: 8px; }
+  .card-body { padding: 8px 8px 9px; }
+  .card-title { font-size: 13px; }
+  .staff-grid { grid-template-columns: repeat(3, 1fr); gap: 5px; }
+  .section { padding: 24px 0; }
+  .logo img.logo-img { height: 22px; }
+  .tile-body .display { font-size: 17px; }
+}
+@media (max-width: 400px) { .loc-pill .t { max-width: 70px; } .hamb { width: 34px; height: 34px; } }
+/* compact pass — fixes */
+.search-trigger { flex: 1 1 160px; min-width: 0; max-width: 300px; }
+.hdr .nav { margin-left: auto; flex: none; }
+.hdr-actions { flex: none; }
+@media (max-width: 1500px) { .hdr .btn.desktop-only { display: none; } }
+@media (max-width: 1280px) { .nav a { padding: 7px 7px; font-size: 13px; } }
+.grid-cards { grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); }
+@media (max-width: 1100px) { .dir { grid-template-columns: 1fr; } .sort-hint { display: none; } }

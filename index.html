@@ -10,15 +10,15 @@
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="assets/sp.css">
 <style>
-  .cat-tiles { display: grid; grid-template-columns: repeat(8, 1fr); gap: 10px; }
-  .cat-tile { display: flex; flex-direction: column; gap: 10px; padding: 16px 14px; border-radius: var(--r); background: var(--surface); border: 1px solid var(--line); transition: .15s; position: relative; }
+  .cat-tiles { display: grid; grid-template-columns: repeat(8, 1fr); gap: 8px; }
+  .cat-tile { display: flex; flex-direction: column; gap: 6px; padding: 12px; border-radius: var(--r); background: var(--surface); border: 1px solid var(--line); transition: .15s; position: relative; }
   .cat-tile:hover { border-color: var(--red); transform: translateY(-2px); }
   .cat-tile .em { font-size: 26px; line-height: 1; }
   .cat-tile b { font-size: 14px; font-weight: 600; line-height: 1.25; }
   .cat-tile span { font-size: 12px; color: var(--muted); }
   .cat-tile .chip-new { position: absolute; top: 10px; right: 10px; }
   .best-list { display: grid; grid-template-columns: 1.1fr 1fr; gap: 28px; align-items: start; }
-  .best-hero { position: relative; border-radius: var(--r-lg); overflow: hidden; aspect-ratio: 4/3.2; display: flex; align-items: flex-end; isolation: isolate; }
+  .best-hero { position: relative; border-radius: var(--r-lg); overflow: hidden; aspect-ratio: 16/10; display: flex; align-items: flex-end; isolation: isolate; }
   .best-hero img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; z-index: -2; }
   .best-hero::before { content: ''; position: absolute; inset: 0; z-index: -1; background: linear-gradient(transparent 35%, rgba(8, 5, 10, .95)); }
   .best-hero .in { padding: 24px; }
@@ -57,41 +57,41 @@
   </section>
 
   <section class="section"><div class="wrap">
-    <div class="sec-head"><div><div class="eyebrow">Where to</div><h2 class="display">Pick a city</h2></div><a class="link-arrow" href="place.html?country=th">All destinations</a></div>
+    <div class="sec-head"><div><div class="eyebrow">Where to</div><h2 class="display">🌏 Pick a city</h2></div><a class="link-arrow" href="place.html?country=th">All destinations</a></div>
     <div class="chips" id="country-chips" style="margin-bottom:16px"></div>
     <div class="scroller" id="cities"></div>
   </div></section>
 
   <section class="section"><div class="wrap">
-    <div class="sec-head"><div><h2 class="display">Popular areas in <em id="pa-city">Bangkok</em></h2><p>Every area has its own page — browse by neighbourhood, not just by city.</p></div><a class="link-arrow" id="pa-all" href="#">All areas</a></div>
+    <div class="sec-head"><div><h2 class="display">📍 Popular areas in <em id="pa-city">Bangkok</em></h2><p>Every area has its own page — browse by neighbourhood, not just by city.</p></div><a class="link-arrow" id="pa-all" href="#">All areas</a></div>
     <div id="areas"></div>
   </div></section>
 
   <section class="section"><div class="wrap">
-    <div class="sec-head"><div><h2 class="display">What are you in the mood for?</h2></div></div>
+    <div class="sec-head"><div><h2 class="display">🔥 What are you in the mood for?</h2></div></div>
     <div class="cat-tiles" id="cats"></div>
   </div></section>
 
   <section class="section"><div class="wrap">
-    <div class="sec-head"><div><div class="eyebrow">Top picks</div><h2 class="display">Featured in <em class="cityname">Bangkok</em></h2></div><a class="link-arrow" href="search.html">See all</a></div>
+    <div class="sec-head"><div><div class="eyebrow">Top picks</div><h2 class="display">⭐ Featured in <em class="cityname">Bangkok</em></h2></div><a class="link-arrow" href="search.html">See all</a></div>
     <div class="scroller" id="featured"></div>
   </div></section>
 
   <section class="section"><div class="wrap">
     <div class="deal-strip" style="margin-bottom:22px">
-      <div style="flex:1"><b style="font-size:17px">Deals tonight in <span class="cityname">Bangkok</span></b><div class="muted" style="font-size:14px">No codes, no sign-up — just say “SwanPass” at the counter or show the venue page.</div></div>
+      <div style="flex:1"><b style="font-size:15px">🏷️ Deals tonight in <span class="cityname">Bangkok</span></b><div class="muted" style="font-size:14px">No codes, no sign-up — just say “SwanPass” at the counter or show the venue page.</div></div>
       <a class="btn btn-ghost btn-sm" href="deals.html">All deals</a>
     </div>
     <div class="scroller" id="deals"></div>
   </div></section>
 
   <section class="section"><div class="wrap">
-    <div class="sec-head"><div><div class="eyebrow">Editors' picks · 2026</div><h2 class="display">Best of <em class="cityname">Bangkok</em></h2></div><a class="link-arrow" href="best.html">Full ranking</a></div>
+    <div class="sec-head"><div><div class="eyebrow">Editors' picks · 2026</div><h2 class="display">🏆 Best of <em class="cityname">Bangkok</em></h2></div><a class="link-arrow" href="best.html">Full ranking</a></div>
     <div class="best-list" id="best"></div>
   </div></section>
 
   <section class="section"><div class="wrap">
-    <div class="sec-head"><div><h2 class="display">Meet the staff</h2><p>Photos are blurred by default — tap to reveal. Turn safe view off in your account.</p></div><a class="link-arrow" href="staff.html">Browse staff</a></div>
+    <div class="sec-head"><div><h2 class="display">👩 Meet the staff</h2><p>Photos are blurred by default — tap to reveal. Turn safe view off in your account.</p></div><a class="link-arrow" href="staff.html">Browse staff</a></div>
     <div class="staff-grid" id="staff"></div>
   </div></section>
 
@@ -103,12 +103,12 @@
   </div></section>
 
   <section class="section"><div class="wrap">
-    <div class="sec-head"><div><h2 class="display">Guides & articles</h2></div><a class="link-arrow" href="#">All guides</a></div>
+    <div class="sec-head"><div><h2 class="display">📝 Guides & articles</h2></div><a class="link-arrow" href="#">All guides</a></div>
     <div class="grid-cards" id="articles"></div>
   </div></section>
 
   <section class="section"><div class="wrap">
-    <div class="sec-head"><div><h2 class="display">Just added</h2></div><a class="link-arrow" href="search.html?sort=newest">See all</a></div>
+    <div class="sec-head"><div><h2 class="display">🆕 Just added</h2></div><a class="link-arrow" href="search.html?sort=newest">See all</a></div>
     <div class="scroller" id="newest"></div>
   </div></section>
 </main>
@@ -140,17 +140,17 @@
     $('#h-cur').textContent = { th: 'Baht', vn: 'Dong', id: 'Rupiah', kh: 'Riel', my: 'Ringgit', sg: 'Dollar' }[loc.country] || 'Buck';
     $$('.cityname').forEach(e => e.textContent = locLabel());
     $('#country-chips').innerHTML = COUNTRIES.filter(c => !c.soon).map(c => `<button class="chip ${c.code === countryTab ? 'on' : ''}" data-ct="${c.code}">${c.flag} ${c.name}</button>`).join('') + '<span class="chip" style="opacity:.6">🇯🇵 🇵🇭 🇭🇰 Coming soon</span>';
-    $('#cities').innerHTML = CITIES.filter(c => c.country === countryTab && c.img).map(c => `<a class="tile" href="place.html?city=${c.slug}"><img src="${c.img}" alt="" loading="lazy"><div class="tile-body"><div class="display">${c.name}</div>${c.hook ? `<p>${c.hook}</p>` : ''}<div class="tile-stats"><span><b class="num">${c.count}</b> venues</span>${c.deals ? `<span><b class="num">${c.deals}</b> deals</span>` : ''}${AREAS[c.slug] ? `<span><b>${AREAS[c.slug].length}</b> areas</span>` : ''}</div></div></a>`).join('');
+    $('#cities').innerHTML = CITIES.filter(c => c.country === countryTab && c.img).map(c => `<a class="tile" href="place.html?city=${c.slug}"><img src="${c.img}" alt="" loading="lazy" onerror="this.remove()"><div class="tile-body"><div class="display">${c.name}</div>${c.hook ? `<p>${c.hook}</p>` : ''}<div class="tile-stats"><span><b class="num">${c.count}</b> venues</span>${c.deals ? `<span><b class="num">${c.deals}</b> deals</span>` : ''}${AREAS[c.slug] ? `<span><b>${AREAS[c.slug].length}</b> areas</span>` : ''}</div></div></a>`).join('');
     const areaCity = city && AREAS[city.slug] ? city.slug : 'bangkok';
     $('#pa-city').textContent = cityOf(areaCity).name;
     $('#pa-all').href = `place.html?city=${areaCity}`;
     $('#areas').innerHTML = areaGrid(areaCity);
-    $('#cats').innerHTML = CATEGORIES.map(c => `<a class="cat-tile" href="search.html?cat=${c.slug}"><span class="em">${EMOJI[c.slug]}</span><b>${c.name}</b><span class="num">${Math.max(scope.filter(l => l.catSlug === c.slug).length * 4, 3)} venues</span>${c.isNew ? '<span class="chip-new">NEW</span>' : ''}</a>`).join('');
-    $('#featured').innerHTML = pool.filter(l => l.featured || l.verified).sort(SORTS.recommended[1]).slice(0, 10).map(card).join('');
+    $('#cats').innerHTML = CATEGORIES.map(c => `<a class="cat-tile" href="search.html?cat=${c.slug}"><span class="em">${CAT_EMOJI[c.slug]}</span><b>${c.name}</b><span class="num">${Math.max(scope.filter(l => l.catSlug === c.slug).length * 4, 3)} venues</span>${c.isNew ? '<span class="chip-new">NEW</span>' : ''}</a>`).join('');
+    $('#featured').innerHTML = pool.filter(l => l.featured || l.verified).sort(SORTS.recommended[1]).slice(0, 14).map(card).join('');
     $('#deals').innerHTML = pool.filter(l => l.deal).sort(SORTS.recommended[1]).slice(0, 10).map(card).join('') || '<p class="muted">No deals in this city yet.</p>';
     const best = pool.filter(l => l.rating).sort((a, b) => score(b) - score(a)).slice(0, 6);
-    $('#best').innerHTML = `<a class="best-hero" href="listing.html?v=${best[0].slug}"><img src="${best[0].img}" alt=""><div class="in"><span class="badge b-feat">#1 Best overall</span><div class="display" style="font-size:44px;margin-top:10px">${esc(best[0].name)}</div><div class="card-meta" style="margin-top:6px"><span class="rating">${starIcon}${best[0].rating.toFixed(1)}</span><span>${best[0].cat} · ${best[0].areaName || best[0].cityName}</span></div></div></a>
-      <div>${best.slice(1).map((l, i) => `<a class="rank" href="listing.html?v=${l.slug}"><span class="n">${i + 2}</span><img src="${l.img}" alt=""><div><b>${esc(l.name)}</b><div class="card-meta">${l.cat} · ${l.areaName || l.cityName}</div></div><span class="rating rt">${starIcon}${l.rating.toFixed(1)}</span></a>`).join('')}</div>`;
+    const _b = 0; $('#best').innerHTML = `<a class="best-hero" href="listing.html?v=${best[0].slug}"><img src="${best[0].img}" alt=""><div class="in"><span class="badge b-feat">#1 Best overall</span><div class="display" style="font-size:28px;margin-top:8px">${esc(best[0].name)}</div><div class="card-meta" style="margin-top:6px"><span class="rating">${starIcon}${best[0].rating.toFixed(1)}</span><span>${best[0].cat} · ${best[0].areaName || best[0].cityName}</span></div></div></a>
+      <div>${best.slice(1, 6).map((l, i) => `<a class="rank" href="listing.html?v=${l.slug}"><span class="n">${i + 2}</span><img src="${l.img}" alt=""><div><b>${esc(l.name)}</b><div class="card-meta">${l.cat} · ${l.areaName || l.cityName}</div></div><span class="rating rt">${starIcon}${l.rating.toFixed(1)}</span></a>`).join('')}</div>`;
     $('#staff').innerHTML = [...pool].sort(SORTS.recommended[1]).slice(0, 6).map(l => `<a class="staff" href="staff.html"><img src="${l.img}" alt="" loading="lazy"><span class="reveal">${icon('eye')}</span><div class="cap"><b>${esc(l.name)}</b>${l.areaName || l.cityName}</div></a>`).join('');
     $('#articles').innerHTML = ARTICLES.map(([t, s, d]) => `<a class="article" href="#"><div class="im"><img src="${LISTINGS.find(l => l.slug === s).img}" alt="" loading="lazy"></div><span class="muted" style="font-size:12.5px">${d}</span><b>${t}</b></a>`).join('');
     $('#newest').innerHTML = [...new Set(pool.filter(l => l.isNew).concat(LISTINGS.filter(l => l.isNew)))].sort(SORTS.newest[1]).slice(0, 10).map(card).join('');
