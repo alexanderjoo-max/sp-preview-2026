@@ -624,3 +624,8 @@ body.drawer-open .drawer-ov { opacity: 1; pointer-events: auto; }
 .ccity b { display: block; font-size: 13px; font-weight: 600; }
 .ccity small { font-size: 11px; color: var(--muted); }
 @media (max-width: 720px) { .cgrid { grid-template-columns: 1fr 1fr; max-height: 180px; } }
+
+/* nav type matched to swanpass.com: 14px regular */
+.nav a { font-size: 14px; font-weight: 400; color: rgba(255, 255, 255, .85); padding: 6px 8px; gap: 4px; }
+.nav a.on { font-weight: 600; color: #fff; }
+.nav .em { font-size: 13px; }

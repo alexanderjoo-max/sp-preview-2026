@@ -73,7 +73,7 @@ const saved = () => store.get('saved', ['don-quixote', 'jelly-pop-bangkok', 'nom
 const toggleSaved = slug => { const s = saved(); const i = s.indexOf(slug); i > -1 ? s.splice(i, 1) : s.push(slug); store.set('saved', s); return i === -1; };
 
 /* ---------- header / footer / tab bar ---------- */
-const NAV = [['map', '🗺️', 'Map', 'map.html'], ['deals', '🏷️', 'Deals', 'deals.html'], ['best', '🏆', 'Best', 'best.html'], ['staff', '👩', 'Staff', 'staff.html'], ['guides', '📝', 'Guides', 'place.html?country=th']];
+const NAV = [['map', '🗺️', 'Map', 'map.html'], ['deals', '🏷️', 'Deals', 'deals.html'], ['best', '🏆', 'Best', 'best.html'], ['staff', '👩', 'Staff', 'staff.html'], ['guides', '📝', 'Guides', 'guides.html']];
 function header(active) {
   return `<header class="hdr"><div class="wrap">
     <button class="icon-btn hamb" data-drawer aria-label="Open menu">${icon('list')}</button>
@@ -116,7 +116,7 @@ function footer() {
         <div class="row" style="margin-top:16px"><button class="btn btn-ghost btn-sm">${icon('globe')} English</button><button class="btn btn-ghost btn-sm">฿ THB</button></div></div>
       <div><h4>Cities</h4><ul>${cities.map(c => `<li><a href="${ROOT}place.html?city=${c.slug}">${c.name}</a></li>`).join('')}</ul></div>
       <div><h4>Categories</h4><ul>${CATEGORIES.slice(0, 7).map(c => `<li><a href="${ROOT}search.html?cat=${c.slug}">${c.name}</a></li>`).join('')}</ul></div>
-      <div><h4>SwanPass</h4><ul><li><a href="${ROOT}deals.html">Deals</a></li><li><a href="${ROOT}best.html">Best of 2026</a></li><li><a href="#">Guides & articles</a></li><li><a href="#">About</a></li><li><a href="#">Telegram channel</a></li></ul></div>
+      <div><h4>SwanPass</h4><ul><li><a href="${ROOT}deals.html">Deals</a></li><li><a href="${ROOT}best.html">Best of 2026</a></li><li><a href="${ROOT}guides.html">Guides & articles</a></li><li><a href="#">About</a></li><li><a href="#">Telegram channel</a></li></ul></div>
       <div><h4>Business</h4><ul><li><a href="${ROOT}shop/index.html">Claim your venue</a></li><li><a href="${ROOT}shop/index.html">Advertise / Featured</a></li><li><a href="#">Report a listing</a></li><li><a href="#">Feedback</a></li></ul></div>
     </div>
     <div class="legal"><span>© ${new Date().getFullYear()} SwanPass. Adults 18+ only. Listings are provided by venues and verified where marked.</span><span><a href="#">Privacy</a> · <a href="#">Terms</a></span></div>

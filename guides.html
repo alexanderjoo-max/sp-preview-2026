@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="robots" content="noindex, nofollow, noarchive">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Guides & Articles — SwanPass</title>
+<meta name="description" content="Thailand nightlife without the guesswork: area guides, venue comparisons, safety, money and transport advice.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/sp.css">
+<style>
+  .g-head { padding: 28px 0 18px; border-bottom: 1px solid var(--line); }
+  .g-head h1 { font-size: clamp(26px, 3.4vw, 36px); }
+  .g-head p { margin: 6px 0 0; color: var(--text-2); font-size: 14.5px; }
+  .g-tools { display: flex; gap: 10px; align-items: center; margin-top: 16px; flex-wrap: wrap; }
+  .g-search { flex: 0 1 280px; display: flex; align-items: center; gap: 8px; height: 36px; padding: 0 12px; border-radius: 8px; background: var(--surface); border: 1px solid var(--line); }
+  .g-search input { flex: 1; min-width: 0; background: transparent; border: 0; outline: 0; font-size: 13.5px; }
+  .g-layout { display: grid; grid-template-columns: 1fr 300px; gap: 32px; padding-top: 24px; padding-bottom: 56px; align-items: start; }
+  .g-top { display: grid; grid-template-columns: 1.35fr 1fr; gap: 14px; margin-bottom: 26px; }
+  .g-lead { position: relative; border-radius: 12px; overflow: hidden; min-height: 300px; display: flex; align-items: flex-end; isolation: isolate; border: 1px solid var(--line); }
+  .g-lead img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; z-index: -2; }
+  .g-lead::before { content: ''; position: absolute; inset: 0; z-index: -1; background: linear-gradient(transparent 30%, rgba(10, 10, 10, .95)); }
+  .g-lead .in { padding: 18px; }
+  .g-lead h2 { font-size: 22px; font-weight: 800; letter-spacing: -.02em; line-height: 1.2; margin: 6px 0; }
+  .g-lead p { margin: 0; color: var(--text-2); font-size: 13.5px; }
+  .g-side-top { display: flex; flex-direction: column; gap: 10px; }
+  .g-mini { display: grid; grid-template-columns: 96px 1fr; gap: 12px; padding: 8px; border-radius: 10px; background: var(--surface); border: 1px solid var(--line); align-items: center; }
+  .g-mini:hover, .g-row:hover { border-color: var(--line-2); background: var(--surface-2); }
+  .g-mini img { width: 96px; height: 72px; object-fit: cover; border-radius: 7px; }
+  .g-mini b, .g-row b { display: block; font-size: 14px; font-weight: 700; line-height: 1.3; letter-spacing: -.01em; }
+  .meta { font-size: 11.5px; color: var(--muted); display: flex; gap: 6px; align-items: center; flex-wrap: wrap; margin-bottom: 3px; }
+  .topic-tag { font-size: 10px; font-weight: 800; text-transform: uppercase; letter-spacing: .06em; color: var(--gold); }
+  .g-list { display: flex; flex-direction: column; }
+  .g-row { display: grid; grid-template-columns: 132px 1fr; gap: 14px; padding: 12px 8px; border-bottom: 1px solid var(--line); border-radius: 8px; border: 1px solid transparent; border-bottom-color: var(--line); }
+  .g-row img { width: 132px; height: 88px; object-fit: cover; border-radius: 8px; }
+  .g-row p { margin: 4px 0 0; color: var(--text-2); font-size: 13px; line-height: 1.45; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+  .g-month { font-size: 11px; font-weight: 800; letter-spacing: .12em; text-transform: uppercase; color: var(--muted); padding: 18px 8px 6px; }
+  .g-aside { position: sticky; top: calc(var(--header-h) + 16px); display: flex; flex-direction: column; gap: 14px; }
+  .g-box { padding: 16px; border-radius: 12px; background: var(--surface); border: 1px solid var(--line); }
+  .g-box h3 { font-size: 13px; margin-bottom: 10px; }
+  .g-pop { display: grid; grid-template-columns: 22px 1fr; gap: 8px; padding: 7px 0; border-top: 1px solid var(--line); font-size: 13px; line-height: 1.35; }
+  .g-pop:first-of-type { border-top: 0; }
+  .g-pop span { font-weight: 900; color: var(--red); }
+  .g-topics { display: flex; flex-wrap: wrap; gap: 6px; }
+  .tg-box { background: linear-gradient(135deg, rgba(42, 171, 238, .16), var(--surface)); border-color: rgba(42, 171, 238, .3); }
+  @media (max-width: 1000px) { .g-layout { grid-template-columns: 1fr; } .g-aside { position: static; } .g-top { grid-template-columns: 1fr; } }
+  @media (max-width: 600px) { .g-row { grid-template-columns: 96px 1fr; gap: 10px; padding: 10px 2px; } .g-row img { width: 96px; height: 72px; } .g-row p { -webkit-line-clamp: 1; } .g-lead { min-height: 230px; } .g-search { flex: 1 1 100%; } }
+</style>
+</head>
+<body>
+<main>
+  <section class="g-head"><div class="wrap">
+    <nav class="crumbs" style="margin-bottom:10px"><a href="index.html">Home</a><span>Guides</span></nav>
+    <h1 class="display">📝 Guides & articles</h1>
+    <p>Thailand nightlife without the guesswork — area guides, venue comparisons, safety and money advice. <span class="muted">New guide every day.</span></p>
+    <div class="g-tools"><label class="g-search">🔎<input id="gq" placeholder="Search 75 guides…"></label><div class="chips" id="gtopics" style="flex:1"></div></div>
+  </div></section>
+  <div class="wrap g-layout">
+    <section>
+      <div class="g-top" id="gtop"></div>
+      <div class="row between" style="margin-bottom:4px"><h2 class="display" id="glist-title">Latest</h2><select class="select" id="gcity"><option value="">📍 All cities</option><option value="bangkok">Bangkok</option><option value="pattaya">Pattaya</option><option value="phuket">Phuket</option></select></div>
+      <div class="g-list" id="glist"></div>
+      <div style="text-align:center;margin-top:18px"><button class="btn btn-ghost">Load more guides</button></div>
+    </section>
+    <aside class="g-aside">
+      <div class="g-box"><h3>🔥 Most read this week</h3><div id="gpop"></div></div>
+      <div class="g-box"><h3>📍 Guides by city</h3><div class="g-topics"><a class="chip" href="#">🇹🇭 Bangkok · 31</a><a class="chip" href="#">🏖️ Pattaya · 22</a><a class="chip" href="#">🏝️ Phuket · 12</a><a class="chip" href="#">🇻🇳 Vietnam · 4</a><a class="chip" href="#">🇮🇩 Bali · 3</a></div></div>
+      <div class="g-box tg-box"><h3>✈️ Get new guides on Telegram</h3><p class="muted" style="font-size:13px;margin:0 0 10px">One message a day: the new guide plus tonight’s deals.</p><a class="btn btn-sm btn-block" style="background:#2aabee;color:#fff" href="#">Join the channel</a></div>
+    </aside>
+  </div>
+</main>
+<script src="assets/data.js"></script>
+<script src="assets/sp.js"></script>
+<script src="assets/blog.js"></script>
+<script>
+  shell('guides');
+  let topic = 'all', q = '', city = '';
+  const tag = p => `<span class="topic-tag">${TOPIC[p.topic][2]}</span>`;
+  const meta = p => `<div class="meta">${tag(p)}<span>·</span><span>${p.date}</span><span>·</span><span>${p.min} min read</span></div>`;
+  function render() {
+    $('#gtopics').innerHTML = TOPICS.map(([k, e, t]) => `<button class="chip ${k === topic ? 'on' : ''}" data-t="${k}">${e} ${t}</button>`).join('');
+    const list = POSTS.filter(p => (topic === 'all' || p.topic === topic) && (!city || p.city === city || p.city === 'all') && (!q || (p.title + p.dek).toLowerCase().includes(q)));
+    const showTop = topic === 'all' && !q && !city;
+    const [lead, ...rest] = list;
+    $('#gtop').style.display = showTop ? '' : 'none';
+    if (showTop) $('#gtop').innerHTML = `<a class="g-lead" href="article.html"><img src="${lead.img}" alt=""><div class="in"><span class="badge b-new">Latest</span><h2>${lead.title}</h2><p>${lead.dek}</p></div></a>
+      <div class="g-side-top">${rest.slice(0, 3).map(p => `<a class="g-mini" href="article.html"><img src="${p.img}" alt="" loading="lazy"><div>${meta(p)}<b>${p.title}</b></div></a>`).join('')}</div>`;
+    const body = showTop ? rest.slice(3) : list;
+    $('#glist-title').textContent = showTop ? 'Latest' : `${list.length} guide${list.length === 1 ? '' : 's'}`;
+    let last = '';
+    $('#glist').innerHTML = body.map(p => { const m = p.date.slice(3); const h = m !== last ? `<div class="g-month">${m}</div>` : ''; last = m; return h + `<a class="g-row" href="article.html"><img src="${p.img}" alt="" loading="lazy"><div>${meta(p)}<b>${p.title}</b><p>${p.dek}</p></div></a>`; }).join('') || '<div class="empty">No guides match.</div>';
+    $('#gpop').innerHTML = [13, 21, 1, 22, 8].map((i, n) => `<a class="g-pop" href="article.html"><span>${n + 1}</span>${POSTS[i].title}</a>`).join('');
+  }
+  document.addEventListener('click', e => { const t = e.target.closest('[data-t]'); if (t) { topic = t.dataset.t; render(); } });
+  $('#gq').addEventListener('input', e => { q = e.target.value.toLowerCase(); render(); });
+  $('#gcity').addEventListener('change', e => { city = e.target.value; render(); });
+  render();
+  $('.g-head p').insertAdjacentHTML('beforeend', ' ' + note('Live /blogs is one long grid of big cards with 3 pages. New: topic tabs, search, city filter, one lead story + 3 secondary, then a compact list grouped by month (2-line excerpts). Sidebar: most read, guides by city, Telegram sign-up.'));
+</script>
+</body>
+</html>
