@@ -575,3 +575,24 @@ body.drawer-open .drawer-ov { opacity: 1; pointer-events: auto; }
 @media (max-width: 1280px) { .nav a { padding: 7px 7px; font-size: 13px; } }
 .grid-cards { grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); }
 @media (max-width: 1100px) { .dir { grid-template-columns: 1fr; } .sort-hint { display: none; } }
+
+/* combined Where + Search panel; header without search bar */
+.search-trigger { display: none !important; }
+.find-pill { gap: 8px; }
+.find-pill .sep { width: 1px; height: 18px; background: var(--line-2); }
+.ms-where { padding: 14px 20px; border-bottom: 1px solid var(--line); background: var(--bg); }
+.ms-where .chips { flex-wrap: wrap; }
+.hdr .nav { margin-left: 12px; }
+.hdr-actions { margin-left: auto; }
+/* top nav stays on desktop and small laptops; bottom bar only below 900px */
+@media (max-width: 1100px) { .nav { display: flex; } body { padding-bottom: 0; } .tabbar { display: none; } .mock-bar { bottom: 16px; } }
+@media (max-width: 1000px) { .nav a { padding: 6px 6px; font-size: 12.5px; } .nav .em { display: none; } }
+@media (max-width: 900px) {
+  .nav { display: none; }
+  body { padding-bottom: 68px; }
+  .tabbar { display: grid; }
+  .mock-bar { bottom: 72px; }
+  .ms-where { padding: 12px 16px; }
+  .ms-where .chips { flex-wrap: nowrap; }
+}
+@media (max-width: 480px) { .find-pill .t { max-width: 80px; overflow: hidden; text-overflow: ellipsis; } }

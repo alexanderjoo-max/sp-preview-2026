@@ -78,10 +78,9 @@ function header(active) {
   return `<header class="hdr"><div class="wrap">
     <button class="icon-btn hamb" data-drawer aria-label="Open menu">${icon('list')}</button>
     <a class="logo" href="${ROOT}index.html" aria-label="SwanPass home">${LOGO}</a>
-    <button class="loc-pill" data-open="loc" aria-label="Change city"><span class="flag">${locFlag()}</span><span class="t">${esc(locLabel())}</span>${icon('chevron')}</button>
-    <button class="search-trigger" data-open="search">${icon('search')}<span>Search venues, areas, deals…</span><kbd>/</kbd></button>
     <nav class="nav">${NAV.map(([k, e, t, h]) => `<a href="${ROOT}${h}" class="${k === active ? 'on' : ''}"><span class="em">${e}</span>${t}</a>`).join('')}</nav>
     <div class="hdr-actions">
+      <button class="loc-pill find-pill" data-open="search" aria-label="Change city or search"><span class="flag">${locFlag()}</span><span class="t">${esc(locLabel())}</span><span class="sep"></span>${icon('search')}</button>
       <a class="btn btn-ghost btn-sm desktop-only" href="${ROOT}shop/index.html">➕ List your business</a>
       <a class="avatar" href="${ROOT}account/index.html" aria-label="Your account">AJ</a>
     </div>
@@ -213,7 +212,7 @@ document.addEventListener('keydown', e => {
 document.addEventListener('click', e => {
   const o = e.target.closest('[data-open]'); if (!o) return;
   e.preventDefault();
-  ({ loc: openLocation, search: openSearch })[o.dataset.open]?.();
+  ({ loc: () => openSearch('', true), search: () => openSearch() })[o.dataset.open]?.();
   if (e.target.closest('[data-close]')) closeAll();
 });
 document.addEventListener('click', e => { if (e.target.closest('[data-close]')) closeAll(); });
@@ -250,8 +249,9 @@ function openLocation() {
 }
 
 /* Mega search (ClickUp "Mega Search", Nightify-style) */
-function openSearch(prefill = '') {
+function openSearch(prefill = '', focusLoc = false) {
   const loc = getLoc();
+  let ctab = loc.country || 'th';
   const city = loc.city ? cityOf(loc.city) : null;
   const inScope = LISTINGS.filter(l => (!loc.country || l.country === loc.country) && (!loc.city || l.city === loc.city));
   const catCount = slug => inScope.filter(l => l.catSlug === slug).length;
@@ -259,8 +259,24 @@ function openSearch(prefill = '') {
   const catImgs = { massage: 'don-quixote', soapy: 'pattaya-vice-massage-pattaya', 'go-go': 'chick-gogo-club-pattaya', 'gentlemens-clubs': 'boofies-pattaya' };
   const m = openModal('sp-search', `
     <div class="modal-head">${icon('search')}<input id="ms-q" placeholder="Search venues, areas, services…" autocomplete="off" value="${esc(prefill)}">
-      <button class="chip" data-open="loc">${locFlag()} ${esc(locLabel())} ${icon('chevron')}</button><button class="icon-btn" data-close aria-label="Close">${icon('close')}</button></div>
+      <button class="icon-btn" data-close aria-label="Close">${icon('close')}</button></div>
+    <div class="ms-where" id="ms-where"></div>
     <div class="modal-body" id="ms-body"></div>`, 'full');
+  const drawWhere = () => {
+    const cur = getLoc();
+    $('#ms-where', m).innerHTML = `<div class="ms-label" style="margin:0 0 8px">📍 Where</div>
+      <div class="chips" style="margin-bottom:8px"><button class="chip" data-near>📍 Near me</button><button class="chip ${!cur.country ? 'on' : ''}" data-allasia>🌏 All of Asia</button>${COUNTRIES.map(c => `<button class="chip ${c.code === ctab ? 'on' : ''}" data-ctab="${c.code}">${c.flag} ${c.name}${c.soon ? ' <span class="muted" style="font-size:11px">soon</span>' : ''}</button>`).join('')}</div>
+      <div class="chips">${countryOf(ctab).soon ? '<span class="muted" style="font-size:13px;padding:6px 2px">Coming soon — we’ll notify you when it launches.</span>' : `<button class="chip ${cur.country === ctab && !cur.city ? 'on' : ''}" data-allc="${ctab}">All of ${countryOf(ctab).name}</button>` + CITIES.filter(c => c.country === ctab).map(c => `<button class="chip ${cur.city === c.slug ? 'on' : ''}" data-city="${c.slug}">${c.name} <span class="muted num" style="font-size:11px">${c.count}</span></button>`).join('')}</div>`;
+  };
+  drawWhere();
+  m.addEventListener('click', e => {
+    const t = e.target.closest('[data-ctab]'); if (t) { ctab = t.dataset.ctab; drawWhere(); return; }
+    const c = e.target.closest('[data-city]'); if (c) { const ci = cityOf(c.dataset.city); setLoc({ country: ci.country, city: ci.slug }); refresh(); return; }
+    const a = e.target.closest('[data-allc]'); if (a) { setLoc({ country: a.dataset.allc, city: null }); refresh(); return; }
+    if (e.target.closest('[data-allasia]')) { setLoc({ country: null, city: null }); refresh(); return; }
+    if (e.target.closest('[data-near]')) { setLoc({ country: 'th', city: 'bangkok', near: true }); refresh(); }
+  });
+  function refresh() { closeAll(); openSearch($('#ms-q', m).value); }
   const idle = () => `<div class="ms-grid">
       <div class="ms-cats">${Object.entries(catImgs).map(([s, v]) => { const c = CATEGORIES.find(x => x.slug === s); const l = LISTINGS.find(x => x.slug === v); return `<a class="ms-cat" href="${ROOT}search.html?cat=${s}"><img src="${l.img}" alt=""><b>${c.name}</b><span class="num">${catCount(s) || "—"} venue${catCount(s) === 1 ? "" : "s"}${city ? ' in ' + city.name : ''}</span></a>`; }).join('')}</div>
       <div>
