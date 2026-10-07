@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="robots" content="noindex, nofollow, noarchive">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Staff — SwanPass</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/sp.css">
+<style>
+  .staff-hero { padding: 44px 0 24px; border-bottom: 1px solid var(--line); }
+  .staff .venue { position: absolute; top: 8px; left: 8px; z-index: 1; }
+  .staff .cnt { position: absolute; top: 8px; right: 8px; font-size: 11px; font-weight: 700; background: rgba(0,0,0,.6); padding: 2px 7px; border-radius: 6px; }
+  .safe-toggle { display: inline-flex; align-items: center; gap: 10px; font-size: 14px; font-weight: 600; }
+</style>
+</head>
+<body class="safe">
+<main>
+  <section class="staff-hero"><div class="wrap row between" style="flex-wrap:wrap;gap:20px">
+    <div>
+      <div class="eyebrow">Staff</div>
+      <h1 class="display" style="font-size:clamp(40px,6vw,72px);margin-top:10px">Meet the staff</h1>
+      <p class="lede" style="margin-top:10px">Browse beautiful staff from venues across Southeast Asia.</p>
+    </div>
+    <label class="safe-toggle"><input type="checkbox" class="switch" id="safe" checked> Safe view (blur photos)</label>
+  </div></section>
+  <div id="app"></div>
+</main>
+<script src="assets/data.js"></script>
+<script src="assets/sp.js"></script>
+<script>
+  shell('staff');
+  $('.staff-hero .lede').insertAdjacentHTML('beforeend', note('Copy changed from “talent girls” to “beautiful staff” (ClickUp: Staff page text change).'));
+  $('.safe-toggle').insertAdjacentHTML('afterbegin', note('Explicit photos blurred until tapped. Keeps the page usable in public, and lowers the risk with Google SafeSearch and ad networks. Members can turn it off for good in Account → Preferences.'));
+  $('#safe').onchange = e => document.body.classList.toggle('safe', e.target.checked);
+  directory({
+    el: $('#app'),
+    gridClass: 'staff-grid',
+    title: S => `Staff in ${S.city ? cityOf(S.city).name : S.country ? countryOf(S.country).name : 'Asia'}`,
+    render: l => `<a class="staff" href="listing.html?v=${l.slug}#staff"><img src="${l.img}" alt="" loading="lazy">${l.verified ? '<span class="badge b-ver venue">✓ Verified venue</span>' : ''}<span class="cnt num">${4 + (l.name.length % 9)} photos</span><span class="reveal">${icon('eye')}&nbsp;Tap to view</span><div class="cap"><b>${esc(l.name)}</b>${esc(l.cat)} · ${esc(l.areaName || l.cityName)}</div></a>`,
+  });
+  $('.filters').insertAdjacentHTML('afterbegin', `<div class="muted" style="font-size:12.5px;margin-bottom:12px">${note('ClickUp “Staff page: Add filters on left”. Same filter component; grid shows one tile per venue (opens that venue’s staff gallery) instead of 839 loose photos.')} Filter staff by venue location and type.</div>`);
+  document.addEventListener('click', e => { const s = e.target.closest('.staff'); if (s && document.body.classList.contains('safe') && !s.classList.contains('revealed')) { e.preventDefault(); s.classList.add('revealed'); } });
+</script>
+</body>
+</html>

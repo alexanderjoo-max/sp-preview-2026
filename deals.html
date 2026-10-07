@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="robots" content="noindex, nofollow, noarchive">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Deals — SwanPass</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/sp.css">
+<style>
+  .deal-hero { padding: 48px 0 28px; background: radial-gradient(700px 300px at 15% 0%, rgba(95, 240, 181, .14), transparent), radial-gradient(700px 300px at 90% 10%, rgba(255, 59, 82, .16), transparent); border-bottom: 1px solid var(--line); }
+  .deal-hero .how { margin-top: 26px; }
+  .how > div { display: flex; gap: 14px; align-items: flex-start; }
+  .how b { font-size: 34px; margin: 0; }
+  .dealcard .card-deal { font-size: 14.5px; padding: 10px 12px; margin: 8px -3px 0; border-radius: 10px; background: var(--deal-bg); border: 1px dashed rgba(95, 240, 181, .35); }
+</style>
+</head>
+<body>
+<main>
+  <section class="deal-hero"><div class="wrap">
+    <div class="eyebrow" style="color:var(--deal)">● Live deals</div>
+    <h1 class="display" style="font-size:clamp(40px,6vw,72px);margin-top:10px">Deals in <em id="dh-city">Bangkok</em></h1>
+    <p class="lede" style="margin-top:12px">Exclusive SwanPass discounts. No codes, no printouts, no sign-up.</p>
+    <div class="how">
+      <div><b>1</b><span><strong>Pick a deal</strong><br><span class="muted">Filter by city, area and category below.</span></span></div>
+      <div><b>2</b><span><strong>Say “SwanPass”</strong><br><span class="muted">At the counter — or show the venue page on your phone.</span></span></div>
+      <div><b>3</b><span><strong>Save</strong><br><span class="muted">Up to ฿800 off. Members get extra perks</span></span></div>
+    </div>
+  </div></section>
+  <div id="app"></div>
+</main>
+<script src="assets/data.js"></script>
+<script src="assets/sp.js"></script>
+<script>
+  shell('deals');
+  $('.how > div:nth-child(3) .muted').innerHTML = 'Up to ฿800 off. Members get extra perks ' + note('Member pass: a QR code in the account area the venue can scan — lets us count redemptions per venue (proof of value when selling Featured).');
+  const setCity = () => $('#dh-city').textContent = locLabel();
+  setCity(); document.addEventListener('sp:loc', setCity);
+  directory({
+    el: $('#app'),
+    preset: { deal: true },
+    title: S => `${S.city ? cityOf(S.city).name : S.country ? countryOf(S.country).name : 'All'} deals`,
+    render: l => card(l).replace('class="card ', 'class="card dealcard '),
+  });
+  $('.filters').insertAdjacentHTML('afterbegin', `<div class="muted" style="font-size:12.5px;margin-bottom:12px">${note('ClickUp “Deals Page: Add Filters on left”. Same filter component as Explore with “Has deal” locked on — one component to maintain.')} Same filters as Explore.</div>`);
+</script>
+</body>
+</html>

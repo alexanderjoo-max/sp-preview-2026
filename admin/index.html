@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="robots" content="noindex, nofollow, noarchive">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Admin — SwanPass</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/sp.css">
+<link rel="stylesheet" href="../assets/app.css">
+<style>
+  .cols { display: grid; grid-template-columns: 1.4fr 1fr; gap: 22px; align-items: start; }
+  @media (max-width: 1100px) { .cols { grid-template-columns: 1fr; } }
+</style>
+</head>
+<body>
+<script src="../assets/data.js"></script>
+<script src="../assets/sp.js"></script>
+<script src="../assets/app.js"></script>
+<script>
+appShell({ area: 'admin', active: 'dash', title: 'Overview', actions: `<button class="btn btn-ghost btn-sm hide-sm" data-open="search">${icon('search')} Find a listing</button><a class="btn btn-red btn-sm" href="listing-edit.html?new=1">${icon('plus')} New listing</a>` });
+const spark = n => `<div class="spark">${Array.from({ length: 14 }, (_, i) => `<i style="height:${20 + Math.round(Math.abs(Math.sin(i * 1.7 + n)) * 80)}%"></i>`).join('')}</div>`;
+const CHANGES = [
+  { l: 'don-quixote', who: 'Owner · Don Quixote', when: '2h ago', rows: [['Hours (Fri)', '12:00 pm – 2:00 am', '12:00 pm – 3:00 am'], ['Deal', 'Free jacuzzi', 'Free jacuzzi + ฿200 off 90-min']] },
+  { l: 'nomo22-bangkok', who: 'Owner · Nomo22', when: '5h ago', rows: [['Prices', '60 min · ฿2,600', '60 min · ฿2,800'], ['Photos', '—', '+ 6 staff photos']] },
+  { l: 'kevin-s-ho-chi-minh-city', who: 'Member report · user 4821', when: 'yesterday', rows: [['Status', 'Open', '“Closed permanently?” — 3 reports this week']] },
+];
+$('#body').innerHTML = `
+  <div class="kpis">
+    <div class="kpi"><span>Visitors · 7 days</span><b>48,210</b><small>▲ 12% vs last week</small>${spark(1)}</div>
+    <div class="kpi"><span>Calls + LINE taps</span><b>3,904</b><small>▲ 8%</small>${spark(2)}</div>
+    <div class="kpi"><span>Deal redemptions</span><b>612</b><small>▲ 21%</small>${spark(3)}</div>
+    <div class="kpi"><span>Featured revenue · Oct</span><b>฿184k</b><small class="down">▼ 3 renewals due</small>${spark(4)}</div>
+  </div>
+  <div class="cols">
+    <section id="inbox">
+      <div class="row between" style="margin-bottom:12px"><h2 style="margin:0;font-size:17px">Inbox <span class="pill pill-red" style="margin-left:6px">7 to review</span> ${note('Venue owners edit their own listing; changes land here as a before/after diff. One click to approve. This replaces “shop sends info on LINE → Alex types it in”.')}</h2><div class="seg" style="width:260px"><button class="on">All</button><button>Owners</button><button>Reports</button><button>Reviews</button></div></div>
+      ${CHANGES.map(c => { const l = LISTINGS.find(x => x.slug === c.l); return `<div class="change"><div class="change-head"><img src="${l.img}" alt=""><div style="flex:1;min-width:0"><b>${esc(l.name)}</b><div class="muted" style="font-size:12.5px">${c.who} · ${c.when}</div></div><a class="btn btn-ghost btn-sm hide-sm" href="listing-edit.html">Open</a></div>
+        <div class="diff">${c.rows.map(([k, o, n]) => `<div class="k">${k}</div><div class="old">${o}</div><div class="new">${n}</div>`).join('')}</div>
+        <div class="change-foot"><button class="btn btn-ghost btn-sm" onclick="toast('Sent back with a note')">Ask a question</button><button class="btn btn-ghost btn-sm" onclick="this.closest('.change').remove();toast('Rejected')">Reject</button><button class="btn btn-red btn-sm" onclick="this.closest('.change').remove();toast('Approved — live now')">${icon('check')} Approve</button></div></div>`; }).join('')}
+      <button class="btn btn-ghost btn-sm">Show 4 more</button>
+    </section>
+    <section>
+      <h2 style="margin:0 0 12px;font-size:17px">Data health ${note('Each item is a saved filter on the Listings table. Numbers in this mockup come from the live-site audit.')}</h2>
+      <div class="alert">${icon('clock')}<div><b>312 listings show “12:00 AM – 12:00 AM” every day.</b> Old hours format — set them to “unknown” in bulk, then ask the owners to confirm. <a href="#" style="text-decoration:underline">Review</a></div></div>
+      <div class="alert">${icon('pin')}<div><b>41 listings have a raw district as their city</b> (“Tambon Patong”, “เมืองพัทยา”, “Muang Pattaya”). Map them to Phuket and Pattaya. <a href="#" style="text-decoration:underline">Fix</a></div></div>
+      <div class="alert">${icon('image')}<div><b>Ko Samui cover image is broken</b>, plus 6 listings with no photos at all. <a href="#" style="text-decoration:underline">Fix</a></div></div>
+      <div class="alert">${icon('chart')}<div><b>Counts don’t match:</b> homepage country totals add up to 937, Cities page says 882; Deals page says 24 deals, Cities page says 36. Use one cached count everywhere. <a href="#" style="text-decoration:underline">Details</a></div></div>
+      <div class="alert">${icon('tag')}<div><b>3 Featured plans expire this month</b> — JSpot, Cube Massage, Sento Bangkok. <a href="#" style="text-decoration:underline">Send renewal</a></div></div>
+    </section>
+  </div>
+
+  <section id="listings" style="margin-top:30px">
+    <div class="row between" style="margin-bottom:12px;flex-wrap:wrap;gap:10px"><h2 style="margin:0;font-size:17px">Listings</h2>
+      <div class="row" style="flex-wrap:wrap"><input class="input" style="width:220px;height:36px" placeholder="Search name, LINE, phone…"><select class="select"><option>All cities</option><option>Bangkok</option><option>Pattaya</option></select><select class="select"><option>Any status</option><option>Live</option><option>Draft</option><option>Pending owner changes</option></select><button class="btn btn-ghost btn-sm">Bulk edit</button></div></div>
+    <div style="overflow-x:auto;border:1px solid var(--line);border-radius:14px"><table class="table">
+      <thead><tr><th><input type="checkbox"></th><th>Venue</th><th class="hide-sm">City / area</th><th>Status</th><th class="hide-sm">Badges</th><th class="hide-sm">Quality</th><th class="hide-sm">Updated</th><th></th></tr></thead>
+      <tbody>${LISTINGS.slice(0, 12).map((l, i) => { const q = [92, 88, 74, 96, 61, 83, 45, 90, 70, 99, 58, 81][i]; return `<tr><td><input type="checkbox"></td><td><div class="t-venue"><img src="${l.img}" alt="">${esc(l.name)}</div></td><td class="hide-sm muted">${l.cityName} · ${l.areaName || '—'}</td><td>${i === 1 ? '<span class="pill pill-pending">Owner edit</span>' : i === 6 ? '<span class="pill pill-draft">Draft</span>' : '<span class="pill pill-live">Live</span>'}</td><td class="hide-sm">${l.featured ? '<span class="badge b-feat">★</span> ' : ''}${l.verified ? '<span class="badge b-ver">✓</span>' : ''}</td><td class="hide-sm"><span class="meter ${q < 60 ? 'low' : q < 80 ? 'mid' : ''}"><i style="width:${q}%"></i></span> <span class="muted num" style="font-size:12px">${q}%</span></td><td class="hide-sm muted">${['today', '2d', '5d', '1w', '3w', '2mo'][i % 6]}</td><td><a class="btn btn-ghost btn-sm" href="listing-edit.html">Edit</a></td></tr>`; }).join('')}</tbody></table></div>
+  </section>`;
+</script>
+</body>
+</html>

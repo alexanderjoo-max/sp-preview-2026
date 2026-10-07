@@ -1,0 +1,218 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="robots" content="noindex, nofollow, noarchive">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Edit listing — SwanPass Admin</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/sp.css">
+<link rel="stylesheet" href="../assets/app.css">
+</head>
+<body>
+<script src="../assets/data.js"></script>
+<script src="../assets/sp.js"></script>
+<script src="../assets/app.js"></script>
+<script>
+const OWNER = new URLSearchParams(location.search).has('owner');
+const L0 = LISTINGS.find(l => l.slug === 'don-quixote');
+appShell({
+  area: OWNER ? 'shop' : 'admin', active: OWNER ? 'edit' : 'listings',
+  title: `<span class="t">Don Quixote</span> ${OWNER ? '<span class="pill pill-pending">2 changes waiting for review</span>' : '<span class="pill pill-live">● Live</span>'}`,
+  actions: `<span class="saved-state hide-sm" id="saved">All changes saved</span><a class="btn btn-ghost btn-sm hide-sm" href="../listing.html?v=don-quixote" target="_blank">${icon('eye')} View</a><button class="btn btn-red btn-sm" id="publish">${OWNER ? 'Submit for review' : 'Publish changes'}</button>`,
+});
+
+/* ---------------- state ---------------- */
+const S = {
+  hoursMode: 'weekdays', // same | weekdays | custom | 24h | unknown
+  days: { mon: [['12:00', '02:00']], tue: [['12:00', '02:00']], wed: [['12:00', '02:00']], thu: [['12:00', '02:00']], fri: [['12:00', '03:00']], sat: [['12:00', '03:00']], sun: [['14:00', '00:00']] },
+  menu: JSON.parse(JSON.stringify(DETAIL.menu.map(g => ({ name: g.group, items: g.items.map(i => ({ dur: i.dur, price: i.price })) })))),
+  cats: ['massage', 'soapy'], amen: new Set(DETAIL.amenities),
+};
+const DAYS = [['mon', 'Mon'], ['tue', 'Tue'], ['wed', 'Wed'], ['thu', 'Thu'], ['fri', 'Fri'], ['sat', 'Sat'], ['sun', 'Sun']];
+const TIMES = Array.from({ length: 48 }, (_, i) => `${String(Math.floor(i / 2)).padStart(2, '0')}:${i % 2 ? '30' : '00'}`);
+const t12 = t => { const [h, m] = t.split(':').map(Number); return `${h % 12 || 12}:${String(m).padStart(2, '0')} ${h < 12 ? 'AM' : 'PM'}`; };
+const mins = t => { const [h, m] = t.split(':').map(Number); return h * 60 + m; };
+
+const sections = [['basics', 'Basics', 'ok'], ['photos', 'Photos', 'ok'], ['hours', 'Opening hours', 'ok'], ['menu', 'Menu & prices', 'ok'], ['deal', 'Deal', 'ok'], ['contact', 'Contact', 'ok'], ['location', 'Location', 'ok'], ['amenities', 'Amenities', 'ok'], ['seo', 'SEO & FAQ', 'warn'], ['visibility', 'Visibility', OWNER ? 'lock' : 'ok']].filter(s => !(OWNER && s[0] === 'visibility'));
+
+$('#body').innerHTML = `
+  ${OWNER ? `<div class="alert">${icon('shield')}<div><b>You’re editing as the venue owner.</b> Changes go live after a quick check by the SwanPass team, usually within 24 hours. Prices and hours you confirm here show as “Confirmed by venue”.</div></div>` : ''}
+  <div class="editor">
+    <nav class="toc" id="toc">${sections.map(([id, t, st], i) => `<a href="#${id}" class="${i ? '' : 'on'}"><span class="st ${st}"></span>${t}</a>`).join('')}
+      <div style="margin-top:16px;padding:12px;border-radius:12px;background:var(--surface);border:1px solid var(--line)"><div class="row between" style="font-size:12.5px"><b>Listing quality</b><b style="color:var(--deal)">92%</b></div><div class="meter" style="width:100%;margin-top:8px"><i style="width:92%"></i></div><div class="muted" style="font-size:12px;margin-top:8px">Add 2 FAQ answers to reach 100%.</div></div>
+    </nav>
+
+    <div>
+      <section class="fcard" id="basics"><header><div><h2>Basics</h2><p>What people see first in search results.</p></div></header>
+        <div class="field"><label>Venue name</label><input class="input" value="Don Quixote"></div>
+        <div class="field"><label>Categories <span class="muted" style="font-weight:500">— first one is the main category</span></label><div class="tagpick" id="cats">${CATEGORIES.map(c => `<button data-cat="${c.slug}" class="${S.cats.includes(c.slug) ? 'on' : ''}">${c.name}</button>`).join('')}</div></div>
+        <div class="field"><label>Short description <span class="muted" style="font-weight:500">(shown on cards, 140 characters)</span></label><input class="input" value="Korean-style full-service nuru parlour on Sukhumvit 26 with jacuzzi rooms."></div>
+        <div class="field"><label>About</label><textarea class="textarea" rows="5">${DETAIL.about}</textarea><span class="hint">Write it in your own words — unique text ranks; copied text doesn’t. ${note('Replaces the 3 rich-text editors (Quill × 2 + React-Quill) loaded on the old admin page. Plain textarea with markdown is enough for venue descriptions.')}</span></div>
+      </section>
+
+      <section class="fcard" id="photos"><header><div><h2>Photos</h2><p>Drag to reorder. The first venue photo is the cover. Staff photos are blurred on the site until tapped.</p></div><div class="seg" style="width:220px"><button class="on">Venue · 12</button><button>Staff · 19</button></div></header>
+        <div class="dropzone">${icon('upload')}<div style="margin-top:6px"><b>Drop photos here</b> or <u>browse</u> — or paste from clipboard</div><div style="font-size:12px;margin-top:4px">JPG, PNG, HEIC, WebP · resized and watermarked automatically</div></div>
+        <div class="photo-grid">${DETAIL.photos.slice(0, 7).map((p, i) => `<div class="ph-item ${i ? 'nsfw' : 'cover'}"><img src="${p}" alt="">${i ? '' : '<span class="badge b-feat tag">Cover</span>'}</div>`).join('')}</div>
+      </section>
+
+      <section class="fcard" id="hours"><header><div><h2>Opening hours ${note('Old admin: 14 separate time pickers (open + close for each day) saved as text like “12:00 AM - 12:00 AM”. That’s why Don Quixote shows midnight–midnight every day on the live site. New: pick a pattern, use 30-minute dropdowns, after-midnight closing handled, split shifts, closed days and “unknown” are explicit.')}</h2><p>Pick the pattern first — you only fill in what’s different.</p></div></header>
+        <div class="hours-presets" id="presets"></div>
+        <div id="days"></div>
+        <div class="week-bar" id="weekbar"></div>
+        <details style="margin-top:12px"><summary class="muted" style="font-size:12.5px;cursor:pointer">Stored as (for the developer)</summary><pre id="hours-json" style="font-size:11.5px;color:var(--text-2);background:var(--bg-2);padding:10px;border-radius:10px;overflow:auto"></pre></details>
+      </section>
+
+      <section class="fcard" id="menu"><header><div><h2>Menu & prices ${note('Old admin: a currency dropdown (every world currency) on every single row. New: currency set once from the country, duration chips, groups for room types, and a “paste from LINE” box that turns the text a shop sends you into rows.')}</h2><p>Currency: <b>฿ Thai baht</b> (from the venue’s country) · <a href="#" style="text-decoration:underline">change</a></p></div></header>
+        <div class="paste-box"><div class="row between" style="margin-bottom:8px;flex-wrap:wrap;gap:8px"><b style="font-size:14px">${icon('wand')} Paste the price list the shop sent you</b><span class="muted" style="font-size:12px">LINE, WhatsApp, a photo’s text — one price per line</span></div>
+          <textarea id="paste" placeholder="VIP room&#10;60 min 3000&#10;90min - 3,800 baht&#10;2 hours ฿4500"></textarea>
+          <div class="row" style="margin-top:8px"><button class="btn btn-red btn-sm" id="parse">Add to menu</button><span class="muted" style="font-size:12px" id="parse-msg">Lines without a price become a new group.</span></div></div>
+        <div id="groups"></div>
+        <button class="mini-btn" id="add-group">+ Add group (e.g. “VIP room”, “2 girls”)</button>
+      </section>
+
+      <section class="fcard" id="deal"><header><div><h2>SwanPass deal</h2><p>Shown on cards, the Deals page and the venue page.</p></div><label class="toggle-row" style="padding:0;gap:10px">Active<input type="checkbox" class="switch" checked></label></header>
+        <div class="grid2"><div class="field"><label>Headline <span class="muted" style="font-weight:500">(short — shows on cards)</span></label><input class="input" id="deal-t" value="Free jacuzzi"></div>
+          <div class="field"><label>Valid</label><div class="row"><input class="input" type="date" value="2026-10-01"><span class="muted">to</span><input class="input" type="date" placeholder="Ongoing"></div></div></div>
+        <div class="field"><label>Details & conditions</label><textarea class="textarea" rows="2">Free jacuzzi upgrade with any mat room. Not valid with other promotions.</textarea></div>
+        <div class="field"><label>How to redeem</label><div class="tagpick"><button class="on">Say “SwanPass”</button><button class="on">Show venue page</button><button>Member pass QR</button></div></div>
+      </section>
+
+      <section class="fcard" id="contact"><header><div><h2>Contact</h2><p>Each one becomes a button on the venue page. Add only the ones the venue answers.</p></div></header>
+        <div class="grid2">
+          <div class="field"><label>Phone</label><div class="input-affix"><span>🇹🇭 +66</span><input value="88 947 4986"></div></div>
+          <div class="field"><label>LINE ID</label><div class="input-affix"><span>@</span><input value="donshop26"></div></div>
+          <div class="field"><label>WhatsApp</label><div class="input-affix"><span>+</span><input placeholder="Not set"></div></div>
+          <div class="field"><label>Website</label><input class="input" value="donquixote69.com"></div>
+        </div>
+        <div class="row" style="gap:6px;flex-wrap:wrap"><span class="muted" style="font-size:12.5px">Add:</span>${['Telegram', 'WeChat', 'Zalo', 'KakaoTalk', 'Instagram', 'TikTok', 'Facebook'].map(c => `<button class="mini-btn">+ ${c}</button>`).join('')}</div>
+      </section>
+
+      <section class="fcard" id="location"><header><div><h2>Location</h2><p>Search the address or drop the pin. City and area are filled in from the pin.</p></div></header>
+        <div class="field"><label>Address</label><input class="input" value="${DETAIL.address}"></div>
+        <div class="grid3"><div class="field"><label>Country</label><select class="sel"><option>Thailand</option></select></div><div class="field"><label>City</label><select class="sel"><option>Bangkok</option></select></div><div class="field"><label>Area ${note('Area is a real dropdown from the areas table. The live site stores raw Google strings (“Tambon Ban Lueam”, “Amphoe Mueang Chiang Mai”, Thai script), which is why city lists look messy.')}</label><select class="sel">${AREAS.bangkok.map(a => `<option ${a.slug === 'phrom-phong' ? 'selected' : ''}>${a.name}</option>`).join('')}</select></div></div>
+        <div style="height:160px;border-radius:12px;background:linear-gradient(135deg,#1c1822,#141118);border:1px solid var(--line);display:grid;place-items:center;color:var(--muted);font-size:13px">${icon('pin')} Map with draggable pin · 13.7282, 100.5706</div>
+      </section>
+
+      <section class="fcard" id="amenities"><header><div><h2>Amenities & features</h2><p>Used for filters and the venue page.</p></div></header>
+        <div class="tagpick" id="amen">${['Jacuzzi', 'Private rooms', 'Shower', 'Nuru gel', 'Lockers', 'Credit card', 'English spoken', 'Korean spoken', 'Japanese spoken', 'Free Wi-Fi', 'Couples welcome', 'Outcall', 'VIP room', 'Parking', 'LGBTQ+ friendly', 'Karaoke'].map(a => `<button class="${S.amen.has(a) ? 'on' : ''}">${a}</button>`).join('')}</div>
+      </section>
+
+      <section class="fcard" id="seo"><header><div><h2>SEO & FAQ</h2><p>Questions people search for. Answers are shown on the page and marked up for Google.</p></div></header>
+        <div class="alert" style="margin-bottom:14px">${icon('sparkle')}<div><b>Auto-generated from your data:</b> “How much does it cost?”, “Is it open now?”, “Which venues are nearby?”. Add 2 of your own to reach 100%.</div></div>
+        <div class="field"><label>Page title</label><input class="input" value="Don Quixote — Sukhumvit, Bangkok | SwanPass"><span class="hint">48 / 60 characters</span></div>
+        <div class="field"><label>Meta description</label><textarea class="textarea" rows="2">Korean-style nuru parlour on Sukhumvit 26. Prices from ฿2,100, jacuzzi rooms, open noon–2am. Free jacuzzi with SwanPass.</textarea><span class="hint">121 / 155 characters</span></div>
+        <button class="mini-btn">+ Add a question</button>
+      </section>
+
+      ${OWNER ? '' : `<section class="fcard" id="visibility"><header><div><h2>Visibility & badges</h2><p>Admin only.</p></div></header>
+        <label class="toggle-row">Published<input type="checkbox" class="switch" checked></label>
+        <label class="toggle-row">Featured (paid) — until 31 Dec 2026<input type="checkbox" class="switch" checked></label>
+        <label class="toggle-row">Verified — checked 12 Sep 2026 by AJ<input type="checkbox" class="switch" checked></label>
+        <label class="toggle-row">Show in “Best of Bangkok”<input type="checkbox" class="switch" checked></label>
+        <div class="field" style="margin-top:10px"><label>Owner account</label><div class="row"><span class="avatar" style="width:30px;height:30px;font-size:11px">DQ</span><span>don.quixote26@gmail.com · claimed 3 Aug 2026</span></div></div>
+      </section>`}
+    </div>
+
+    <aside class="preview-col">
+      <div class="lbl">Live preview</div>
+      <div id="preview" style="pointer-events:none"></div>
+      <div class="fcard" style="padding:16px"><div class="lbl" style="margin-bottom:8px">Last 30 days</div><div class="row between" style="font-size:13.5px"><span class="muted">Views</span><b class="num">7,214</b></div><div class="row between" style="font-size:13.5px;margin-top:6px"><span class="muted">Calls + LINE taps</span><b class="num">412</b></div><div class="row between" style="font-size:13.5px;margin-top:6px"><span class="muted">Deal redemptions</span><b class="num">96</b></div></div>
+      <div class="fcard" style="padding:16px;font-size:13px"><div class="lbl" style="margin-bottom:8px">History</div><div class="muted">Today 09:12 · AJ updated prices</div><div class="muted" style="margin-top:4px">3 Oct · Owner changed hours (approved)</div><div class="muted" style="margin-top:4px">12 Sep · AJ verified</div></div>
+    </aside>
+  </div>`;
+
+/* ---------------- hours editor ---------------- */
+const PRESETS = [['same', 'Same every day', 'One set of hours'], ['weekdays', 'Weekdays / weekend', 'Two sets'], ['custom', 'Different each day', 'Seven rows'], ['24h', 'Open 24 hours', 'Every day'], ['unknown', 'Hours unknown', 'Shows “Call to check”']];
+function rowsForMode() {
+  if (S.hoursMode === 'same') return [['Every day', DAYS.map(d => d[0])]];
+  if (S.hoursMode === 'weekdays') return [['Mon–Fri', ['mon', 'tue', 'wed', 'thu', 'fri']], ['Sat–Sun', ['sat', 'sun']]];
+  return DAYS.map(([k, t]) => [t, [k]]);
+}
+function slotHTML(key, i, [o, c]) {
+  const opt = sel => TIMES.map(t => `<option value="${t}" ${t === sel ? 'selected' : ''}>${t12(t)}</option>`).join('');
+  return `<span class="slot" data-k="${key}" data-i="${i}"><select data-f="0">${opt(o)}</select><span class="muted">–</span><select data-f="1">${opt(c)}</select>${mins(c) <= mins(o) ? '<span class="nd">next day</span>' : ''}<button class="x" data-rm aria-label="Remove">${icon('close')}</button></span>`;
+}
+function drawHours() {
+  $('#presets').innerHTML = PRESETS.map(([k, t, s]) => `<button class="preset ${S.hoursMode === k ? 'on' : ''}" data-mode="${k}"><b>${t}</b>${s}</button>`).join('');
+  const rows = rowsForMode();
+  $('#days').innerHTML = ['24h', 'unknown'].includes(S.hoursMode) ? `<div class="muted" style="font-size:14px;padding:6px 0">${S.hoursMode === '24h' ? 'Shows “Open 24 hours” on the site.' : 'Shows “Hours not confirmed — call to check”. The venue is asked to confirm next time they log in.'}</div>` :
+    rows.map(([label, keys]) => { const k = keys[0]; const sl = S.days[k]; return `<div class="day-row"><span class="d">${label}</span><input type="checkbox" class="switch" data-open="${keys.join(',')}" ${sl.length ? 'checked' : ''} aria-label="Open on ${label}"><div class="slots">${sl.length ? sl.map((s, i) => slotHTML(keys.join(','), i, s)).join('') : '<span class="closed-label">Closed</span>'}</div><div class="row" style="gap:6px">${sl.length ? `<button class="mini-btn" data-add="${keys.join(',')}">+ Split shift</button>` : ''}${S.hoursMode === 'custom' && k === 'mon' ? '<button class="mini-btn" data-copy>Copy to all days</button>' : ''}</div></div>`; }).join('');
+  // week bar 06:00 → 06:00 next day
+  const pos = m => ((m - 360 + 1440) % 1440) / 1440 * 100;
+  $('#weekbar').innerHTML = DAYS.map(([k, t]) => `<div class="wb-row"><span>${t}</span><div class="wb-track">${S.hoursMode === 'unknown' ? '' : (S.hoursMode === '24h' ? [['06:00', '06:00']] : S.days[k]).map(([o, c]) => { const a = pos(mins(o)), b = S.hoursMode === '24h' ? 100 : pos(mins(c)) || 100; return b > a ? `<i style="left:${a}%;width:${b - a}%"></i>` : `<i style="left:${a}%;right:0"></i><i style="left:0;width:${b}%"></i>`; }).join('')}</div></div>`).join('') + '<div class="wb-axis"><span></span><div><span>6am</span><span>noon</span><span>6pm</span><span>midnight</span><span>6am</span></div></div>';
+  const out = {}; DAYS.forEach(([k]) => out[k] = S.hoursMode === '24h' ? [['00:00', '24:00']] : S.hoursMode === 'unknown' ? null : S.days[k]);
+  $('#hours-json').textContent = '// listings.opening_hours (jsonb) — replaces mon…sun text columns\n' + JSON.stringify({ mode: S.hoursMode, days: out }, null, 0).replace(/\],"/g, '],\n  "');
+}
+$('#hours').addEventListener('click', e => {
+  const m = e.target.closest('[data-mode]'); if (m) { S.hoursMode = m.dataset.mode; if (m.dataset.mode === 'same') DAYS.forEach(([k]) => S.days[k] = JSON.parse(JSON.stringify(S.days.mon))); drawHours(); dirty(); return; }
+  const a = e.target.closest('[data-add]'); if (a) { a.dataset.add.split(',').forEach(k => S.days[k].push(['18:00', '23:00'])); drawHours(); dirty(); return; }
+  const r = e.target.closest('[data-rm]'); if (r) { const s = r.closest('.slot'); s.dataset.k.split(',').forEach(k => S.days[k].splice(+s.dataset.i, 1)); drawHours(); dirty(); return; }
+  if (e.target.closest('[data-copy]')) { DAYS.forEach(([k]) => S.days[k] = JSON.parse(JSON.stringify(S.days.mon))); drawHours(); dirty(); toast('Monday’s hours copied to every day'); }
+});
+$('#hours').addEventListener('change', e => {
+  const o = e.target.closest('[data-open]'); if (o) { o.dataset.open.split(',').forEach(k => S.days[k] = o.checked ? [['12:00', '00:00']] : []); drawHours(); dirty(); return; }
+  const s = e.target.closest('.slot'); if (s) { s.dataset.k.split(',').forEach(k => S.days[k][+s.dataset.i][+e.target.dataset.f] = e.target.value); drawHours(); dirty(); }
+});
+
+/* ---------------- menu editor ---------------- */
+const DURS = [30, 45, 60, 90, 120];
+function drawMenu() {
+  $('#groups').innerHTML = S.menu.map((g, gi) => `<div class="mgroup" data-g="${gi}">
+    <div class="mgroup-head"><span class="handle muted">${icon('drag')}</span><input value="${esc(g.name)}" data-gname aria-label="Group name"><span class="muted" style="font-size:12px">${g.items.length} prices</span><button class="x icon-btn" style="width:30px;height:30px" data-delg aria-label="Delete group">${icon('trash')}</button></div>
+    ${g.items.map((it, ii) => `<div class="mrow" data-i="${ii}"><span class="handle">${icon('drag')}</span>
+      <div class="dur-chips">${DURS.map(d => `<button data-dur="${d}" class="${it.dur === d ? 'on' : ''}">${d >= 60 && d % 60 === 0 ? d / 60 + 'h' : d + 'm'}</button>`).join('')}<input type="number" placeholder="other" value="${DURS.includes(it.dur) ? '' : it.dur}" data-durx aria-label="Other duration (minutes)"></div>
+      <div class="input-affix"><span>฿</span><input type="number" value="${it.price}" data-price aria-label="Price"></div>
+      <button class="icon-btn" style="width:32px;height:32px" data-deli aria-label="Delete price">${icon('close')}</button></div>`).join('')}
+    <div style="padding:8px 12px;border-top:1px solid var(--line)"><button class="mini-btn" data-addi>+ Add price</button></div></div>`).join('');
+  updatePreview();
+}
+$('#menu').addEventListener('click', e => {
+  const g = e.target.closest('[data-g]'); const gi = g ? +g.dataset.g : -1; const row = e.target.closest('.mrow'); const ii = row ? +row.dataset.i : -1;
+  if (e.target.closest('[data-dur]')) { S.menu[gi].items[ii].dur = +e.target.closest('[data-dur]').dataset.dur; drawMenu(); dirty(); }
+  if (e.target.closest('[data-addi]')) { const last = S.menu[gi].items.at(-1) || { dur: 60, price: 0 }; S.menu[gi].items.push({ dur: DURS[Math.min(DURS.indexOf(last.dur) + 1, DURS.length - 1)] || 60, price: last.price ? last.price + 300 : 0 }); drawMenu(); dirty(); }
+  if (e.target.closest('[data-deli]')) { S.menu[gi].items.splice(ii, 1); drawMenu(); dirty(); }
+  if (e.target.closest('[data-delg]')) { S.menu.splice(gi, 1); drawMenu(); dirty(); }
+  if (e.target.closest('#add-group')) { S.menu.push({ name: 'New group', items: [{ dur: 60, price: 0 }] }); drawMenu(); dirty(); }
+});
+$('#menu').addEventListener('input', e => {
+  const g = e.target.closest('[data-g]'); if (!g) return; const gi = +g.dataset.g; const row = e.target.closest('.mrow');
+  if (e.target.dataset.gname != null) S.menu[gi].name = e.target.value;
+  if (e.target.dataset.price != null) S.menu[gi].items[+row.dataset.i].price = +e.target.value;
+  if (e.target.dataset.durx != null && e.target.value) S.menu[gi].items[+row.dataset.i].dur = +e.target.value;
+  dirty(); updatePreview();
+});
+$('#parse').onclick = () => {
+  const lines = $('#paste').value.split(/\n+/).map(l => l.trim()).filter(Boolean);
+  let group = null, added = 0;
+  lines.forEach(l => {
+    const m = l.match(/(\d+(?:\.\d+)?)\s*(h|hr|hrs|hour|hours|ชม|m|min|mins|minutes|นาที)?\b[^\d]*?([\d,]{3,})\s*(?:thb|baht|บาท|฿|b)?/i);
+    if (!m) { group = { name: l.replace(/[:\-–]+$/, ''), items: [] }; S.menu.push(group); return; }
+    const n = parseFloat(m[1]), unit = (m[2] || 'min').toLowerCase();
+    const dur = /^h|ชม/.test(unit) ? Math.round(n * 60) : n;
+    if (!group) { group = { name: 'Imported prices', items: [] }; S.menu.push(group); }
+    group.items.push({ dur, price: +m[3].replace(/,/g, '') }); added++;
+  });
+  S.menu = S.menu.filter(g => g.items.length);
+  $('#parse-msg').textContent = added ? `Added ${added} price${added > 1 ? 's' : ''} — check them below.` : 'Couldn’t find any prices. Try one price per line, like “60 min 2500”.';
+  if (added) { $('#paste').value = ''; drawMenu(); dirty(); toast(`${added} prices imported`); }
+};
+
+/* ---------------- misc ---------------- */
+document.addEventListener('click', e => { const t = e.target.closest('.tagpick button'); if (t) { t.classList.toggle('on'); dirty(); } });
+let saveT;
+function dirty() { const s = $('#saved'); if (!s) return; s.textContent = 'Saving…'; clearTimeout(saveT); saveT = setTimeout(() => s.textContent = 'All changes saved', 700); }
+$('#deal-t').addEventListener('input', updatePreview);
+function updatePreview() {
+  const min = Math.min(...S.menu.flatMap(g => g.items.map(i => i.price)).filter(Boolean));
+  $('#preview').innerHTML = card({ ...L0, deal: $('#deal-t') ? $('#deal-t').value : L0.deal, priceFrom: isFinite(min) ? min : 0, openNow: true });
+}
+$('#publish').onclick = () => toast(OWNER ? 'Sent to SwanPass for review' : 'Published — live on swanpass.com');
+const links = $$('#toc a');
+const io = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) links.forEach(a => a.classList.toggle('on', a.getAttribute('href') === '#' + e.target.id)); }), { rootMargin: '-30% 0px -60% 0px' });
+$$('.fcard[id]').forEach(s => io.observe(s));
+drawHours(); drawMenu();
+</script>
+</body>
+</html>

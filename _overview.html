@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="robots" content="noindex, nofollow, noarchive">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>SwanPass Redesign — All Screens</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/sp.css">
+<style>
+  .ov { padding: 48px 0 80px; }
+  .ov-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 14px; margin-top: 18px; }
+  .ov-card { display: flex; flex-direction: column; gap: 6px; padding: 18px; border-radius: var(--r-lg); background: var(--surface); border: 1px solid var(--line); }
+  .ov-card:hover { border-color: var(--red); }
+  .ov-card b { font-size: 16px; }
+  .ov-card span { font-size: 13.5px; color: var(--muted); }
+  .ov-card code { font-size: 12px; color: var(--gold); }
+  .ov h2 { margin-top: 44px; }
+</style>
+</head>
+<body>
+<main class="wrap ov">
+  <a class="logo" href="index.html"><img class="logo-img" src="https://swanpass.com/swanpass_logo_rev.png" alt="SwanPass"></a>
+  <h1 class="display" style="font-size:44px;margin-top:22px">Redesign mockup — <em>all screens</em></h1>
+  <p class="lede">Clickable mockup built on real listings from swanpass.com. Same Inter type, colours and badges as the live site. Gold <span class="note" data-note="Like this. Hover or tap for the design reasoning / developer note. Toggle them off with “Hide notes” bottom-left.">i</span> dots explain decisions. Try it at phone width too.</p>
+  <div id="ov"></div>
+</main>
+<script src="assets/data.js"></script>
+<script src="assets/sp.js"></script>
+<script>
+const S = [
+  ['Public site', [
+    ['index.html', 'Home', 'City chooser, popular areas, categories incl. KTV + LGBTQ+, featured, deals, best-of, staff, guides.'],
+    ['search.html', 'Explore / search', 'Left filters on desktop, bottom-sheet filters on mobile, live counts, Featured → Verified → rest in every sort.'],
+    ['search.html?sort=price', 'Explore sorted by price', 'Shows the paid-placement rule: price order applies inside each tier.'],
+    ['listing.html?v=don-quixote', 'Venue page (PDP)', 'One page with sticky section links, contact bar on mobile, structured prices and hours.'],
+    ['map.html', 'Map', 'Photo pins for Featured, blue pins for Verified (never clustered), list + swipe cards.'],
+    ['deals.html', 'Deals', 'Same filters as Explore with “has deal” locked on.'],
+    ['best.html', 'Best of', 'Every city with 20+ venues, category tabs, awards.'],
+    ['staff.html', 'Staff', 'Filters, safe-view blur, one tile per venue.'],
+    ['place.html?country=th', 'Country page', 'Hub page per SEO spec (PAGES SCHEMA task).'],
+    ['place.html?city=bangkok', 'City page', 'Category-in-city links, popular areas, featured/newest, FAQ.'],
+    ['place.html?city=bangkok&area=phrom-phong', 'Area page', 'Venue list, map, sibling areas.'],
+    ['place.html?city=hanoi', 'City page — Vietnam', 'Same template for a non-Thai city.'],
+  ]],
+  ['Members', [['account/index.html', 'My SwanPass', 'Member pass QR, lists, deal history, reviews, alerts, preferences (safe view, currency, language).']]],
+  ['Venue owners', [
+    ['shop/index.html?claim=1', 'Claim a venue', 'Verify by LINE / phone code. Portal in Thai, Chinese, Korean, Vietnamese.'],
+    ['shop/index.html', 'Venue dashboard', 'Views, calls, LINE taps, redemptions, completeness checklist, Featured plans.'],
+    ['admin/listing-edit.html?owner=1', 'Owner edits listing', 'Same editor as admin; changes go to the review inbox.'],
+  ]],
+  ['Admin', [
+    ['admin/index.html', 'Admin overview', 'KPIs, review inbox with before/after diffs, data-health warnings, listings table.'],
+    ['admin/listing-edit.html', 'Listing editor', 'New hours editor, menu editor with “paste from LINE”, live preview card.'],
+  ]],
+];
+$('#ov').innerHTML = S.map(([h, items]) => `<h2 class="display">${h}</h2><div class="ov-grid">${items.map(([u, t, d]) => `<a class="ov-card" href="${u}${u.includes('?') ? '&' : '?'}nogate"><b>${t}</b><span>${d}</span><code>${u}</code></a>`).join('')}</div>`).join('') ;
+</script>
+</body>
+</html>

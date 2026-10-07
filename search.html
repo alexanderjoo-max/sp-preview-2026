@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="robots" content="noindex, nofollow, noarchive">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Explore venues — SwanPass</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/sp.css">
+</head>
+<body>
+<main id="app"></main>
+<script src="assets/data.js"></script>
+<script src="assets/sp.js"></script>
+<script>
+  shell('search');
+  directory({
+    el: $('#app'),
+    title: S => {
+      const cat = S.cats.length === 1 ? CATEGORIES.find(c => c.slug === S.cats[0]).name : 'Nightlife';
+      const where = S.areas.length === 1 ? AREAS[S.city].find(a => a.slug === S.areas[0]).name : S.city ? cityOf(S.city).name : S.country ? countryOf(S.country).name : 'Asia';
+      return `${cat} in ${where}`;
+    },
+    after: () => {
+      const h = $('.results-head h1');
+      if (h && !h.querySelector('.note')) h.insertAdjacentHTML('beforeend', ' ' + note('Title + URL follow the filters: “Massage in Phrom Phong, Bangkok” → /thailand/bangkok/phrom-phong/massage. Indexable only for combinations we have a landing page for; everything else is canonical to the parent (SEO spec, PAGES SCHEMA task).'));
+    },
+  });
+  $('.filters').insertAdjacentHTML('afterbegin', `<div class="muted" style="font-size:12.5px;margin-bottom:12px">${note('Filters on the left on desktop (ClickUp: “All pages with cards: Filters on left”). On phones the same panel opens as a bottom sheet with a live “Show N venues” button.')} Counts update as you filter.</div>`);
+</script>
+</body>
+</html>

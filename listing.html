@@ -1,0 +1,195 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="robots" content="noindex, nofollow, noarchive">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Don Quixote — Sukhumvit, Bangkok | SwanPass</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
+<link rel="stylesheet" href="assets/sp.css">
+<style>
+  .gallery { display: grid; grid-template-columns: 2fr 1fr 1fr; grid-template-rows: 210px 210px; gap: 8px; border-radius: var(--r-lg); overflow: hidden; margin-top: 8px; position: relative; }
+  .gallery button { position: relative; overflow: hidden; background: var(--surface-2); }
+  .gallery button:first-child { grid-row: span 2; }
+  .gallery img { width: 100%; height: 100%; object-fit: cover; transition: transform .5s; }
+  .gallery button:hover img { transform: scale(1.04); }
+  .gal-wrap { position: relative; }
+  .gal-wrap .all { position: absolute; right: 14px; bottom: 14px; }
+  .gal-tabs { position: absolute; left: 14px; bottom: 14px; display: flex; gap: 6px; }
+  .gal-count { display: none; }
+  .safe .gallery .g-staff img { filter: blur(22px) saturate(.7); transform: scale(1.15); }
+  .safe .gallery .g-staff.revealed img { filter: none; transform: none; }
+  .g-reveal { position: absolute; inset: 0; display: grid; place-items: center; color: var(--text-2); }
+  .safe .gallery .g-staff.revealed .g-reveal, body:not(.safe) .g-reveal { display: none; }
+  .pdp { display: grid; grid-template-columns: 1fr 360px; gap: 40px; align-items: start; }
+  .pdp-title h1 { font-family: var(--font-display); font-weight: 800; letter-spacing: -.03em; font-size: clamp(30px, 4vw, 44px); line-height: 1.1; margin: 10px 0 12px; display: flex; align-items: center; gap: 12px; }
+  .pdp-title h1 .verified-tick { width: 30px; height: 30px; }
+  .facts { display: flex; flex-wrap: wrap; gap: 8px 18px; color: var(--text-2); font-size: 14.5px; }
+  .facts > span { display: inline-flex; align-items: center; gap: 6px; }
+  .facts .ico { width: 16px; height: 16px; color: var(--muted); }
+  .anchors { position: sticky; top: var(--header-h); z-index: 40; background: rgba(11, 9, 14, .92); backdrop-filter: blur(16px); border-bottom: 1px solid var(--line); margin: 26px 0 0; }
+  .anchors .chips { padding: 10px 0; }
+  .anchors .chip.on { background: var(--red); border-color: var(--red); color: #fff; }
+  .blk { padding: 34px 0; border-bottom: 1px solid var(--line); }
+  .blk h2 { font-family: var(--font-display); font-weight: 800; letter-spacing: -.02em; font-size: 22px; margin: 0 0 16px; }
+  .deal-box { padding: 20px; border-radius: var(--r-lg); background: linear-gradient(120deg, rgba(95, 240, 181, .14), rgba(95, 240, 181, .03)); border: 1px solid rgba(95, 240, 181, .3); }
+  .deal-box .t { font-family: var(--font-display); font-weight: 800; font-size: 26px; color: var(--deal); line-height: 1.05; }
+  .menu-group + .menu-group { margin-top: 22px; }
+  .menu-group h3 { font-size: 14px; color: var(--muted); font-weight: 600; letter-spacing: .02em; margin-bottom: 8px; }
+  .menu-row { display: flex; align-items: baseline; gap: 10px; padding: 12px 0; border-bottom: 1px dashed var(--line); font-size: 15.5px; }
+  .menu-row .lead { flex: 1; border-bottom: 1px dotted var(--line-2); transform: translateY(-4px); }
+  .menu-row b { font-variant-numeric: tabular-nums; }
+  .amen { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+  .amen span { display: flex; gap: 8px; align-items: center; color: var(--text-2); font-size: 14.5px; }
+  .amen .ico { color: var(--deal); width: 16px; height: 16px; }
+  .hours { display: grid; gap: 2px; max-width: 420px; }
+  .hours div { display: flex; justify-content: space-between; padding: 9px 12px; border-radius: 8px; font-size: 14.5px; color: var(--text-2); }
+  .hours div.today { background: var(--surface-2); color: var(--text); font-weight: 600; }
+  .rev-sum { display: grid; grid-template-columns: 180px 1fr; gap: 28px; align-items: center; margin-bottom: 20px; }
+  .rev-sum .big { font-family: var(--font-display); font-weight: 800; font-size: 56px; line-height: 1; }
+  .bar { display: grid; grid-template-columns: 14px 1fr 30px; gap: 10px; align-items: center; font-size: 12.5px; color: var(--muted); }
+  .bar i { height: 6px; border-radius: 9px; background: var(--surface-3); overflow: hidden; display: block; }
+  .bar i b { display: block; height: 100%; background: var(--gold); border-radius: 9px; }
+  .review { padding: 16px 0; border-top: 1px solid var(--line); }
+  .review .who { display: flex; gap: 10px; align-items: center; font-weight: 600; }
+  .review .who .av { width: 34px; height: 34px; border-radius: 50%; background: var(--surface-3); display: grid; place-items: center; font-size: 12px; }
+  .review p { margin: 8px 0 6px; color: var(--text-2); }
+  .stars { color: var(--gold); letter-spacing: 1px; font-size: 13px; }
+  #pdp-map { height: 300px; border-radius: var(--r-lg); overflow: hidden; border: 1px solid var(--line); }
+  .side { position: sticky; top: calc(var(--header-h) + 76px); display: flex; flex-direction: column; gap: 14px; }
+  .panel { padding: 18px; border-radius: var(--r-lg); background: var(--surface); border: 1px solid var(--line); }
+  .cta-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  .btn-line-app { background: #06c755; color: #fff; }
+  .btn-wa { background: #25d366; color: #0b1a10; }
+  .actionbar { display: none; }
+  .leaflet-container { background: #111; }
+  @media (max-width: 1100px) { .pdp { grid-template-columns: 1fr; } .side { position: static; } .side .contact { display: none; } }
+  @media (max-width: 720px) {
+    .gallery { display: flex; overflow-x: auto; scroll-snap-type: x mandatory; border-radius: 0; margin: 0 calc(var(--gutter) * -1); height: 300px; gap: 0; scrollbar-width: none; }
+    .gallery::-webkit-scrollbar { display: none; }
+    .gallery button { flex: 0 0 100%; scroll-snap-align: start; }
+    .gal-wrap .all { display: none; }
+    .gal-count { display: block; position: absolute; right: 12px; bottom: 12px; font-size: 12px; font-weight: 700; background: rgba(0,0,0,.6); padding: 4px 9px; border-radius: 8px; }
+    .gal-wrap { position: relative; }
+    .gal-tabs { bottom: 12px; left: 12px; }
+    .gal-tabs .chip { height: 30px; font-size: 12px; }
+    .gal-tabs .chip:not(.on) { background: rgba(0,0,0,.55); }
+    .pdp { gap: 0; }
+    .anchors { margin-top: 18px; }
+    .amen { grid-template-columns: 1fr 1fr; }
+    .rev-sum { grid-template-columns: 1fr; gap: 12px; }
+    .tabbar { display: none; }
+    .actionbar { display: grid; grid-template-columns: 1fr 1fr 1fr 1fr 52px; gap: 8px; position: fixed; left: 0; right: 0; bottom: 0; z-index: 70; padding: 10px 12px calc(10px + env(safe-area-inset-bottom)); background: rgba(11, 9, 14, .95); backdrop-filter: blur(16px); border-top: 1px solid var(--line); }
+    .actionbar .btn { height: 46px; padding: 0 8px; font-size: 13.5px; }
+  }
+</style>
+</head>
+<body>
+<main class="wrap" id="pdp"></main>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+<script src="assets/data.js"></script>
+<script src="assets/sp.js"></script>
+<script>
+  shell('search');
+  const slug = new URLSearchParams(location.search).get('v') || 'don-quixote';
+  const L0 = LISTINGS.find(l => l.slug === slug) || LISTINGS[0];
+  /* every venue uses Don Quixote's rich detail in the mockup, re-labelled with its own name/photo */
+  const D = slug === 'don-quixote' ? DETAIL : { ...DETAIL, name: L0.name, cats: [L0.cat], area: L0.areaName || L0.cityName, city: L0.cityName, rating: L0.rating, deal: L0.deal ? { ...DETAIL.deal, title: L0.deal } : null, photos: [L0.img, ...DETAIL.photos.slice(1)] };
+  document.title = `${D.name} — ${D.area}, ${D.city} | SwanPass`;
+  const today = (new Date().getDay() + 6) % 7;
+  const dayHours = D.hours[today];
+  const fmt = t => { const [h, m] = t.split(':').map(Number); return (h % 12 || 12) + (m ? ':' + String(m).padStart(2, '0') : '') + (h < 12 ? 'am' : 'pm'); };
+  const total = Object.values(D.breakdown).reduce((a, b) => a + b, 0);
+  const nearby = LISTINGS.filter(l => l.slug !== slug && l.city === L0.city).sort(SORTS.recommended[1]).slice(0, 8);
+
+  $('#pdp').innerHTML = `
+    <nav class="crumbs" style="margin-top:18px"><a href="index.html">Home</a><a href="place.html?country=th">${D.country}</a><a href="place.html?city=bangkok">${D.city}</a><a href="place.html?city=bangkok&area=phrom-phong">${D.area}</a><span>${esc(D.name)}</span></nav>
+    <div class="gal-wrap">
+      <div class="gallery" id="gallery">${D.photos.slice(0, 5).map((p, i) => `<button aria-label="Photo ${i + 1}" class="${i ? 'g-staff' : ''}"><img src="${p}" alt="" ${i ? 'loading="lazy"' : ''}>${i ? `<span class="g-reveal">${icon('eye')}</span>` : ''}</button>`).join('')}
+      </div>
+      <div class="gal-tabs"><button class="chip on">Venue · 12</button><button class="chip">Staff · 19</button></div>
+      <button class="btn btn-ghost btn-sm all">${icon('grid')} All 31 photos</button>
+      <span class="gal-count num">1 / 31</span>
+    </div>
+
+    <div class="pdp" style="margin-top:22px">
+      <div>
+        <div class="pdp-title">
+          <div class="row" style="flex-wrap:wrap;gap:6px">${D.cats.map(c => `<span class="badge b-ver" style="color:var(--text-2);border-color:var(--line-2);background:var(--surface-2)">${c}</span>`).join('')}<span class="badge b-feat">★ Featured</span><span class="badge b-ver">✓ Verified ${note('Verified = SwanPass has checked the venue in person or by video in the last 6 months. The date is stored (content_verified_at) and shown on hover.')}</span></div>
+          <h1>${esc(D.name)}${tick}</h1>
+          <div class="facts">
+            <span><span class="rating">${starIcon}${D.rating.toFixed(1)}</span><a href="#reviews" class="muted">(${D.reviewsCount} reviews)</a></span>
+            <span>${icon('pin')}${D.area}, ${D.city}</span>
+            <span><span class="open-dot"></span><b style="color:var(--deal)">Open now</b>&nbsp;· until ${fmt(dayHours[2])}</span>
+            <span>${icon('tag')}From ฿2,100</span>
+          </div>
+        </div>
+      </div>
+      <div></div>
+    </div>
+
+    <div class="anchors" id="anchors"><div class="chips">${[['overview', 'Overview'], ['deal', 'Deal'], ['prices', 'Prices'], ['staff', 'Staff'], ['reviews', 'Reviews'], ['hours', 'Hours & contact'], ['location', 'Location'], ['faq', 'FAQ'], ['nearby', 'Nearby']].filter(([k]) => k !== 'deal' || D.deal).map(([k, t], i) => `<a class="chip ${i ? '' : 'on'}" href="#${k}">${t}</a>`).join('')}</div></div>
+
+    <div class="pdp">
+      <div>
+        <section class="blk" id="overview"><h2>About</h2><div class="prose"><p>${D.about}</p></div>
+          <div class="amen" style="margin-top:18px">${D.amenities.map(a => `<span>${icon('check')}${a}</span>`).join('')}</div></section>
+        ${D.deal ? `<section class="blk" id="deal"><h2>SwanPass deal</h2><div class="deal-box"><div class="eyebrow" style="color:var(--deal)">Exclusive · ${D.deal.expires}</div><div class="t" style="margin-top:6px">${esc(D.deal.title)}</div><p class="muted" style="margin:8px 0 14px">${D.deal.detail}</p><div class="row" style="flex-wrap:wrap"><button class="btn btn-red btn-sm">${icon('ticket')} Show at counter</button><a class="btn btn-ghost btn-sm" href="account/index.html#pass">Add to my pass</a></div></div></section>` : ''}
+        <section class="blk" id="prices"><h2>Prices</h2>${D.menu.map(g => `<div class="menu-group"><h3>${g.group}</h3>${g.items.map(it => `<div class="menu-row"><span>${it.dur} min</span><span class="lead"></span><b>฿${it.price.toLocaleString()}</b></div>`).join('')}</div>`).join('')}
+          <p class="muted" style="font-size:13px;margin-top:14px">Prices confirmed by the venue on 12 Sep 2026. Tips not included. ${note('Menu is structured data (group → duration → price) in one currency per venue. It also generates the “How much does it cost?” FAQ answer and the priceRange in the schema markup.')}</p></section>
+        <section class="blk" id="staff"><h2>Staff</h2><div class="staff-grid" style="grid-template-columns:repeat(auto-fill,minmax(130px,1fr))">${D.photos.slice(1, 7).map(p => `<button class="staff"><img src="${p}" alt="" loading="lazy"><span class="reveal">${icon('eye')}</span></button>`).join('')}</div></section>
+        <section class="blk" id="reviews"><h2>Reviews</h2>
+          <div class="rev-sum"><div><div class="big">${D.rating}</div><div class="stars">★★★★☆</div><div class="muted" style="font-size:13px">${D.reviewsCount} reviews</div></div>
+            <div style="display:grid;gap:6px">${[5, 4, 3, 2, 1].map(n => `<div class="bar"><span>${n}</span><i><b style="width:${(D.breakdown[n] / total * 100).toFixed(0)}%"></b></i><span class="num">${D.breakdown[n]}</span></div>`).join('')}</div></div>
+          <div class="row" style="margin-bottom:6px;flex-wrap:wrap"><button class="chip on">Most helpful</button><button class="chip">Newest</button><button class="chip">English</button><button class="chip">한국어</button><span style="flex:1"></span><button class="btn btn-red btn-sm">${icon('edit')} Write a review</button></div>
+          ${D.reviews.map(r => `<div class="review"><div class="who"><span class="av">${r.who.slice(0, 2)}</span><span>${r.who}<div class="muted" style="font-size:12px;font-weight:500">${r.when}</div></span><span class="stars" style="margin-left:auto">${'★'.repeat(r.stars)}${'☆'.repeat(5 - r.stars)}</span></div><p>${esc(r.translated || r.text)}</p>${r.translated ? `<div class="muted" style="font-size:12.5px">Translated from Korean · <a href="#" style="text-decoration:underline">Show original</a></div>` : ''}<div class="muted" style="font-size:12.5px;margin-top:4px">Helpful (${r.helpful}) · Report</div></div>`).join('')}
+          <button class="btn btn-ghost" style="margin-top:12px">Show all ${D.reviewsCount} reviews</button></section>
+        <section class="blk" id="hours"><h2>Hours & contact</h2>
+          <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:24px">
+            <div class="hours">${D.hours.map(([d, o, c], i) => `<div class="${i === today ? 'today' : ''}"><span>${d}${i === today ? ' · today' : ''}</span><span class="num">${fmt(o)} – ${fmt(c)}${+c.split(':')[0] < +o.split(':')[0] ? ' <span class="muted">(next day)</span>' : ''}</span></div>`).join('')}</div>
+            <div class="stack"><a class="btn btn-ghost btn-block" href="#" data-contact="phone" data-value="${D.phone}" data-venue="${esc(D.name)}" style="justify-content:flex-start">${icon('phone')} ${D.phone}</a><a class="btn btn-ghost btn-block" href="#" data-contact="sms" data-value="${D.phone}" data-venue="${esc(D.name)}" style="justify-content:flex-start">${icon('chat')} Text message</a><a class="btn btn-ghost btn-block" href="#" data-contact="line" data-value="${D.line}" data-venue="${esc(D.name)}" target="_blank" style="justify-content:flex-start">${icon('chat')} LINE: ${D.line}</a><a class="btn btn-ghost btn-block" href="#" data-contact="whatsapp" data-value="${D.whatsapp}" data-venue="${esc(D.name)}" target="_blank" style="justify-content:flex-start">${icon('chat')} WhatsApp</a><a class="btn btn-ghost btn-block" href="#" style="justify-content:flex-start">${icon('globe')} ${D.website}</a></div>
+          </div></section>
+        <section class="blk" id="location"><h2>Location</h2><p class="muted" style="margin:-6px 0 14px">${D.address}</p><div id="pdp-map"></div>
+          <div class="row" style="margin-top:12px;flex-wrap:wrap"><a class="btn btn-ghost btn-sm" href="https://www.google.com/maps/dir//${D.lat},${D.lng}" target="_blank" rel="noopener">${icon('route')} Directions</a><button class="btn btn-ghost btn-sm">${icon('copy')} Copy address</button><span class="muted" style="font-size:13px">5 min walk from BTS Phrom Phong</span></div></section>
+        <section class="blk faq" id="faq"><h2>Questions people ask</h2>
+          <details open><summary>How much does ${esc(D.name)} cost?</summary><p>The menu runs ฿2,100–฿2,800 for 45 to 90 minutes. Large rooms with a jacuzzi start at ฿2,500.</p></details>
+          <details><summary>Is ${esc(D.name)} open now?</summary><p>Today it’s open ${fmt(dayHours[1])}–${fmt(dayHours[2])}. Fridays and Saturdays it stays open until 3am.</p></details>
+          <details><summary>How do I get the SwanPass deal?</summary><p>Say “SwanPass” at the counter or show this page. No code or sign-up needed.</p></details>
+          <details><summary>Which venues are close by?</summary><p>${nearby.slice(0, 3).map(n => n.name).join(', ')} are all within a few minutes’ walk.</p></details>
+        </section>
+      </div>
+      <aside class="side">
+        <div class="panel contact">
+          ${D.deal ? `<div class="deal-box" style="padding:14px;margin-bottom:14px"><div class="eyebrow" style="color:var(--deal);font-size:10.5px">SwanPass deal</div><div style="font-weight:700;color:var(--deal);font-size:18px;margin-top:2px">${esc(D.deal.title)}</div></div>` : ''}
+          <div class="muted" style="font-size:12px;margin-bottom:8px">Opens the app with a message ready to send ${note('Pre-filled: “Hi! I saw Don Quixote on SwanPass.com and would like to ask a question.” WhatsApp, SMS and LINE official accounts (@id) support pre-fill. For LINE personal IDs, Telegram, WeChat, Zalo and Kakao the chat opens and the message is copied to the clipboard. Bonus: venues see that customers came from SwanPass.')}</div><div class="cta-grid"><a class="btn btn-red" href="#" data-contact="phone" data-value="${D.phone}" data-venue="${esc(D.name)}">${icon('phone')} Call</a><a class="btn btn-line-app" href="#" data-contact="line" data-value="${D.line}" data-venue="${esc(D.name)}" target="_blank">${icon('chat')} LINE</a><a class="btn btn-wa" href="#" data-contact="whatsapp" data-value="${D.whatsapp}" data-venue="${esc(D.name)}" target="_blank">${icon('chat')} WhatsApp</a><a class="btn btn-ghost" href="#" data-contact="telegram" data-value="${D.telegram}" data-venue="${esc(D.name)}" target="_blank">${icon('share')} Telegram</a><a class="btn btn-ghost" href="#location">${icon('route')} Directions</a><button class="btn btn-ghost" data-save="${slug}">${icon('heart')} Save</button></div>
+          <div class="row between" style="margin-top:14px;font-size:13px"><span class="muted">${icon('eye')} 7,214 views this month</span><button class="muted">${icon('share')} Share</button></div>
+        </div>
+        <div class="panel"><b>Is this your venue?</b><p class="muted" style="font-size:13.5px;margin:6px 0 12px">Claim it to update photos, prices and hours yourself.</p><a class="btn btn-ghost btn-sm btn-block" href="shop/index.html">Claim this listing</a></div>
+        <div class="panel" style="font-size:13px"><a class="muted" href="#">Report outdated info</a></div>
+      </aside>
+    </div>
+
+    <section class="section" id="nearby"><div class="sec-head"><div><h2 class="display">Nearby in ${D.area}</h2></div><a class="link-arrow" href="place.html?city=bangkok&area=phrom-phong">All of ${D.area}</a></div><div class="scroller">${nearby.map(card).join('')}</div></section>
+
+    <div class="actionbar">${note('Mobile: a fixed contact bar replaces the tab bar on venue pages — Call, LINE and Directions are always one tap away.')}<a class="btn btn-red" href="#" data-contact="phone" data-value="${D.phone}" data-venue="${esc(D.name)}">${icon('phone')} Call</a><a class="btn btn-line-app" href="#" data-contact="line" data-value="${D.line}" data-venue="${esc(D.name)}" target="_blank">LINE</a><a class="btn btn-wa" href="#" data-contact="whatsapp" data-value="${D.whatsapp}" data-venue="${esc(D.name)}" target="_blank">WhatsApp</a><a class="btn btn-ghost" href="#location">${icon('route')} Go</a><button class="btn btn-ghost" data-save="${slug}" aria-label="Save">${icon('heart')}</button></div>`;
+  $('.actionbar .note').style.cssText = 'position:absolute;top:-30px;left:12px';
+
+  /* scroll-spy for the anchor chips */
+  const links = $$('#anchors a');
+  const io = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) links.forEach(a => a.classList.toggle('on', a.getAttribute('href') === '#' + e.target.id)); }), { rootMargin: '-40% 0px -55% 0px' });
+  $$('.blk, #nearby').forEach(s => io.observe(s));
+  $('#gallery').addEventListener('scroll', e => { const i = Math.round(e.target.scrollLeft / e.target.clientWidth) + 1; $('.gal-count').textContent = `${i} / 31`; });
+  document.body.classList.add('safe');
+  document.addEventListener('click', e => { const s = e.target.closest('.staff, .g-staff'); if (s && !s.classList.contains('revealed')) { e.preventDefault(); s.classList.add('revealed'); } });
+
+  if (window.L) {
+    const map = L.map('pdp-map', { scrollWheelZoom: false, zoomControl: false }).setView([D.lat, D.lng], 16);
+    L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', { attribution: '© OpenStreetMap' }).addTo(map);
+    L.marker([D.lat, D.lng], { icon: L.divIcon({ className: '', html: `<div style="width:46px;height:46px;border-radius:50%;border:3px solid var(--red);overflow:hidden;box-shadow:0 0 0 6px rgba(255,59,82,.25)"><img src="${D.photos[0]}" style="width:100%;height:100%;object-fit:cover"></div>`, iconSize: [46, 46], iconAnchor: [23, 23] }) }).addTo(map);
+  }
+</script>
+<div class="toast" id="toast"></div>
+</body>
+</html>

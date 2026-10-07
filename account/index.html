@@ -1,0 +1,103 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="robots" content="noindex, nofollow, noarchive">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>My SwanPass</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/sp.css">
+<link rel="stylesheet" href="../assets/app.css">
+<style>
+  .acct { display: grid; grid-template-columns: 340px 1fr; gap: 28px; align-items: start; padding-top: 28px; padding-bottom: 60px; }
+  .pass { position: relative; border-radius: 18px; padding: 20px; overflow: hidden; isolation: isolate; background: linear-gradient(135deg, #1d0508, #0a0a0a 55%), #0a0a0a; border: 1px solid rgba(232, 20, 42, .35); box-shadow: 0 30px 60px -30px rgba(232, 20, 42, .5); }
+  .pass::before { content: ''; position: absolute; inset: -40% -20% auto auto; width: 260px; height: 260px; border-radius: 50%; background: radial-gradient(circle, rgba(232, 20, 42, .45), transparent 70%); z-index: -1; }
+  .pass .tier { font-size: 11px; font-weight: 900; letter-spacing: .14em; text-transform: uppercase; color: var(--gold); }
+  .qr { width: 132px; height: 132px; background: #fff; border-radius: 12px; padding: 8px; display: grid; grid-template-columns: repeat(21, 1fr); }
+  .qr i { background: #0a0a0a; } .qr i.w { background: transparent; }
+  .side-card { padding: 18px; border-radius: var(--r-lg); background: var(--surface); border: 1px solid var(--line); margin-top: 14px; }
+  .lists { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 12px; margin-bottom: 24px; }
+  .listcard { border-radius: var(--r-lg); overflow: hidden; background: var(--surface); border: 1px solid var(--line); }
+  .listcard .mosaic { display: grid; grid-template-columns: 2fr 1fr; grid-template-rows: 1fr 1fr; gap: 2px; height: 130px; }
+  .listcard .mosaic img { width: 100%; height: 100%; object-fit: cover; }
+  .listcard .mosaic img:first-child { grid-row: span 2; }
+  .listcard div.b { padding: 12px 14px; }
+  .acct > section, .acct > aside { min-width: 0; }
+  .pane { display: none; } .pane.on { display: block; }
+  .pref { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 14px 0; border-bottom: 1px solid var(--line); }
+  .pref p { margin: 2px 0 0; font-size: 13px; color: var(--muted); }
+  @media (max-width: 900px) { .acct { grid-template-columns: 1fr; } }
+</style>
+</head>
+<body>
+<main class="wrap acct">
+  <aside>
+    <div class="pass">
+      <div class="row between"><span class="tier">SwanPass member · Gold</span><img src="https://swanpass.com/swanpass_logo_rev.png" alt="" style="height:18px"></div>
+      <div style="font-size:22px;font-weight:800;margin:14px 0 2px">Alexander J.</div>
+      <div class="muted" style="font-size:12.5px">Member since 2023 · ID 4821-7702</div>
+      <div class="row" style="margin-top:16px;align-items:flex-end;gap:16px"><div class="qr" id="qr"></div><div style="font-size:12.5px;color:var(--text-2)">Show this at the counter.<br><b style="color:var(--text)">12 deals</b> unlocked in Bangkok.<br><span style="color:var(--deal)">฿4,300 saved</span> so far.</div></div>
+    </div>
+    <div class="side-card"><div class="row"><span class="avatar">AJ</span><div><b>Alexander Joo</b><div class="muted" style="font-size:12.5px">Home city: Bangkok · English · ฿ THB</div></div></div></div>
+    <nav class="side-card" style="padding:8px" id="acct-nav">
+      ${''}
+    </nav>
+  </aside>
+  <section>
+    <div class="pane on" id="p-overview"></div>
+    <div class="pane" id="p-saved"></div>
+    <div class="pane" id="p-pass"></div>
+    <div class="pane" id="p-reviews"></div>
+    <div class="pane" id="p-alerts"></div>
+    <div class="pane" id="p-prefs"></div>
+  </section>
+</main>
+<script src="../assets/data.js"></script>
+<script src="../assets/sp.js"></script>
+<script src="../assets/app.js"></script>
+<script>
+shell('account', { gate: false });
+const TABS = [['overview', 'Overview', 'home'], ['saved', 'Saved & lists', 'heart'], ['pass', 'My pass & deals', 'ticket'], ['reviews', 'My reviews', 'star'], ['alerts', 'Alerts', 'bell'], ['prefs', 'Preferences', 'settings']];
+$('#acct-nav').innerHTML = TABS.map(([k, t, i]) => `<a class="side-link" href="#${k}" data-tab="${k}">${icon(i)}${t}</a>`).join('') + `<a class="side-link" href="#">${icon('close')}Log out</a>`;
+// fake QR
+$('#qr').innerHTML = Array.from({ length: 441 }, (_, i) => { const x = i % 21, y = Math.floor(i / 21); const finder = (a, b) => x >= a && x < a + 7 && y >= b && y < b + 7 && !(x > a && x < a + 6 && y > b && y < b + 6 && !(x > a + 1 && x < a + 5 && y > b + 1 && y < b + 5)); const f = finder(0, 0) || finder(14, 0) || finder(0, 14); const inF = (x < 8 && y < 8) || (x > 12 && y < 8) || (x < 8 && y > 12); return `<i class="${f || (!inF && ((x * 7 + y * 13 + x * y) % 5 < 2)) ? '' : 'w'}"></i>`; }).join('');
+
+const SAVED = saved().map(s => LISTINGS.find(l => l.slug === s)).filter(Boolean);
+const lists = [['Bangkok — October trip', LISTINGS.filter(l => l.featured).slice(0, 6)], ['Want to try', LISTINGS.filter(l => l.isNew).slice(0, 4)], ['Pattaya', LISTINGS.filter(l => l.city === 'pattaya').slice(0, 5)]];
+$('#p-overview').innerHTML = `
+  <h1 class="display" style="font-size:34px;margin-bottom:6px">Welcome back, Alex</h1><p class="muted" style="margin:0 0 22px">Here’s what’s new in Bangkok since your last visit.</p>
+  <div class="kpis"><div class="kpi"><span>Saved venues</span><b>${SAVED.length + 15}</b></div><div class="kpi"><span>Deals used</span><b>9</b></div><div class="kpi"><span>Reviews written</span><b>4</b><small>2 marked helpful</small></div><div class="kpi"><span>Saved with SwanPass</span><b>฿4,300</b></div></div>
+  <div class="sec-head"><div><h2 class="display">New deals at places you saved</h2></div></div>
+  <div class="grid-cards">${SAVED.concat(LISTINGS.filter(l => l.deal)).slice(0, 3).map(l => card(l)).join('')}</div>
+  <div class="sec-head" style="margin-top:34px"><div><h2 class="display">Recently viewed</h2></div></div>
+  <div class="scroller">${LISTINGS.slice(5, 13).map(l => card(l)).join('')}</div>`;
+$('#p-saved').innerHTML = `<div class="sec-head"><div><h2 class="display">Your lists</h2><p>Plan a night out, share a list with a friend, or keep a “want to try” shortlist.</p></div><button class="btn btn-red btn-sm">${icon('plus')} New list</button></div>
+  <div class="lists">${lists.map(([n, ls]) => `<a class="listcard" href="#"><div class="mosaic">${ls.slice(0, 3).map(l => `<img src="${l.img}" alt="">`).join('')}</div><div class="b"><b>${n}</b><div class="muted" style="font-size:12.5px">${ls.length} venues · private</div></div></a>`).join('')}</div>
+  <div class="sec-head"><div><h2 class="display">All saved</h2></div><select class="select"><option>Recently saved</option><option>Nearest</option></select></div>
+  <div class="grid-cards">${SAVED.concat(lists[0][1]).slice(0, 9).map(l => card(l)).join('')}</div>`;
+$('#p-pass').innerHTML = `<div class="sec-head"><div><h2 class="display">Deals you can use</h2><p>Show your pass QR or say “SwanPass”. Gold members get an extra 5% at venues marked Gold.</p></div></div>
+  <div class="grid-cards">${LISTINGS.filter(l => l.deal && l.city === 'bangkok').sort(SORTS.recommended[1]).slice(0, 6).map(l => card(l)).join('')}</div>
+  <div class="sec-head" style="margin-top:30px"><div><h2 class="display">History</h2></div></div>
+  <table class="table"><thead><tr><th>Date</th><th>Venue</th><th>Deal</th><th style="text-align:right">Saved</th></tr></thead><tbody>
+  ${[['2 Oct', 'Jelly Pop', 'Free jacuzzi', '฿500'], ['18 Sep', 'Nomo22', '฿500 off 2-girl course', '฿500'], ['4 Sep', 'Don Quixote', 'Free jacuzzi', '฿400'], ['21 Aug', 'DRAKE Luxury Lounge', '฿300 off karaoke', '฿300']].map(r => `<tr>${r.map((c, i) => `<td ${i === 3 ? 'style="text-align:right;color:var(--deal)"' : ''}>${c}</td>`).join('')}</tr>`).join('')}</tbody></table>`;
+$('#p-reviews').innerHTML = `<div class="sec-head"><div><h2 class="display">My reviews</h2><p>Visited somewhere recently? We’ll remind you to review it.</p></div></div>
+  <div class="alert">${icon('star')}<div><b>You redeemed a deal at Jelly Pop on 2 Oct.</b> How was it? <a href="#" style="text-decoration:underline">Write a review</a> — verified-visit reviews get a ✓ badge.</div></div>
+  ${DETAIL.reviews.slice(0, 3).map((r, i) => { const l = LISTINGS[i * 3]; return `<div class="fcard" style="display:flex;gap:14px;padding:16px"><img src="${l.img}" alt="" style="width:64px;height:64px;border-radius:10px;object-fit:cover"><div style="flex:1"><div class="row between"><b>${esc(l.name)}</b><span style="color:var(--gold)">${'★'.repeat(r.stars)}</span></div><p class="muted" style="margin:6px 0">${esc(r.translated || r.text)}</p><div class="muted" style="font-size:12px">${r.when} · ${r.helpful} people found this helpful · <a href="#" style="text-decoration:underline">Edit</a></div></div></div>`; }).join('')}`;
+$('#p-alerts').innerHTML = `<div class="sec-head"><div><h2 class="display">Alerts</h2><p>We’ll message you — by email, Telegram or LINE — when something you care about changes.</p></div></div>
+  ${[['New deals in Bangkok', 'Weekly digest · Telegram', 1], ['A saved venue posts a new deal', 'Instantly · LINE', 1], ['New venues in Phrom Phong & Asok', 'Weekly · email', 1], ['Price changes at saved venues', 'Instantly · email', 0], ['SwanPass launches in Japan', 'Once · email', 1]].map(([t, s, on]) => `<div class="pref"><div><b>${t}</b><p>${s}</p></div><input type="checkbox" class="switch" ${on ? 'checked' : ''}></div>`).join('')}`;
+$('#p-prefs').innerHTML = `<div class="sec-head"><div><h2 class="display">Preferences</h2></div></div>
+  <div class="pref"><div><b>Home city</b><p>Pages open on this city first.</p></div><button class="btn btn-ghost btn-sm" data-open="loc">🇹🇭 Bangkok</button></div>
+  <div class="pref"><div><b>Language</b><p>Venue text is machine-translated where needed.</p></div><select class="select"><option>English</option><option>中文</option><option>한국어</option><option>日本語</option><option>ไทย</option></select></div>
+  <div class="pref"><div><b>Currency</b><p>Prices are shown in the venue’s currency, with your currency next to them.</p></div><select class="select"><option>Show THB + USD</option><option>Venue currency only</option></select></div>
+  <div class="pref"><div><b>Safe view</b><p>Blur explicit staff photos until tapped.</p></div><input type="checkbox" class="switch" checked></div>
+  <div class="pref"><div><b>Show only LGBTQ+ friendly venues</b><p>Applies to search, map and deals.</p></div><input type="checkbox" class="switch"></div>
+  <div class="pref"><div><b>Private profile</b><p>Your reviews show as “AJ***”.</p></div><input type="checkbox" class="switch" checked></div>
+  <div class="pref"><div><b>Delete my account</b><p>Removes your lists, history and reviews.</p></div><button class="btn btn-ghost btn-sm" style="color:#ff7d8d">Delete</button></div>`;
+
+function show() { const k = (location.hash || '#overview').slice(1); $$('.pane').forEach(p => p.classList.toggle('on', p.id === 'p-' + k)); $$('[data-tab]').forEach(a => a.classList.toggle('on', a.dataset.tab === k)); }
+window.addEventListener('hashchange', show); show();
+$('#p-overview').insertAdjacentHTML('afterbegin', `<div style="float:right">${note('Members area: digital pass (QR) that venues scan or staff tap “Redeemed” — gives you real redemption numbers per venue. Lists replace the single “favorites” page. Alerts are the reason to sign up.')}</div>`);
+</script>
+</body>
+</html>

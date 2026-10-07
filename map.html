@@ -1,0 +1,113 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="robots" content="noindex, nofollow, noarchive">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Map — SwanPass</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet.markercluster/1.5.3/MarkerCluster.min.css">
+<link rel="stylesheet" href="assets/sp.css">
+<style>
+  body { overflow: hidden; padding-bottom: 0 !important; }
+  .ftr { display: none; }
+  .mapapp { display: grid; grid-template-columns: 440px 1fr; height: calc(100vh - var(--header-h)); }
+  .maplist { overflow: auto; border-right: 1px solid var(--line); padding: 14px; display: flex; flex-direction: column; gap: 10px; background: var(--bg); }
+  .maplist .head { position: sticky; top: -14px; z-index: 2; background: var(--bg); margin: -14px -14px 0; padding: 14px; border-bottom: 1px solid var(--line); }
+  #map { height: 100%; background: #0e0c11; }
+  .map-top { position: absolute; z-index: 500; top: 14px; left: 14px; right: 14px; display: flex; gap: 8px; pointer-events: none; }
+  .map-top > * { pointer-events: auto; }
+  .map-top .chip { background: rgba(23, 19, 28, .92); backdrop-filter: blur(10px); }
+  .map-top .chip.on { background: var(--text); }
+  .search-area { position: absolute; z-index: 500; top: 64px; left: 50%; transform: translateX(-50%); box-shadow: var(--shadow); }
+  .pin { width: 28px; height: 28px; border-radius: 50% 50% 50% 0; transform: rotate(-45deg); background: var(--red); border: 2px solid #fff; box-shadow: 0 4px 10px rgba(0,0,0,.5); }
+  .pin.deal { background: var(--deal); }
+  .pin-photo { width: 52px; height: 52px; border-radius: 16px; border: 3px solid var(--gold); overflow: hidden; box-shadow: 0 6px 18px rgba(0,0,0,.6), 0 0 0 5px rgba(240,195,106,.18); background: #222; position: relative; }
+  .pin-photo img { width: 100%; height: 100%; object-fit: cover; }
+  .pin-photo::after { content: '★'; position: absolute; right: -2px; bottom: -2px; background: var(--gold); color: #1b1203; font-size: 10px; width: 16px; height: 16px; display: grid; place-items: center; border-radius: 6px 0 12px 0; }
+  .pin-label { position: absolute; top: 56px; left: 50%; transform: translateX(-50%); white-space: nowrap; font: 700 11px var(--font-ui); color: #fff; text-shadow: 0 1px 3px #000; }
+  .marker-cluster { background: rgba(255, 255, 255, .12) !important; }
+  .marker-cluster div { background: #3a3a3a !important; color: #fff !important; font: 700 13px var(--font-ui) !important; }
+  .leaflet-popup-content-wrapper { background: var(--surface); color: var(--text); border-radius: 16px; padding: 0; overflow: hidden; }
+  .leaflet-popup-content { margin: 0; width: 240px !important; }
+  .leaflet-popup-tip { background: var(--surface); }
+  .pop img { width: 100%; height: 120px; object-fit: cover; }
+  .pop div { padding: 10px 12px 12px; }
+  .legend { position: absolute; z-index: 500; left: 14px; bottom: 14px; display: flex; gap: 12px; padding: 8px 12px; border-radius: 12px; background: rgba(23,19,28,.92); font-size: 12px; color: var(--text-2); align-items: center; }
+  .legend i { display: inline-block; width: 10px; height: 10px; border-radius: 50%; margin-right: 5px; vertical-align: -1px; }
+  .mobile-carousel { display: none; }
+  @media (max-width: 900px) {
+    .mapapp { grid-template-columns: 1fr; height: calc(100vh - var(--header-h) - 64px); }
+    .maplist { display: none; }
+    .maplist.open { display: flex; position: fixed; inset: var(--header-h) 0 64px; z-index: 600; }
+    .mobile-carousel { display: grid; position: absolute; z-index: 500; left: 0; right: 0; bottom: 12px; grid-auto-flow: column; grid-auto-columns: 84%; gap: 10px; overflow-x: auto; scroll-snap-type: x mandatory; padding: 0 12px; scrollbar-width: none; }
+    .mobile-carousel::-webkit-scrollbar { display: none; }
+    .mobile-carousel .rowcard { scroll-snap-align: center; background: rgba(23, 19, 28, .96); backdrop-filter: blur(10px); }
+    .legend { display: none; }
+    .search-area { top: 60px; }
+  }
+</style>
+</head>
+<body>
+<div class="mapapp">
+  <aside class="maplist" id="list"></aside>
+  <div style="position:relative">
+    <div id="map"></div>
+    <div class="map-top"><div class="chips" id="mcats"></div></div>
+    <button class="btn btn-ghost btn-sm search-area" id="search-area">${''}Search this area</button>
+    <div class="legend"><span><i style="background:var(--gold)"></i>Featured (photo pin)</span><span><i style="background:var(--blue)"></i>Verified</span><span><i style="background:var(--deal)"></i>Has deal</span><span><i style="background:var(--red)"></i>Venue</span><span id="map-note"></span></div>
+    <div class="mobile-carousel" id="mcar"></div>
+  </div>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet.markercluster/1.5.3/leaflet.markercluster.min.js"></script>
+<script src="assets/data.js"></script>
+<script src="assets/sp.js"></script>
+<script>
+  shell('map');
+  $('#search-area').innerHTML = icon('search') + ' Search this area';
+  $('#map-note').innerHTML = note('ClickUp “MAP: New icons for Featured”: featured venues get their own photo as the pin (like Google’s “Black Cabin Bar”). Verified venues get a blue tick pin. Featured and Verified pins are never grouped into clusters, so they’re always visible; everyone else clusters until you zoom in. The list and the swipe cards on mobile follow the same Featured → Verified → rest order. Coordinates in this mockup are approximate.');
+  const map = L.map('map', { zoomControl: false }).setView([13.735, 100.565], 14);
+  L.control.zoom({ position: 'bottomright' }).addTo(map);
+  L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', { attribution: '© OpenStreetMap', maxZoom: 19 }).addTo(map);
+  const cluster = L.markerClusterGroup({ showCoverageOnHover: false, maxClusterRadius: 46 });
+  const featuredLayer = L.layerGroup(); // featured + verified are never clustered — always visible on the map
+  map.addLayer(cluster); map.addLayer(featuredLayer);
+  let cat = '';
+  const markers = {};
+
+  function pop(l) { return `<a class="pop" href="listing.html?v=${l.slug}"><img src="${l.img}" alt=""><div><b>${esc(l.name)}</b><div class="card-meta"><span class="rating">${starIcon}${l.rating ? l.rating.toFixed(1) : "—"}</span>· ${l.cat} · ${l.areaName || l.cityName}</div>${l.deal ? `<div class="card-deal" style="padding:6px 0 0">${icon('tag')}${esc(l.deal)}</div>` : ''}</div></a>`; }
+  function rowcard(l) { return `<a class="rowcard" data-slug="${l.slug}" href="listing.html?v=${l.slug}"><img src="${l.img}" alt="" loading="lazy"><div style="min-width:0"><div class="card-title"><span>${esc(l.name)}</span>${l.verified ? tick : ''}</div><div class="card-meta"><span class="rating">${starIcon}${l.rating ? l.rating.toFixed(1) : "—"}</span><span>${l.cat}</span></div><div class="card-meta"><span class="open-dot ${l.openNow ? '' : 'closed'}"></span>${l.openNow ? 'Open' : 'Closed'} · ${l.areaName || l.cityName}</div>${l.deal ? `<div class="card-deal" style="padding-top:4px">${icon('tag')}${esc(l.deal)}</div>` : ''}</div></a>`; }
+
+  function draw(fit) {
+    const loc = getLoc();
+    const pool = LISTINGS.filter(l => (!loc.country || l.country === loc.country) && (!loc.city || l.city === loc.city) && (!cat || l.catSlug === cat)).sort(SORTS.recommended[1]);
+    cluster.clearLayers(); featuredLayer.clearLayers();
+    pool.forEach(l => {
+      const m = l.featured
+        ? L.marker([l.lat, l.lng], { zIndexOffset: 1000, icon: L.divIcon({ className: '', html: `<div class="pin-photo"><img src="${l.img}" alt=""></div><span class="pin-label">${esc(l.name)}</span>`, iconSize: [52, 52], iconAnchor: [26, 26] }) })
+        : l.verified
+        ? L.marker([l.lat, l.lng], { zIndexOffset: 500, icon: L.divIcon({ className: '', html: '<div class="pin-ver">✓</div>', iconSize: [30, 30], iconAnchor: [15, 15] }) })
+        : L.marker([l.lat, l.lng], { icon: L.divIcon({ className: '', html: `<div class="pin ${l.deal ? 'deal' : ''}"></div>`, iconSize: [28, 28], iconAnchor: [14, 28] }) });
+      m.bindPopup(pop(l), { closeButton: false });
+      (l.featured || l.verified ? featuredLayer : cluster).addLayer(m);
+      markers[l.slug] = m;
+    });
+    $('#list').innerHTML = `<div class="head"><div class="row between"><div><b style="font-size:18px">${pool.length} venues</b><div class="muted" style="font-size:13px">in ${locLabel()} · Featured & Verified first</div></div><a class="btn btn-ghost btn-sm" href="search.html">${icon('list')} List view</a></div></div>` + withTierHeads(pool, rowcard);
+    $('#mcar').innerHTML = pool.slice(0, 15).map(rowcard).join('');
+    $('#mcats').innerHTML = `<button class="chip mobile-only" id="toggle-list">${icon('list')} List</button><button class="chip ${!cat ? 'on' : ''}" data-mc="">All</button>` + CATEGORIES.slice(0, 7).map(c => `<button class="chip ${cat === c.slug ? 'on' : ''}" data-mc="${c.slug}">${c.name}</button>`).join('');
+    if (fit && pool.length) map.fitBounds(L.latLngBounds(pool.map(l => [l.lat, l.lng])).pad(0.1), { maxZoom: 15 });
+  }
+  document.addEventListener('click', e => {
+    const c = e.target.closest('[data-mc]'); if (c) { cat = c.dataset.mc; draw(true); }
+    if (e.target.closest('#toggle-list')) $('#list').classList.toggle('open');
+  });
+  document.addEventListener('mouseover', e => { const r = e.target.closest('.maplist .rowcard'); if (r && markers[r.dataset.slug]) { const m = markers[r.dataset.slug]; if (featuredLayer.hasLayer(m)) m.openPopup(); else cluster.zoomToShowLayer(m, () => m.openPopup()); } });
+  $('#mcar').addEventListener('scroll', () => { const i = Math.round($('#mcar').scrollLeft / ($('#mcar').firstElementChild.offsetWidth + 10)); const r = $$('#mcar .rowcard')[i]; if (r) { const m = markers[r.dataset.slug]; map.panTo(m.getLatLng()); } });
+  document.addEventListener('sp:loc', () => draw(true));
+  draw(true);
+</script>
+</body>
+</html>

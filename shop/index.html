@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="robots" content="noindex, nofollow, noarchive">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Venue dashboard — SwanPass</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/sp.css">
+<link rel="stylesheet" href="../assets/app.css">
+<style>
+  .cols { display: grid; grid-template-columns: 1.5fr 1fr; gap: 22px; align-items: start; }
+  .todo { display: flex; align-items: center; gap: 12px; padding: 12px 14px; border-radius: 12px; border: 1px solid var(--line); background: var(--surface); margin-bottom: 8px; }
+  .todo .st { width: 22px; height: 22px; border-radius: 50%; border: 2px solid var(--line-2); flex: none; display: grid; place-items: center; }
+  .todo.done .st { background: var(--deal); border-color: var(--deal); color: #0a0a0a; }
+  .todo.done b { color: var(--muted); text-decoration: line-through; }
+  .chart { display: flex; align-items: flex-end; gap: 6px; height: 160px; padding-top: 10px; }
+  .chart div { flex: 1; display: flex; flex-direction: column; justify-content: flex-end; gap: 2px; }
+  .chart i { display: block; border-radius: 3px 3px 0 0; }
+  .chart .v { background: var(--surface-3); }
+  .chart .c { background: var(--red); }
+  .upgrade { padding: 22px; border-radius: var(--r-lg); background: radial-gradient(400px 200px at 100% 0%, rgba(212, 168, 71, .25), transparent), var(--surface); border: 1px solid rgba(212, 168, 71, .35); }
+  .plans { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-top: 14px; }
+  .plan { padding: 14px; border-radius: 12px; border: 1px solid var(--line-2); background: var(--bg-2); }
+  .plan.rec { border-color: var(--gold); }
+  .plan b { display: block; font-size: 15px; }
+  .plan .p { font-size: 22px; font-weight: 800; margin: 6px 0; }
+  .plan li { font-size: 12.5px; color: var(--text-2); margin: 4px 0; }
+  .plan ul { padding-left: 16px; margin: 0; }
+  .claim { max-width: 560px; margin: 0 auto; }
+  .steps { display: flex; gap: 8px; margin: 18px 0 22px; }
+  .steps span { flex: 1; height: 4px; border-radius: 9px; background: var(--surface-3); }
+  .steps span.on { background: var(--red); }
+  @media (max-width: 1100px) { .cols { grid-template-columns: 1fr; } .plans { grid-template-columns: 1fr; } }
+</style>
+</head>
+<body>
+<script src="../assets/data.js"></script>
+<script src="../assets/sp.js"></script>
+<script src="../assets/app.js"></script>
+<script>
+const CLAIM = new URLSearchParams(location.search).has('claim');
+appShell({ area: 'shop', active: 'dash', title: CLAIM ? 'Claim your venue' : 'Dashboard', actions: CLAIM ? '' : `<a class="btn btn-ghost btn-sm hide-sm" href="../listing.html?v=don-quixote" target="_blank">${icon('eye')} View my page</a><a class="btn btn-red btn-sm" href="../admin/listing-edit.html?owner=1">${icon('edit')} Edit listing</a>` });
+const days = Array.from({ length: 30 }, (_, i) => ({ v: 140 + Math.round(Math.abs(Math.sin(i * .6)) * 160 + i * 3), c: 6 + Math.round(Math.abs(Math.cos(i * .8)) * 14) }));
+
+$('#body').innerHTML = CLAIM ? `
+  <div class="claim fcard">
+    <div class="eyebrow">For venue owners · free</div>
+    <h2 class="display" style="font-size:28px;margin:8px 0 6px">Claim Don Quixote</h2>
+    <p class="muted">Update your own photos, prices, hours and deals. See how many people find and call you from SwanPass.</p>
+    <div class="steps"><span class="on"></span><span class="on"></span><span></span></div>
+    <div class="field"><label>How should we verify you?</label><div class="tagpick"><button class="on">LINE message to @donshop26</button><button>Call 088 947 4986</button><button>Business card photo</button></div><span class="hint">We send a 6-digit code to the LINE or phone already on your listing.</span></div>
+    <div class="field"><label>Code</label><div class="row"><input class="input" style="letter-spacing:.4em;font-weight:700;text-align:center;max-width:200px" value="482 9"><button class="btn btn-ghost btn-sm">Resend</button></div></div>
+    <div class="field"><label>Your email (for login)</label><input class="input" value="don.quixote26@gmail.com"></div>
+    <div class="field"><label>Language</label><div class="tagpick"><button>English</button><button class="on">ไทย</button><button>中文</button><button>한국어</button><button>Tiếng Việt</button></div><span class="hint">The whole venue portal is translated — most owners won’t use it in English.</span></div>
+    <a class="btn btn-red btn-block" href="index.html">Verify and continue</a>
+  </div>` : `
+  <div class="kpis">
+    <div class="kpi"><span>Page views · 30 days</span><b>7,214</b><small>▲ 18% vs September</small></div>
+    <div class="kpi"><span>Calls + LINE taps</span><b>412</b><small>▲ 9%</small></div>
+    <div class="kpi"><span>Directions taps</span><b>238</b><small>▲ 4%</small></div>
+    <div class="kpi"><span>Deal redemptions ${note('Counted when a member shows their pass QR or staff tap “Redeemed” in the portal. This is the number that sells Featured renewals.')}</span><b>96</b><small>≈ ฿230k in customer spend</small></div>
+  </div>
+  <div class="cols">
+    <div>
+      <div class="fcard"><header><div><h2>Visitors & contacts</h2><p>Grey: page views · Red: calls and LINE taps</p></div><div class="seg" style="width:200px"><button>7d</button><button class="on">30d</button><button>90d</button></div></header>
+        <div class="chart">${days.map(d => `<div title="${d.v} views · ${d.c} contacts"><i class="v" style="height:${d.v / 4}px"></i><i class="c" style="height:${d.c * 1.6}px"></i></div>`).join('')}</div>
+        <div class="row between muted" style="font-size:11.5px;margin-top:6px"><span>7 Sep</span><span>22 Sep</span><span>6 Oct</span></div></div>
+      <div class="fcard"><header><div><h2>Where customers find you</h2></div></header>
+        <table class="table"><tbody>
+          <tr><td>Search — “nuru Bangkok”, “Sukhumvit 26 massage”</td><td class="num" style="text-align:right">2,940</td></tr>
+          <tr><td>Phrom Phong area page</td><td class="num" style="text-align:right">1,388</td></tr>
+          <tr><td>Map</td><td class="num" style="text-align:right">1,102</td></tr>
+          <tr><td>Deals page</td><td class="num" style="text-align:right">905</td></tr>
+          <tr><td>Google (direct to your page)</td><td class="num" style="text-align:right">879</td></tr>
+        </tbody></table></div>
+      <div class="fcard"><header><div><h2>Latest reviews</h2><p>Reply publicly — owners who reply get 30% more calls.</p></div></header>
+        ${DETAIL.reviews.slice(0, 2).map(r => `<div style="padding:10px 0;border-top:1px solid var(--line)"><div class="row between"><b>${r.who}</b><span class="stars" style="color:var(--gold)">${'★'.repeat(r.stars)}</span></div><p class="muted" style="margin:6px 0 8px">${esc(r.translated || r.text)}</p><button class="btn btn-ghost btn-sm">Reply</button></div>`).join('')}</div>
+    </div>
+    <div>
+      <div class="fcard"><header><div><h2>Make your listing complete</h2><p>Complete listings rank higher in “Recommended”.</p></div><b style="color:var(--deal)">5 / 7</b></header>
+        ${[['Add 10+ venue photos', 1], ['Confirm prices', 1], ['Confirm opening hours', 1], ['Add a SwanPass deal', 1], ['Add LINE and phone', 1], ['Upload staff photos (19 / 10)', 0], ['Reply to 2 new reviews', 0]].map(([t, d]) => `<a class="todo ${d ? 'done' : ''}" href="../admin/listing-edit.html?owner=1"><span class="st">${d ? icon('check') : ''}</span><b style="font-weight:600;font-size:14px">${t}</b></a>`).join('')}</div>
+      <div class="upgrade" id="upgrade"><div class="eyebrow">You’re Featured until 31 Dec 2026</div><h2 style="margin:6px 0 4px;font-size:20px">Stay on top of every list</h2><p class="muted" style="margin:0;font-size:13.5px">Featured venues always show first — in search, on the map, on area pages, whatever the visitor sorts by.</p>
+        <div class="plans">
+          <div class="plan"><b>Verified</b><div class="p">฿0</div><ul><li>Blue tick after our visit</li><li>Second tier in every list</li><li>Blue map pin</li></ul></div>
+          <div class="plan rec"><b>Featured</b><div class="p">฿9,900<small class="muted" style="font-size:12px;font-weight:500">/mo</small></div><ul><li>Top tier in every list</li><li>Photo pin on the map</li><li>Homepage + city rows</li></ul></div>
+          <div class="plan"><b>Featured+</b><div class="p">฿19,900<small class="muted" style="font-size:12px;font-weight:500">/mo</small></div><ul><li>Everything in Featured</li><li>Area page hero slot</li><li>Telegram + newsletter push</li></ul></div>
+        </div>${note('Prices are placeholders. The point: the ranking rule (Featured → Verified → rest) is the product you sell, so it’s shown to owners plainly.')}</div>
+    </div>
+  </div>`;
+</script>
+</body>
+</html>

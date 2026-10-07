@@ -1,0 +1,125 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="robots" content="noindex, nofollow, noarchive">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Bangkok Nightlife — Massage, Soapy, Go-Go & KTV | SwanPass</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
+<link rel="stylesheet" href="assets/sp.css">
+<style>
+  .place-hero { position: relative; padding: 36px 0 44px; isolation: isolate; overflow: hidden; border-bottom: 1px solid var(--line); }
+  .place-hero .bgimg { position: absolute; inset: 0; z-index: -2; width: 100%; height: 100%; object-fit: cover; opacity: .32; }
+  .place-hero::before { content: ''; position: absolute; inset: 0; z-index: -1; background: linear-gradient(90deg, var(--bg) 25%, rgba(11, 9, 14, .55)), linear-gradient(transparent 60%, var(--bg)); }
+  .place-hero h1 { font-size: clamp(48px, 7vw, 96px); margin: 10px 0 16px; }
+  .place-hero .lede { margin-bottom: 26px; }
+  .cat-links { display: flex; flex-wrap: wrap; gap: 8px; }
+  .cat-links a { padding: 10px 16px; border-radius: var(--r-pill); border: 1px solid var(--line-2); font-weight: 550; font-size: 14px; }
+  .cat-links a:hover { border-color: var(--red); background: var(--surface); }
+  .cat-links a b { color: var(--muted); font-weight: 500; margin-left: 6px; }
+  .two { display: grid; grid-template-columns: 1fr 380px; gap: 36px; align-items: start; }
+  .seo-card { padding: 16px; border-radius: var(--r); background: #fff7e6; color: #1b1203; font-size: 12.5px; line-height: 1.5; }
+  .seo-card b { display: block; font-size: 11px; letter-spacing: .1em; text-transform: uppercase; margin: 10px 0 2px; color: #8a5a00; }
+  .seo-card b:first-child { margin-top: 0; }
+  .seo-card code { font-size: 11.5px; word-break: break-all; }
+  .seo-card .serp-t { color: #1a0dab; font-size: 15px; }
+  .seo-card .serp-u { color: #006621; }
+  #area-map { height: 320px; border-radius: var(--r-lg); overflow: hidden; border: 1px solid var(--line); }
+  .area-list { display: flex; flex-direction: column; gap: 10px; }
+  @media (max-width: 1100px) { .two { grid-template-columns: 1fr; } }
+</style>
+</head>
+<body>
+<main id="place"></main>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+<script src="assets/data.js"></script>
+<script src="assets/sp.js"></script>
+<script>
+  shell('guides');
+  const P = new URLSearchParams(location.search);
+  const city = P.get('city') ? cityOf(P.get('city')) : null;
+  const country = countryOf(P.get('country') || (city ? city.country : 'th'));
+  const area = city && P.get('area') ? (AREAS[city.slug] || []).find(a => a.slug === P.get('area')) : null;
+  const level = area ? 'area' : city ? 'city' : 'country';
+  if (city) setLocQuiet(city);
+  function setLocQuiet(c) { store.set('loc', { country: c.country, city: c.slug }); }
+
+  const PROSE = {
+    th: ['Thailand has the deepest adult nightlife in Southeast Asia, spread across a handful of cities that each have their own character. <b>Bangkok</b> runs the widest range — from Japanese-style nuru parlours in Phrom Phong to the soapy palaces of Huai Khwang. <b>Pattaya</b> packs the highest concentration of go-go bars into a few streets, and the islands run their own beach-bar scene.', 'This guide breaks the country down by city, then by district, so you can pick the area that fits the night you’re after before you go.'],
+    bangkok: ['Bangkok’s scene isn’t one strip — it’s a set of districts, and which one you pick shapes the whole night. <b>Sukhumvit</b> is the spine: Phrom Phong and Asok hold most of the city’s nuru and Japanese-style massage, while Soi Cowboy and Nana Plaza sit a few stops apart for go-go.', '<b>Huai Khwang</b> along Ratchada is where the big soapy parlours and late clubs concentrate, Thonglor is upscale KTV, and <b>Patpong</b> in Silom is the old-school original. Prices run highest on lower Sukhumvit and drop the further out you go.'],
+    'phrom-phong': ['Phrom Phong — roughly Sukhumvit sois 24 to 39 — has more nuru parlours per block than anywhere else in Bangkok. Many are Japanese- or Korean-run and set up like private bathhouses: shower, gel massage, then a room with a jacuzzi.', 'It’s quieter and more polished than Nana or Cowboy, and a few hundred baht pricier. Most places open around noon and close at 2am. Afternoons between 3 and 5pm are the least busy.'],
+  };
+  const prose = PROSE[(area && area.slug) || (city && city.slug) || country.code] || [`${(area || city || country).name} is one of SwanPass’s growing destinations. This page lists every venue we’ve verified there, grouped by area and category.`];
+  const inScope = LISTINGS.filter(l => l.country === country.code && (!city || l.city === city.slug) && (!area || l.area === area.slug));
+  const pool = inScope.length >= 3 ? inScope : LISTINGS.filter(l => l.country === country.code);
+  const name = (area || city || country).name;
+  const count = area ? areaCount(city.slug, area.slug) : city ? city.count : country.count;
+  const crumbs = [['Home', 'index.html'], [country.name, `place.html?country=${country.code}`], city && [city.name, `place.html?city=${city.slug}`], area && [area.name]].filter(Boolean);
+  const url = 'swanpass.com/' + [country.name.toLowerCase(), city && city.slug, area && area.slug].filter(Boolean).join('/');
+  const title = level === 'country' ? `${name} Nightlife Guide — Bars, Clubs & Massage | SwanPass` : level === 'city' ? `${name} Nightlife — Massage, Soapy, Go-Go & KTV | SwanPass` : `${name} Nightlife — Bars & Massage, ${city.name} | SwanPass`;
+  document.title = title;
+  const catIn = CATEGORIES.filter(c => pool.some(l => l.catSlug === c.slug) || ['massage', 'soapy', 'go-go', 'ktv'].includes(c.slug));
+  const heroImg = (city && city.img) || CITIES.find(c => c.country === country.code && c.img)?.img || '';
+
+  const seoCard = `<div class="seo-card">
+    <b>SEO — what Google sees</b>
+    <div class="serp-t">${esc(title)}</div><div class="serp-u">${url}</div>
+    <div>${esc(prose[0].replace(/<[^>]+>/g, '').slice(0, 150))}…</div>
+    <b>Schema</b><code>CollectionPage + BreadcrumbList + ItemList${level === 'city' ? ' + FAQPage' : ''}</code>
+    <b>Links</b>Up to ${level === 'area' ? city.name : level === 'city' ? country.name : 'Home'} · down to ${level === 'country' ? 'every city' : level === 'city' ? 'every area + category-in-city page' : 'every venue'}${level === 'area' ? ' · across to sibling areas' : ''}
+    <b>Rule</b>Unique intro per page (no find-and-replace text). Area pages only where people actually search for them.
+  </div>`;
+
+  let html = `<section class="place-hero">${heroImg ? `<img class="bgimg" src="${heroImg}" alt="">` : ''}<div class="wrap">
+      <nav class="crumbs">${crumbs.map(([t, h]) => h ? `<a href="${h}">${t}</a>` : `<span>${t}</span>`).join('')}</nav>
+      <div class="eyebrow">${level === 'country' ? 'Southeast Asia nightlife directory' : level === 'city' ? `${country.flag} ${country.name}` : `${city.name} · ${area.type}`}</div>
+      <h1 class="display">${name} <em>${level === 'country' ? 'nightlife guide' : 'nightlife'}</em></h1>
+      <p class="lede">${prose[0]}</p>
+      <div class="stats" style="margin-bottom:28px">
+        <div class="stat"><b class="num">${count}</b><span>Venues</span></div>
+        ${level === 'country' ? `<div class="stat"><b>${CITIES.filter(c => c.country === country.code).length}</b><span>Cities</span></div>` : ''}
+        ${level === 'city' ? `<div class="stat"><b>${(AREAS[city.slug] || []).length || '—'}</b><span>Areas</span></div><div class="stat"><b class="num">${city.deals || 0}</b><span>Live deals</span></div>` : ''}
+        ${level === 'area' ? `<div class="stat"><b>${area.type}</b><span>Main type</span></div>` : ''}
+        <div class="stat"><b>฿฿</b><span>Typical price</span></div>
+      </div>
+      <div class="cat-links">${catIn.map(c => `<a href="search.html?cat=${c.slug}">${c.name} in ${name}<b class="num">${Math.max(pool.filter(l => l.catSlug === c.slug).length * (level === 'area' ? 1 : 4), 1)}</b></a>`).join('')}</div>
+    </div></section>`;
+
+  if (level === 'country') {
+    html += `<section class="section"><div class="wrap"><div class="sec-head"><div><h2 class="display">Cities in ${name}</h2></div></div>
+      <div class="grid-cards" style="grid-template-columns:repeat(auto-fill,minmax(240px,1fr))">${CITIES.filter(c => c.country === country.code).map(c => `<a class="tile" style="aspect-ratio:4/3.4" href="place.html?city=${c.slug}">${c.img ? `<img src="${c.img}" alt="" loading="lazy">` : ''}<div class="tile-body"><div class="display">${c.name}</div>${c.hook ? `<p>${c.hook}</p>` : ''}<div class="tile-stats"><span><b class="num">${c.count}</b> venues</span>${AREAS[c.slug] ? `<span><b>${AREAS[c.slug].length}</b> areas</span>` : ''}</div></div></a>`).join('')}</div></div></section>
+      <section class="section"><div class="wrap two"><div><h2 class="display" style="margin-bottom:18px">About ${name} nightlife</h2><div class="prose">${prose.map(p => `<p>${p}</p>`).join('')}</div></div>${seoCard}</div></section>
+      <section class="section"><div class="wrap"><h2 class="display" style="margin-bottom:16px">Other countries</h2><div class="chips">${COUNTRIES.filter(c => c.code !== country.code).map(c => `<a class="chip" href="place.html?country=${c.code}">${c.flag} ${c.name}${c.soon ? ' · soon' : ''}</a>`).join('')}</div></div></section>`;
+  }
+  if (level === 'city') {
+    html += `<section class="section"><div class="wrap"><div class="sec-head"><div><h2 class="display">Popular areas</h2><p>Each area has its own guide and venue list.</p></div></div>${areaGrid(city.slug) || '<p class="muted">Area guides for this city are coming soon.</p>'}</div></section>
+      <section class="section"><div class="wrap"><div class="sec-head"><div><div class="eyebrow">Top picks · rotates weekly</div><h2 class="display">Featured in ${name}</h2></div><a class="link-arrow" href="search.html">All ${count} venues</a></div><div class="scroller">${pool.sort(SORTS.recommended[1]).slice(0, 10).map(card).join('')}</div></div></section>
+      <section class="section"><div class="wrap"><div class="sec-head"><div><h2 class="display">Newest in ${name}</h2></div></div><div class="scroller">${[...new Set(pool.filter(l => l.isNew).concat(pool))].sort(SORTS.newest[1]).slice(0, 8).map(card).join('')}</div></div></section>
+      <section class="section"><div class="wrap two"><div><h2 class="display" style="margin-bottom:18px">About ${name}</h2><div class="prose">${prose.map(p => `<p>${p}</p>`).join('')}</div>
+        <div class="faq" style="margin-top:20px"><h2 class="display" style="font-size:32px">${name} nightlife FAQ</h2>
+          <details open><summary>Which ${name} area has the most nightlife?</summary><p>Lower Sukhumvit. Phrom Phong, Asok and Nana are a few BTS stops apart and hold most of the city’s massage and go-go venues.</p></details>
+          <details><summary>What’s the difference between Soi Cowboy and Nana Plaza?</summary><p>Cowboy is a single neon street, easy to walk end to end. Nana is a three-storey complex with more bars and a rowdier crowd.</p></details>
+          <details><summary>Where are the soapy massage parlours?</summary><p>Mostly in Huai Khwang along Ratchadaphisek Road, with a few on New Phetchaburi.</p></details>
+        </div></div>${seoCard}</div></section>`;
+  }
+  if (level === 'area') {
+    const siblings = (AREAS[city.slug] || []).filter(a => a.slug !== area.slug);
+    html += `<section class="section"><div class="wrap two"><div>
+        <div class="sec-head"><div><h2 class="display">Venues in ${name}</h2></div><button class="btn btn-ghost btn-sm">${icon('filter')} Filter</button></div>
+        <div class="area-list">${withTierHeads(pool.sort(SORTS.recommended[1]), l => `<a class="rowcard" href="listing.html?v=${l.slug}"><img src="${l.img}" alt="" loading="lazy"><div style="min-width:0"><div class="eyebrow" style="font-size:10.5px">${l.cat}</div><div class="card-title" style="font-size:17px;margin-top:2px"><span>${esc(l.name)}</span>${l.verified ? tick : ''}</div><div class="card-meta"><span class="rating">${starIcon}${l.rating ? l.rating.toFixed(1) : "—"}</span>${l.priceFrom ? `<span>· from ฿${l.priceFrom.toLocaleString()}</span>` : ''}<span>· ${l.hours.opens}:00 – ${l.hours.closes}:00</span></div>${l.deal ? `<div class="card-deal" style="padding-top:4px">${icon('tag')}${esc(l.deal)}</div>` : ''}</div></a>`)}</div>
+        <div class="prose" style="margin-top:34px">${prose.slice(1).map(p => `<p>${p}</p>`).join('')}</div>
+      </div><div class="stack" style="position:sticky;top:calc(var(--header-h) + 16px)"><div id="area-map"></div>
+        <div><h3 style="margin:18px 0 10px">Nearby areas</h3><div class="chips" style="flex-wrap:wrap">${siblings.map(a => `<a class="chip" href="place.html?city=${city.slug}&area=${a.slug}">${a.name} →</a>`).join('')}</div></div>${seoCard}</div></div></section>`;
+  }
+  $('#place').innerHTML = html;
+
+  if (level === 'area' && window.L) {
+    const m = L.map('area-map', { scrollWheelZoom: false, zoomControl: false }).setView([area.lat, area.lng], 15);
+    L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', { attribution: '© OpenStreetMap' }).addTo(m);
+    pool.forEach(l => L.circleMarker([l.lat, l.lng], { radius: 7, color: '#fff', weight: 2, fillColor: l.featured ? '#f0c36a' : '#ff3b52', fillOpacity: 1 }).bindTooltip(l.name).addTo(m));
+  }
+</script>
+</body>
+</html>
