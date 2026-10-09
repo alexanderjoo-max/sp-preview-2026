@@ -66,7 +66,7 @@
   const url = 'swanpass.com/' + [country.name.toLowerCase(), city && city.slug, area && area.slug].filter(Boolean).join('/');
   const title = level === 'country' ? `${name} Nightlife Guide — Bars, Clubs & Massage | SwanPass` : level === 'city' ? `${name} Nightlife — Massage, Soapy, Go-Go & KTV | SwanPass` : `${name} Nightlife — Bars & Massage, ${city.name} | SwanPass`;
   document.title = title;
-  const catIn = CATEGORIES.filter(c => pool.some(l => l.catSlug === c.slug) || ['massage', 'soapy', 'go-go', 'ktv'].includes(c.slug));
+  const catIn = CATEGORIES.filter(c => pool.some(l => l.cats.includes(c.slug)) || ['massage', 'soapy', 'go-go', 'ktv'].includes(c.slug));
   const heroImg = (city && city.img) || CITIES.find(c => c.country === country.code && c.img)?.img || '';
 
 
@@ -95,7 +95,7 @@
         ${level === 'area' ? `<div class="stat"><b>${area.type}</b><span>Main type</span></div>` : ''}
         <div class="stat"><b>฿฿</b><span>Typical price</span></div>
       </div>
-      <div class="cat-links">${catIn.map(c => `<a href="search.html?cat=${c.slug}">${c.name} in ${name}<b class="num">${Math.max(pool.filter(l => l.catSlug === c.slug).length * (level === 'area' ? 1 : 4), 1)}</b></a>`).join('')}</div>
+      <div class="cat-links">${catIn.map(c => `<a href="search.html?cat=${c.slug}">${c.name} in ${name}<b class="num">${Math.max(pool.filter(l => l.cats.includes(c.slug)).length * (level === 'area' ? 1 : 4), 1)}</b></a>`).join('')}</div>
     </div></section>`;
 
   if (level === 'country') {

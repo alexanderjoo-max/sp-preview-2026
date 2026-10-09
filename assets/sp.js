@@ -169,7 +169,7 @@ function card(l, opts = {}) {
     </div>
     <div class="card-body">
       <div class="card-title"><span>${esc(l.name)}</span>${l.verified ? tick : ''}</div>
-      <div class="card-meta">${l.rating ? `<span class="rating">${starIcon}${l.rating.toFixed(1)}</span><span class="num">(${l.reviews})</span><span class="dot"></span>` : `<span>${t('noReviews')}</span><span class="dot"></span>`}<span>${CAT_EMOJI[l.catSlug] || ''} ${esc(l.cat.replace('’', "'"))}</span></div>
+      <div class="card-meta">${l.rating ? `<span class="rating">${starIcon}${l.rating.toFixed(1)}</span><span class="num">(${l.reviews})</span><span class="dot"></span>` : `<span>${t('noReviews')}</span><span class="dot"></span>`}<span>${(l.cats || [l.catSlug]).slice(0, 2).map(c => `${CAT_EMOJI[c] || ''} ${esc((CATEGORIES.find(x => x.slug === c) || { name: l.cat }).name.replace(' & Strip', '').replace(' & Hostess Bars', ' bar'))}`).join(' · ')}</span></div>
       <div class="card-meta"><span class="open-dot ${l.openNow ? '' : 'closed'}"></span><span>${l.openNow ? t('open') : t('opens') + ' ' + l.hours.opens + ':00'}</span><span class="dot"></span><span>📍 ${esc(l.areaName || l.cityName)}</span></div>
       ${l.good && l.good.length ? `<div class="card-good">${l.good.slice(0, 2).map(k => `<span>${goodTag(k)[1]} ${goodTag(k)[2]}</span>`).join('')}</div>` : ''}
       ${l.deal ? `<div class="card-deal">🏷️ ${esc(l.deal)}</div>` : ''}
@@ -287,7 +287,7 @@ function openSearch(prefill = '', focusLoc = false) {
   let ctab = loc.country || 'th';
   const city = loc.city ? cityOf(loc.city) : null;
   const inScope = LISTINGS.filter(l => (!loc.country || l.country === loc.country) && (!loc.city || l.city === loc.city));
-  const catCount = slug => inScope.filter(l => l.catSlug === slug).length;
+  const catCount = slug => inScope.filter(l => l.cats.includes(slug)).length;
   const areas = (city && AREAS[city.slug]) || [];
   const m = openModal('sp-search', `
     <div class="modal-head">${icon('search')}<input id="ms-q" placeholder="Search venues, areas, services…" autocomplete="off" value="${esc(prefill)}">
@@ -381,7 +381,7 @@ function directory({ el, title, preset = {}, render = card, gridClass = 'grid-ca
   const scope = l => (!S.country || l.country === S.country) && (!S.city || l.city === S.city);
   const match = (l, skip) =>
     scope(l) && (skip === 'area' || !S.areas.length || S.areas.includes(l.area)) &&
-    (skip === 'cat' || !S.cats.length || S.cats.includes(l.catSlug)) &&
+    (skip === 'cat' || !S.cats.length || S.cats.some(c => l.cats.includes(c))) &&
     (!S.q || (l.name + ' ' + l.tags.join(' ')).toLowerCase().includes(S.q.toLowerCase())) &&
     (skip === 'good' || S.good.every(g => l.good.includes(g))) && (!S.openNow || l.openNow) && (!S.deal || l.deal) && (!S.verified || l.verified) && (!S.isNew || l.isNew) &&
     (!S.featuredOnly || l.featured) && (!S.minRating || (l.rating || 0) >= S.minRating) && (!S.price || l.priceLevel === S.price);
@@ -417,7 +417,7 @@ function directory({ el, title, preset = {}, render = card, gridClass = 'grid-ca
         ${areas.length ? `<div class="ms-label" style="margin:12px 0 4px;font-size:10.5px">Areas in ${cityOf(S.city).name}</div>${areas.map(a => `<label class="fcheck"><input type="checkbox" data-area="${a.slug}" ${S.areas.includes(a.slug) ? 'checked' : ''}>${a.name}<span class="n">${countBy(l => l.area === a.slug, 'area')}</span></label>`).join('')}` : ''}
       </div></details>
       <details class="fgroup" open><summary>Category</summary><div class="fbody">
-        ${CATEGORIES.map(c => `<label class="fcheck"><input type="checkbox" data-cat="${c.slug}" ${S.cats.includes(c.slug) ? 'checked' : ''}>${CAT_EMOJI[c.slug]} ${c.name}${c.isNew ? ' <span class="chip-new">NEW</span>' : ''}<span class="n">${countBy(l => l.catSlug === c.slug, 'cat')}</span></label>`).join('')}
+        ${CATEGORIES.map(c => `<label class="fcheck"><input type="checkbox" data-cat="${c.slug}" ${S.cats.includes(c.slug) ? 'checked' : ''}>${CAT_EMOJI[c.slug]} ${c.name}${c.isNew ? ' <span class="chip-new">NEW</span>' : ''}<span class="n">${countBy(l => l.cats.includes(c.slug), 'cat')}</span></label>`).join('')}
       </div></details>
       <details class="fgroup" open><summary>Show only</summary><div class="fbody">
         <label class="toggle-row">Open now<input type="checkbox" class="switch" data-flag="openNow" ${S.openNow ? 'checked' : ''}></label>

@@ -55,8 +55,8 @@
     $('#b-city').textContent = locLabel();
     $('#b-cities').innerHTML = CITIES.filter(c => c.count >= 20).map(c => `<button class="chip ${loc.city === c.slug ? 'on' : ''}" data-bc="${c.slug}">${countryOf(c.country).flag} ${c.name}</button>`).join('') + `<button class="chip" data-open="loc">More cities…</button>`;
     $('#b-cats').innerHTML = `<button class="chip ${!cat ? 'on' : ''}" data-bk="">Best overall</button>` + ['massage', 'soapy', 'go-go', 'gentlemens-clubs', 'ktv'].map(s => `<button class="chip ${cat === s ? 'on' : ''}" data-bk="${s}">Best ${CATEGORIES.find(c => c.slug === s).name.toLowerCase()}</button>`).join('');
-    let pool = LISTINGS.filter(l => (!loc.country || l.country === loc.country) && (!loc.city || l.city === loc.city) && (!cat || l.catSlug === cat) && l.rating);
-    if (pool.length < 3) pool = LISTINGS.filter(l => l.rating && (!cat || l.catSlug === cat));
+    let pool = LISTINGS.filter(l => (!loc.country || l.country === loc.country) && (!loc.city || l.city === loc.city) && (!cat || l.cats.includes(cat)) && l.rating);
+    if (pool.length < 3) pool = LISTINGS.filter(l => l.rating && (!cat || l.cats.includes(cat)));
     pool.sort((a, b) => score(b) - score(a));
     const pick = (fn, label) => { const l = LISTINGS.filter(x => x.city === (loc.city || x.city)).find(fn) || pool[0]; return `<a class="award" href="listing.html?v=${l.slug}"><img src="${l.img}" alt=""><div><small>${label}</small><div style="font-weight:600">${esc(l.name)}</div></div></a>`; };
     $('#awards').innerHTML = pick(l => l.featured, 'Best overall') + pick(l => l.deal, 'Best deal') + pick(l => l.isNew, 'Best newcomer') + pick(l => l.priceLevel === 1 && l.rating >= 4.5, 'Best value');

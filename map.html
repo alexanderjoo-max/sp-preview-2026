@@ -82,7 +82,7 @@
 
   function draw(fit) {
     const loc = getLoc();
-    const pool = LISTINGS.filter(l => (!loc.country || l.country === loc.country) && (!loc.city || l.city === loc.city) && (!cat || l.catSlug === cat)).sort(SORTS.recommended[1]);
+    const pool = LISTINGS.filter(l => (!loc.country || l.country === loc.country) && (!loc.city || l.city === loc.city) && (!cat || l.cats.includes(cat))).sort(SORTS.recommended[1]);
     cluster.clearLayers(); featuredLayer.clearLayers();
     pool.forEach(l => {
       const m = l.featured
@@ -96,7 +96,7 @@
     });
     $('#list').innerHTML = `<div class="head"><div class="row between"><div><b style="font-size:18px">${pool.length} venues</b><div class="muted" style="font-size:13px">in ${locLabel()} · Featured & Verified first</div></div><a class="btn btn-ghost btn-sm" href="search.html">${icon('list')} List view</a></div></div>` + withTierHeads(pool, rowcard);
     $('#mcar').innerHTML = pool.slice(0, 15).map(rowcard).join('');
-    $('#mcats').innerHTML = `<button class="chip mobile-only" id="toggle-list">${icon('list')} List</button><button class="chip ${!cat ? 'on' : ''}" data-mc="">All</button>` + CATEGORIES.slice(0, 7).map(c => `<button class="chip ${cat === c.slug ? 'on' : ''}" data-mc="${c.slug}">${c.name}</button>`).join('');
+    $('#mcats').innerHTML = `<button class="chip mobile-only" id="toggle-list">${icon('list')} List</button><button class="chip ${!cat ? 'on' : ''}" data-mc="">All</button>` + CATEGORIES.map(c => `<button class="chip ${cat === c.slug ? 'on' : ''}" data-mc="${c.slug}">${c.name}</button>`).join('');
     if (fit && pool.length) map.fitBounds(L.latLngBounds(pool.map(l => [l.lat, l.lng])).pad(0.1), { maxZoom: 15 });
   }
   document.addEventListener('click', e => {

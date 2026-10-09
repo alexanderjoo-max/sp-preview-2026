@@ -139,7 +139,7 @@
     $('#pa-city').textContent = cityOf(areaCity).name;
     $('#pa-all').href = `place.html?city=${areaCity}`;
     $('#areas').innerHTML = areaGrid(areaCity);
-    $('#cats').innerHTML = CATEGORIES.map(c => `<a class="cat-tile" href="search.html?cat=${c.slug}"><span class="em">${CAT_EMOJI[c.slug]}</span><b>${c.name}</b><span class="num">${Math.max(scope.filter(l => l.catSlug === c.slug).length * 4, 3)} venues</span>${c.isNew ? '<span class="chip-new">NEW</span>' : ''}</a>`).join('');
+    $('#cats').innerHTML = CATEGORIES.map(c => `<a class="cat-tile" href="search.html?cat=${c.slug}"><span class="em">${CAT_EMOJI[c.slug]}</span><b>${c.name}</b><span class="num">${Math.max(scope.filter(l => l.cats.includes(c.slug)).length * 4, 3)} venues</span>${c.isNew ? '<span class="chip-new">NEW</span>' : ''}</a>`).join('');
     $('#featured').innerHTML = pool.filter(l => l.featured || l.verified).sort(SORTS.recommended[1]).slice(0, 14).map(card).join('');
     $('#deals').innerHTML = pool.filter(l => l.deal).sort(SORTS.recommended[1]).slice(0, 10).map(card).join('') || '<p class="muted">No deals in this city yet.</p>';
     const best = pool.filter(l => l.rating).sort((a, b) => score(b) - score(a)).slice(0, 6);

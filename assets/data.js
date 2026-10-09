@@ -129,6 +129,10 @@ const LISTINGS = RAW.map(r => {
   };
 });
 
+/* Extra categories per venue — scraped from swanpass.com/cities/:city/:category on 9 Oct 2026 (a venue listed under Massage AND Soapy shows in both). */
+const EXTRA_CATS = {"don-quixote":["soapy"],"666-class":["soapy"],"amor888":["soapy"],"the333-bangkok":["soapy"],"body-bliss":["soapy"],"chairman-nuru-massage-bangkok":["soapy"],"g2g-massage-bangkok":["soapy"],"exotic-massage-bangkok-bangkok":["soapy"],"cube-massage-bangkok":["soapy"],"jspot-bangkok":["soapy"],"sento-bangkok-bangkok":["soapy"],"nomo22-bangkok":["soapy"],"drake-luxury-lounge-bangkok":["massage","soapy"],"jelly-pop-bangkok":["soapy"],"boss-nuru-massage-20-bangkok":["soapy"],"dna-massage-bangkok":["soapy"],"boss-nuru-massage-33-bangkok":["soapy"],"rina-nuru-massage-bangkok":["soapy"],"lucky-cat-bkk-bangkok":["soapy"],"luxe-nuru-massage-bangkok":["soapy"],"the-pixies-bangkok":["soapy"],"airi-nuru-exclusive-spa-bangkok":["soapy"],"vivi-nuru-bangkok":["soapy"],"canary-massage-bangkok-bangkok":["soapy"],"8-fantasy-bangkok":["soapy"],"fin69-nuru-massage-bkk-bangkok":["soapy"],"kizuna-saki-bangkok":["soapy"],"canary-massage-pattaya-pattaya":["soapy"],"yihongyuan-spa-pattaya":["soapy"],"pattaya-vice-massage-pattaya":["massage"],"soi-33-roots-bangkok":["soapy"],"elle-massage-bangkok":["soapy"],"lumi-nuru-massage-ktv-bangkok":["gentlemens-clubs"],"katoeys-are-us-pattaya":["go-go"],"showgirls-bar-pattaya":["gentlemens-clubs"],"liquid-bar-pattaya":["gentlemens-clubs"],"elysium-bar-pattaya":["gentlemens-clubs"],"kink-pattaya-pattaya":["go-go"],"cydonia-bar-pattaya":["gentlemens-clubs"],"desire-bar-pattaya":["gentlemens-clubs"],"gold-bar-pattaya":["gentlemens-clubs"],"lucifer-club-pattaya":["gentlemens-clubs"],"awesome999-bangkok":["massage"],"a-beautiful-day-bangkok":["soapy"],"kawaii-nuru-massage":["soapy"],"massage-blue-spa-hanoi":["soapy"],"superior-luxury-spa-surabaya":["soapy"]};
+LISTINGS.forEach(l => { l.cats = [...new Set([l.catSlug, ...(EXTRA_CATS[l.slug] || [])])]; });
+
 /* Listing detail sample — Don Quixote (real content from the live page) */
 const DETAIL = {
   slug: 'don-quixote',
