@@ -384,7 +384,7 @@ function directory({ el, title, preset = {}, render = card, gridClass = 'grid-ca
     scope(l) && (skip === 'area' || !S.areas.length || S.areas.includes(l.area)) &&
     (skip === 'cat' || !S.cats.length || S.cats.some(c => l.cats.includes(c))) &&
     (!S.q || (l.name + ' ' + l.tags.join(' ')).toLowerCase().includes(S.q.toLowerCase())) &&
-    (skip === 'good' || S.good.every(g => l.good.includes(g))) && (!S.openNow || l.openNow) && (!S.deal || l.deal) && (!S.verified || l.verified) && (!S.isNew || l.isNew) &&
+    (!S.hasStaff || l.staffCount > 0) && (skip === 'good' || S.good.every(g => l.good.includes(g))) && (!S.openNow || l.openNow) && (!S.deal || l.deal) && (!S.verified || l.verified) && (!S.isNew || l.isNew) &&
     (!S.featuredOnly || l.featured) && (!S.minRating || (l.rating || 0) >= S.minRating) && (!S.price || l.priceLevel === S.price);
   const results = () => LISTINGS.filter(l => match(l)).sort(SORTS[S.sort][1]);
 

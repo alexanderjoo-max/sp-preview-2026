@@ -144,7 +144,7 @@
     $('#deals').innerHTML = pool.filter(l => l.deal).sort(SORTS.recommended[1]).slice(0, 10).map(card).join('') || '<p class="muted">No deals in this city yet.</p>';
     const best = pool.filter(l => l.rating).sort((a, b) => score(b) - score(a)).slice(0, 6);
     $('#best-top').textContent = 'Top 3: ' + best.slice(0, 3).map(l => l.name).join(' · ');
-    $('#staff').innerHTML = [...pool].sort(SORTS.recommended[1]).slice(0, 6).map(l => `<a class="staff" href="staff.html"><img src="${l.img}" alt="" loading="lazy"><span class="reveal">${icon('eye')}</span><div class="cap"><b>${esc(l.name)}</b>${l.areaName || l.cityName}</div></a>`).join('');
+    $('#staff').innerHTML = [...pool].filter(l => l.staffCount).sort(SORTS.recommended[1]).slice(0, 6).map(l => `<a class="staff" href="listing.html?v=${l.slug}#staff"><img src="${l.staffImgs[0]}" alt="" loading="lazy"><span class="reveal">${icon('eye')}</span><div class="cap"><b>${esc(l.name)}</b>${l.areaName || l.cityName}</div></a>`).join('');
     $('#articles').innerHTML = ARTICLES.map(([t, s, d]) => `<a class="article" href="article.html"><div class="im"><img src="${LISTINGS.find(l => l.slug === s).img}" alt="" loading="lazy"></div><span class="muted" style="font-size:12.5px">${d}</span><b>${t}</b></a>`).join('');
     $('#newest').innerHTML = [...new Set(pool.filter(l => l.isNew).concat(LISTINGS.filter(l => l.isNew)))].sort(SORTS.newest[1]).slice(0, 10).map(card).join('');
   }

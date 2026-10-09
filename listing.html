@@ -128,7 +128,7 @@
     <div class="gal-wrap">
       <div class="gallery" id="gallery">${D.photos.slice(0, 5).map((p, i) => `<button aria-label="Photo ${i + 1}" class="${i ? 'g-staff' : ''}"><img src="${p}" alt="" ${i ? 'loading="lazy"' : ''}>${i ? `<span class="g-reveal">${icon('eye')}</span>` : ''}</button>`).join('')}
       </div>
-      <div class="gal-tabs"><button class="chip on">Venue · 12</button><button class="chip">Staff · 19</button></div>
+      <div class="gal-tabs"><button class="chip on">Venue · 12</button>${L0.staffCount ? `<button class="chip">Staff · ${L0.staffCount}</button>` : ''}</div>
       <button class="btn btn-ghost btn-sm all">${icon('grid')} All 31 photos</button>
       <span class="gal-count num">1 / 31</span>
     </div>
@@ -149,7 +149,7 @@
       <div></div>
     </div>
 
-    <div class="anchors" id="anchors"><div class="chips">${[['overview', 'Overview'], ['deal', 'Deal'], ['prices', 'Prices'], ['staff', 'Staff'], ['reviews', 'Reviews'], ['hours', 'Hours & contact'], ['location', 'Location'], ['hotels', 'Stay nearby'], ['faq', 'FAQ'], ['nearby', 'Nearby']].filter(([k]) => k !== 'deal' || D.deal).map(([k, t], i) => `<a class="chip ${i ? '' : 'on'}" href="#${k}">${t}</a>`).join('')}</div></div>
+    <div class="anchors" id="anchors"><div class="chips">${[['overview', 'Overview'], ['deal', 'Deal'], ['prices', 'Prices'], ...(L0.staffCount ? [['staff', 'Staff']] : []), ['reviews', 'Reviews'], ['hours', 'Hours & contact'], ['location', 'Location'], ['hotels', 'Stay nearby'], ['faq', 'FAQ'], ['nearby', 'Nearby']].filter(([k]) => k !== 'deal' || D.deal).map(([k, t], i) => `<a class="chip ${i ? '' : 'on'}" href="#${k}">${t}</a>`).join('')}</div></div>
 
     <div class="pdp">
       <div>
@@ -166,7 +166,7 @@
             </div>
             <p class="muted" style="font-size:12.5px;margin:10px 0 0">${L0.bar ? 'Bar fine = what you pay the bar to leave with a staff member. Agree anything else directly with her before leaving.' : 'Price covers the room, shower and the full service listed. Tips go straight to the staff.'}</p></div>
           <p class="muted" style="font-size:13px;margin-top:14px">Prices confirmed by the venue on 12 Sep 2026. Tips not included. ${note('Menu is structured data (group → duration → price) in one currency per venue. It also generates the “How much does it cost?” FAQ answer and the priceRange in the schema markup.')}</p></section>
-        <section class="blk" id="staff"><h2>Staff</h2><div class="staff-grid" style="grid-template-columns:repeat(auto-fill,minmax(130px,1fr))">${D.photos.slice(1, 7).map(p => `<button class="staff"><img src="${p}" alt="" loading="lazy"><span class="reveal">${icon('eye')}</span></button>`).join('')}</div></section>
+        ${L0.staffCount ? `<section class="blk" id="staff"><h2>Staff <span class="muted" style="font-size:15px;font-weight:500">· ${L0.staffCount} photos</span></h2><div class="staff-grid" style="grid-template-columns:repeat(auto-fill,minmax(130px,1fr))">${L0.staffImgs.map(p => `<button class="staff"><img src="${p}" alt="" loading="lazy"><span class="reveal">${icon('eye')}</span></button>`).join('')}</div></section>` : ''}
         <section class="blk" id="reviews"><h2>Reviews</h2>
           <div class="rev-sum"><div><div class="big">${D.rating}</div><div class="stars">★★★★☆</div><div class="muted" style="font-size:13px">${D.reviewsCount} reviews</div></div>
             <div style="display:grid;gap:6px">${[5, 4, 3, 2, 1].map(n => `<div class="bar"><span>${n}</span><i><b style="width:${(D.breakdown[n] / total * 100).toFixed(0)}%"></b></i><span class="num">${D.breakdown[n]}</span></div>`).join('')}</div></div>

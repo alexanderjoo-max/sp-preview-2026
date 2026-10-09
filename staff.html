@@ -36,8 +36,9 @@
   directory({
     el: $('#app'),
     gridClass: 'staff-grid',
+    preset: { hasStaff: true },
     title: S => `Staff in ${S.city ? cityOf(S.city).name : S.country ? countryOf(S.country).name : 'Asia'}`,
-    render: l => `<a class="staff" href="listing.html?v=${l.slug}#staff"><img src="${l.img}" alt="" loading="lazy">${l.verified ? '<span class="badge b-ver venue">✓ Verified venue</span>' : ''}<span class="cnt num">${4 + (l.name.length % 9)} photos</span><span class="reveal">${icon('eye')}&nbsp;Tap to view</span><div class="cap"><b>${esc(l.name)}</b>${esc(l.cat)} · ${esc(l.areaName || l.cityName)}</div></a>`,
+    render: l => `<a class="staff" href="listing.html?v=${l.slug}#staff"><img src="${l.staffImgs[0]}" alt="" loading="lazy" onerror="this.src='${l.staffImgs[1] || ''}'">${l.verified ? '<span class="badge b-ver venue">✓ Verified venue</span>' : ''}<span class="cnt num">${l.staffCount} photo${l.staffCount === 1 ? '' : 's'}</span><span class="reveal">${icon('eye')}&nbsp;Tap to view</span><div class="cap"><b>${esc(l.name)}</b>${esc(l.cat)} · ${esc(l.areaName || l.cityName)}</div></a>`,
   });
   $('.filters').insertAdjacentHTML('afterbegin', `<div class="muted" style="font-size:12.5px;margin-bottom:12px">${note('ClickUp “Staff page: Add filters on left”. Same filter component; grid shows one tile per venue (opens that venue’s staff gallery) instead of 839 loose photos.')} Filter staff by venue location and type.</div>`);
   document.addEventListener('click', e => { const s = e.target.closest('.staff'); if (s && document.body.classList.contains('safe') && !s.classList.contains('revealed')) { e.preventDefault(); s.classList.add('revealed'); } });
