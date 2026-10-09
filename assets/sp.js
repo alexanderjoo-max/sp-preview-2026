@@ -73,7 +73,7 @@ const saved = () => store.get('saved', ['don-quixote', 'jelly-pop-bangkok', 'nom
 const toggleSaved = slug => { const s = saved(); const i = s.indexOf(slug); i > -1 ? s.splice(i, 1) : s.push(slug); store.set('saved', s); return i === -1; };
 
 /* ---------- header / footer / tab bar ---------- */
-const NAV = [['map', '🗺️', 'Map', 'map.html'], ['deals', '🏷️', 'Deals', 'deals.html'], ['best', '🏆', 'Best', 'best.html'], ['staff', '👩', 'Staff', 'staff.html'], ['guides', '📝', 'Guides', 'guides.html']];
+const NAV = [['search', '🔎', 'Explore', 'search.html'], ['map', '🗺️', 'Map', 'map.html'], ['deals', '🏷️', 'Deals', 'deals.html'], ['best', '🏆', 'Best', 'best.html'], ['staff', '👩', 'Staff', 'staff.html'], ['guides', '📝', 'Guides', 'guides.html']];
 function header(active) {
   return `<header class="hdr"><div class="wrap">
     <button class="icon-btn hamb" data-drawer aria-label="Open menu">${icon('list')}</button>

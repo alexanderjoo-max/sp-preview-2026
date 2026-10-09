@@ -9,23 +9,26 @@
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="assets/sp.css">
 <style>
-  .best-hero { padding: 56px 0 34px; text-align: center; background: radial-gradient(600px 300px at 50% 0%, rgba(240, 195, 106, .18), transparent); border-bottom: 1px solid var(--line); }
-  .best-hero h1 { font-size: clamp(54px, 8vw, 110px); }
-  .best-hero .chips { justify-content: center; flex-wrap: wrap; margin-top: 24px; }
-  .ranked { display: flex; flex-direction: column; gap: 18px; max-width: 980px; margin: 0 auto; }
-  .r-item { display: grid; grid-template-columns: 90px 300px 1fr; gap: 26px; align-items: center; padding: 18px; border-radius: var(--r-lg); background: var(--surface); border: 1px solid var(--line); }
+  .best-hero { padding: 28px 0 18px; text-align: center; background: radial-gradient(600px 220px at 50% 0%, rgba(240, 195, 106, .16), transparent); border-bottom: 1px solid var(--line); }
+  .best-hero h1 { font-size: clamp(30px, 4vw, 44px); }
+  .best-hero .lede { font-size: 14px; }
+  .best-hero .chips { justify-content: center; flex-wrap: wrap; margin-top: 14px; }
+  .ranked { display: flex; flex-direction: column; gap: 8px; max-width: 860px; margin: 0 auto; }
+  .r-item { display: grid; grid-template-columns: 36px 96px 1fr; gap: 14px; align-items: center; padding: 10px 12px; border-radius: var(--r); background: var(--surface); border: 1px solid var(--line); }
   .r-item:hover { border-color: var(--line-2); }
   .r-item.top { border-color: rgba(240, 195, 106, .4); background: linear-gradient(110deg, rgba(240, 195, 106, .08), var(--surface) 50%); }
-  .r-num { font-family: var(--font-display); font-weight: 900; font-size: 72px; line-height: .8; color: var(--muted); text-align: center; }
+  .r-num { font-weight: 900; font-size: 26px; line-height: 1; color: var(--muted); text-align: center; }
   .r-item.top .r-num { color: var(--gold); }
-  .r-item img { width: 300px; height: 200px; object-fit: cover; border-radius: var(--r); }
-  .r-item h2 { font-family: var(--font-display); font-weight: 800; letter-spacing: -.02em; font-size: 24px; margin: 6px 0 6px; display: flex; gap: 10px; align-items: center; }
-  .r-item p { color: var(--text-2); margin: 8px 0 12px; }
-  .awards { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 40px; }
-  .award { padding: 16px; border-radius: var(--r); background: var(--surface); border: 1px solid var(--line); display: flex; gap: 12px; align-items: center; }
-  .award img { width: 54px; height: 54px; border-radius: 12px; object-fit: cover; }
-  .award small { color: var(--gold); font-weight: 700; font-size: 11px; letter-spacing: .08em; text-transform: uppercase; }
-  @media (max-width: 900px) { .r-item { grid-template-columns: 50px 1fr; } .r-item img { grid-column: 1 / -1; width: 100%; height: 200px; order: -1; } .r-num { font-size: 60px; } .awards { grid-template-columns: 1fr 1fr; } .r-item h2 { font-size: 28px; } }
+  .r-item img { width: 96px; height: 72px; object-fit: cover; border-radius: 8px; }
+  .r-item h2 { font-weight: 700; font-size: 16px; margin: 0 0 3px; display: flex; gap: 6px; align-items: center; flex-wrap: wrap; }
+  .r-item p { color: var(--text-2); font-size: 13px; margin: 4px 0 0; display: -webkit-box; -webkit-line-clamp: 1; -webkit-box-orient: vertical; overflow: hidden; }
+  .r-item .card-deal { font-size: 12.5px; margin-top: 4px; }
+  .awards { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; max-width: 860px; margin: 0 auto 18px; }
+  .award { padding: 10px; border-radius: var(--r); background: var(--surface); border: 1px solid var(--line); display: flex; gap: 10px; align-items: center; font-size: 14px; }
+  .award img { width: 40px; height: 40px; border-radius: 8px; object-fit: cover; }
+  .award small { color: var(--gold); font-weight: 700; font-size: 10.5px; letter-spacing: .08em; text-transform: uppercase; }
+  @media (max-width: 900px) { .awards { grid-template-columns: 1fr 1fr; } }
+  @media (max-width: 560px) { .r-item { grid-template-columns: 26px 72px 1fr; gap: 10px; padding: 8px; } .r-item img { width: 72px; height: 72px; } .r-num { font-size: 20px; } .r-item p { display: none; } }
 </style>
 </head>
 <body>
@@ -37,7 +40,7 @@
     <div class="chips" id="b-cities"></div>
     <div class="chips" id="b-cats" style="margin-top:10px"></div>
   </div></section>
-  <section class="section"><div class="wrap">
+  <section class="section" style="padding-top:20px"><div class="wrap">
     <div class="awards" id="awards"></div>
     <div class="ranked" id="ranked"></div>
   </div></section>
@@ -59,11 +62,10 @@
     const pick = (fn, label) => { const l = LISTINGS.filter(x => x.city === (loc.city || x.city)).find(fn) || pool[0]; return `<a class="award" href="listing.html?v=${l.slug}"><img src="${l.img}" alt=""><div><small>${label}</small><div style="font-weight:600">${esc(l.name)}</div></div></a>`; };
     $('#awards').innerHTML = pick(l => l.featured, 'Best overall') + pick(l => l.deal, 'Best deal') + pick(l => l.isNew, 'Best newcomer') + pick(l => l.priceLevel === 1 && l.rating >= 4.5, 'Best value');
     $('#ranked').innerHTML = pool.slice(0, 10).map((l, i) => `<a class="r-item ${i < 3 ? 'top' : ''}" href="listing.html?v=${l.slug}"><div class="r-num">${i + 1}</div><img src="${l.img}" alt="" loading="lazy"><div>
-      <div class="row" style="gap:6px">${l.featured ? '<span class="badge b-feat">★ Featured</span>' : ''}<span class="badge" style="background:var(--surface-2);color:var(--text-2)">${l.cat}</span></div>
-      <h2>${esc(l.name)} ${l.verified ? tick : ''}</h2>
-      <div class="card-meta"><span class="rating">${starIcon}${l.rating.toFixed(1)}</span><span>(${l.reviews})</span><span class="dot"></span><span>${l.areaName || l.cityName}</span>${l.priceFrom ? `<span class="dot"></span><span>from ฿${l.priceFrom.toLocaleString()}</span>` : ''}</div>
+      <h2>${esc(l.name)} ${l.verified ? tick : ''}${l.featured ? '<span class="badge b-feat">★ Featured</span>' : ''}</h2>
+      <div class="card-meta"><span>${l.cat}</span><span class="dot"></span><span class="rating">${starIcon}${l.rating.toFixed(1)}</span><span>(${l.reviews})</span><span class="dot"></span><span>${l.areaName || l.cityName}</span>${l.priceFrom ? `<span class="dot"></span><span>from ฿${l.priceFrom.toLocaleString()}</span>` : ''}</div>
       <p>${WHY[i % WHY.length]}</p>
-      ${l.deal ? `<div class="card-deal" style="padding:0">${icon('tag')}${esc(l.deal)}</div>` : ''}
+      ${l.deal ? `<div class="card-deal" style="padding:0;margin-top:4px">${icon('tag')}${esc(l.deal)}</div>` : ''}
     </div></a>`).join('');
   }
   document.addEventListener('click', e => {

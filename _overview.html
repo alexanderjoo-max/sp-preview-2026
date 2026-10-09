@@ -57,7 +57,7 @@ const S = [
     ['admin/listing-edit.html', 'Listing editor', 'New hours editor, menu editor with “paste from LINE”, live preview card.'],
   ]],
 ];
-$('#ov').innerHTML = S.map(([h, items]) => `<h2 class="display">${h}</h2><div class="ov-grid">${items.map(([u, t, d]) => `<a class="ov-card" href="${u}${u.includes('?') ? '&' : '?'}nogate"><b>${t}</b><span>${d}</span><code>${u}</code></a>`).join('')}</div>`).join('') ;
+$('#ov').innerHTML = S.map(([h, items]) => `<h2 class="display">${h}</h2><div class="ov-grid">${items.map(([u, t, d]) => `<a class="ov-card" href="${u}${u.includes('?') ? '&' : '?'}nogate"><b>${t}</b><span>${d}</span><code>${u}</code></a>`).join('')}</div>`).join('') + `<h2 class="display">For the developer</h2><div class="ov-grid"><a class="ov-card" href="CHANGES.md"><b>CHANGES.md</b><span>Page-by-page change list, data model changes, ranking rule, build order.</span><code>mockups/redesign/CHANGES.md</code></a></div>`;
 </script>
 </body>
 </html>
