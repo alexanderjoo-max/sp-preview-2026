@@ -76,7 +76,7 @@
 
 
   const KNOW = [['💵', 'What things cost', 'Massage ฿1,500–4,000 · beer ฿80–120 · lady drink ฿150–250 · bar fine ฿600–1,500'], ['🍹', 'Bar fines explained', 'What you pay the bar to leave with a staff member — and what it doesn’t cover'], ['🏳️‍⚧️', 'Ladyboy etiquette', 'How to tell, how to ask politely, and the bars that are openly katoey'], ['⚠️', 'Common scams', 'Inflated bills, “closed today” tuk-tuks, drink spiking — and how to avoid them'], ['👮', 'Police & ID checks', 'Carry a passport copy. What happens in a raid, and what to say'], ['🏨', 'Guest-friendly hotels', 'Where you can bring someone back without a joiner fee', 'hotels.html']];
-  const knowBlock = n => `<section class="section"><div class="wrap"><div class="sec-head"><div><div class="eyebrow">First time in ${n}?</div><h2 class="display">Know before you go</h2></div><a class="link-arrow" href="guides.html">All guides</a></div>
+  const knowBlock = n => `<section class="section"><div class="wrap"><div class="sec-head"><div><h2 class="display">Know before you go</h2></div><a class="link-arrow" href="guides.html">All guides</a></div>
     <div class="know-grid">${KNOW.map(([e, t, d, h]) => `<a class="know" href="${h || 'article.html'}"><span class="em">${e}</span><b>${t}</b><span class="muted">${d}</span></a>`).join('')}</div></div></section>`;
   const hotelsBlock = (c, a) => { const hs = HOTELS.filter(h => h.city === c && (!a || h.area === a)); const list = (hs.length ? hs : HOTELS.filter(h => h.city === c)).filter(h => h.guest !== 'no').slice(0, 3); return list.length ? `<section class="section"><div class="wrap"><div class="sec-head"><div><h2 class="display">🏨 Guest-friendly hotels nearby</h2><p>No joiner fee unless marked — checked by members after their stay.</p></div><a class="link-arrow" href="hotels.html">All hotels</a></div><div class="hotel-list">${list.map(hotelRow).join('')}</div></div></section>` : ''; };
   const seoCard = `<div class="seo-card">
@@ -111,7 +111,7 @@
   }
   if (level === 'city') {
     html += `<section class="section"><div class="wrap"><div class="sec-head"><div><h2 class="display">Popular areas</h2><p>Each area has its own guide and venue list.</p></div></div>${areaGrid(city.slug) || '<p class="muted">Area guides for this city are coming soon.</p>'}</div></section>
-      <section class="section"><div class="wrap"><div class="sec-head"><div><div class="eyebrow">Top picks · rotates weekly</div><h2 class="display">Featured in ${name}</h2></div><a class="link-arrow" href="search.html">All ${count} venues</a></div><div class="scroller">${pool.sort(SORTS.recommended[1]).slice(0, 10).map(card).join('')}</div></div></section>
+      <section class="section"><div class="wrap"><div class="sec-head"><div><h2 class="display">Featured in ${name}</h2></div><a class="link-arrow" href="search.html">All ${count} venues</a></div><div class="scroller">${pool.sort(SORTS.recommended[1]).slice(0, 10).map(card).join('')}</div></div></section>
       <section class="section"><div class="wrap"><div class="sec-head"><div><h2 class="display">Newest in ${name}</h2></div></div><div class="scroller">${[...new Set(pool.filter(l => l.isNew).concat(pool))].sort(SORTS.newest[1]).slice(0, 8).map(card).join('')}</div></div></section>
 ` + knowBlock(name) + hotelsBlock(city.slug) + `
       <section class="section"><div class="wrap two"><div><h2 class="display" style="margin-bottom:18px">About ${name}</h2><div class="prose">${prose.map(p => `<p>${p}</p>`).join('')}</div>

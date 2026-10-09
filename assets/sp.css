@@ -667,3 +667,10 @@ body.drawer-open .drawer-ov { opacity: 1; pointer-events: auto; }
   .nav a.on { font-weight: 600; }
   .nav .em { font-size: 12px; }
 }
+
+/* Section headers: clear hierarchy (page H1 > section H2 > card titles) with a glowing red bar */
+.sec-head h2.display { display: block; font-size: clamp(24px, 2.4vw, 30px); font-weight: 800; letter-spacing: -.02em; }
+.sec-head h2.display::before { content: ''; display: inline-block; vertical-align: -.14em; margin-right: 12px; width: 5px; height: 1.05em; border-radius: 3px; background: var(--red); box-shadow: 0 0 12px rgba(232, 20, 42, .75), 0 0 2px rgba(232, 20, 42, .9); }
+.sec-head { margin-bottom: 18px; align-items: center; }
+.sec-head p { padding-left: 17px; }
+@media (max-width: 720px) { .sec-head h2.display { font-size: 22px; } .sec-head h2.display::before { margin-right: 10px; } .sec-head p { padding-left: 15px; } }
