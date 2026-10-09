@@ -651,3 +651,9 @@ body.drawer-open .drawer-ov { opacity: 1; pointer-events: auto; }
 
 /* phones: account lives in the bottom tab bar, so drop the header avatar to stop horizontal overflow */
 @media (max-width: 480px) { .hdr-actions { display: none; } }
+
+/* language / currency picker */
+.pick-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 8px; }
+.pick { text-align: left; padding: 12px 14px; border-radius: 10px; border: 1px solid var(--line); background: var(--surface); font-size: 14px; font-weight: 600; }
+.pick:hover { border-color: var(--line-2); }
+.pick.on { border-color: var(--red); background: rgba(232, 20, 42, .1); }

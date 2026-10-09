@@ -72,6 +72,25 @@ const locFlag = (loc = getLoc()) => loc.country ? countryOf(loc.country).flag : 
 const saved = () => store.get('saved', ['don-quixote', 'jelly-pop-bangkok', 'nomo22-bangkok']);
 const toggleSaved = slug => { const s = saved(); const i = s.indexOf(slug); i > -1 ? s.splice(i, 1) : s.push(slug); store.set('saved', s); return i === -1; };
 
+/* ---------- language: UI chrome translated in the mockup; production = Rails I18n + /de/, /fr/… URL prefixes with hreflang ---------- */
+const LANGS = [['en', '🇬🇧', 'English'], ['de', '🇩🇪', 'Deutsch'], ['fr', '🇫🇷', 'Français'], ['es', '🇪🇸', 'Español'], ['ru', '🇷🇺', 'Русский'], ['zh', '🇨🇳', '中文'], ['ja', '🇯🇵', '日本語'], ['ko', '🇰🇷', '한국어'], ['th', '🇹🇭', 'ไทย']];
+const T = {
+  //        explore      map        deals       best        hotels     staff        guides       account      from    open        opens          noReviews             cities      categories    business       tagline
+  de: ['Entdecken', 'Karte', 'Deals', 'Beste', 'Hotels', 'Personal', 'Ratgeber', 'Konto', 'ab', 'Geöffnet', 'Öffnet', 'Noch keine Bewertungen', 'Städte', 'Kategorien', 'Für Betriebe', 'Der Nachtleben-Guide für Asien. Echte Locations, echte Preise, exklusive SwanPass-Deals.'],
+  fr: ['Explorer', 'Carte', 'Offres', 'Top', 'Hôtels', 'Équipe', 'Guides', 'Compte', 'dès', 'Ouvert', 'Ouvre à', 'Pas encore d’avis', 'Villes', 'Catégories', 'Professionnels', 'Le guide de la vie nocturne en Asie. Vrais lieux, vrais prix, offres SwanPass exclusives.'],
+  es: ['Explorar', 'Mapa', 'Ofertas', 'Lo mejor', 'Hoteles', 'Chicas', 'Guías', 'Cuenta', 'desde', 'Abierto', 'Abre', 'Sin reseñas aún', 'Ciudades', 'Categorías', 'Negocios', 'La guía nocturna de Asia. Locales reales, precios reales, ofertas exclusivas SwanPass.'],
+  ru: ['Обзор', 'Карта', 'Скидки', 'Лучшее', 'Отели', 'Девушки', 'Гиды', 'Аккаунт', 'от', 'Открыто', 'Откроется', 'Пока нет отзывов', 'Города', 'Категории', 'Бизнесу', 'Ночной гид по Азии. Реальные заведения, реальные цены, эксклюзивные скидки SwanPass.'],
+  zh: ['探索', '地图', '优惠', '精选', '酒店', '小姐', '攻略', '账户', '起', '营业中', '开门', '暂无评价', '城市', '分类', '商家合作', '亚洲夜生活指南。真实场所、真实价格、SwanPass 独家优惠。'],
+  ja: ['探す', '地図', 'お得', 'ベスト', 'ホテル', 'スタッフ', 'ガイド', 'アカウント', '〜', '営業中', '開店', 'レビューなし', '都市', 'カテゴリー', '掲載をお考えの方', 'アジアのナイトライフガイド。本物の店、本当の料金、SwanPass限定特典。'],
+  ko: ['탐색', '지도', '할인', '베스트', '호텔', '스태프', '가이드', '계정', '부터', '영업 중', '오픈', '아직 리뷰 없음', '도시', '카테고리', '업체 등록', '아시아 나이트라이프 가이드. 실제 업소, 실제 가격, SwanPass 단독 할인.'],
+  th: ['สำรวจ', 'แผนที่', 'ดีล', 'ที่สุด', 'โรงแรม', 'พนักงาน', 'คู่มือ', 'บัญชี', 'เริ่ม', 'เปิดอยู่', 'เปิด', 'ยังไม่มีรีวิว', 'เมือง', 'หมวดหมู่', 'สำหรับธุรกิจ', 'คู่มือไนท์ไลฟ์เอเชีย สถานที่จริง ราคาจริง ดีลพิเศษจาก SwanPass'],
+};
+const T_KEYS = ['search', 'map', 'deals', 'best', 'hotels', 'staff', 'guides', 'account', 'from', 'open', 'opens', 'noReviews', 'cities', 'categories', 'business', 'tagline'];
+const T_EN = ['Explore', 'Map', 'Deals', 'Best', 'Hotels', 'Staff', 'Guides', 'Account', 'from', 'Open', 'Opens', 'No reviews yet', 'Cities', 'Categories', 'Business', 'The after-dark guide to Asia. Real venues, real prices, exclusive SwanPass deals.'];
+const getLang = () => store.get('lang', 'en');
+const t = k => { const i = T_KEYS.indexOf(k); return (T[getLang()] || T_EN)[i] || T_EN[i] || k; };
+document.documentElement.lang = getLang();
+
 /* ---------- header / footer / tab bar ---------- */
 const NAV = [['search', '🔎', 'Explore', 'search.html'], ['map', '🗺️', 'Map', 'map.html'], ['deals', '🏷️', 'Deals', 'deals.html'], ['best', '🏆', 'Best', 'best.html'], ['hotels', '🏨', 'Hotels', 'hotels.html'], ['staff', '👩', 'Staff', 'staff.html'], ['guides', '📝', 'Guides', 'guides.html']];
 function header(active) {
@@ -79,7 +98,7 @@ function header(active) {
     <button class="icon-btn hamb" data-drawer aria-label="Open menu">${icon('list')}</button>
     <a class="logo" href="${ROOT}index.html" aria-label="SwanPass home">${LOGO}</a>
       <button class="loc-pill find-pill" data-open="search" aria-label="Change city or search"><span class="flag">${locFlag()}</span><span class="t">${esc(locLabel())}</span><span class="sep"></span>${icon('search')}</button>
-    <nav class="nav">${NAV.map(([k, e, t, h]) => `<a href="${ROOT}${h}" class="${k === active ? 'on' : ''}"><span class="em">${e}</span>${t}</a>`).join('')}</nav>
+    <nav class="nav">${NAV.map(([k, e, _, h]) => `<a href="${ROOT}${h}" class="${k === active ? 'on' : ''}"><span class="em">${e}</span>${t(k)}</a>`).join('')}</nav>
     <div class="hdr-actions">
       <a class="btn btn-ghost btn-sm desktop-only" href="${ROOT}shop/index.html">➕ List your business</a>
       <a class="avatar" href="${ROOT}account/index.html" aria-label="Your account">AJ</a>
@@ -89,7 +108,7 @@ function header(active) {
   <aside class="drawer" aria-label="Menu">
     <div class="row between" style="margin-bottom:10px"><a class="logo" href="${ROOT}index.html">${LOGO}</a><button class="icon-btn" data-drawer-close aria-label="Close">${icon('close')}</button></div>
     <button class="loc-pill" data-open="loc" style="width:100%;max-width:none;margin-bottom:8px"><span class="flag">${locFlag()}</span><span class="t">${esc(locLabel())}</span>${icon('chevron')}</button>
-    ${NAV.map(([k, e, t, h]) => `<a class="dlink ${k === active ? 'on' : ''}" href="${ROOT}${h}"><span class="em">${e}</span>${t}</a>`).join('')}
+    ${NAV.map(([k, e, _, h]) => `<a class="dlink ${k === active ? 'on' : ''}" href="${ROOT}${h}"><span class="em">${e}</span>${t(k)}</a>`).join('')}
     <div class="dlabel">Categories</div>
     ${CATEGORIES.map(c => `<a class="dlink" href="${ROOT}search.html?cat=${c.slug}"><span class="em">${CAT_EMOJI[c.slug]}</span>${c.name}</a>`).join('')}
     <div class="dlabel">You</div>
@@ -102,13 +121,13 @@ const CAT_EMOJI = { massage: '💋', soapy: '🧼', 'go-go': '👯', 'gentlemens
 
 /* ---------- visitor currency: every price shows local + ≈ the visitor's own currency ----------
    production: default from Accept-Language / Cloudflare country header, saved in a cookie + member profile; rates refreshed daily */
-const CURRENCIES = { USD: ['$', 33.7], GBP: ['£', 44.5], EUR: ['€', 37.7], AUD: ['A$', 22.1], CAD: ['C$', 24.6], NONE: ['', 0] };
+const CURRENCIES = { USD: ['$', 33.7], GBP: ['£', 44.5], EUR: ['€', 37.7], AUD: ['A$', 22.1], CAD: ['C$', 24.6], NONE: ['฿', 0] };
 const FX_FROM_THB = { th: 1, vn: 700, id: 450, kh: 0.028, my: 0.13, sg: 0.037 };
 const getCur = () => store.get('cur', 'USD');
 const approx = thb => { const [sym, rate] = CURRENCIES[getCur()] || CURRENCIES.USD; return rate ? `≈ ${sym}${Math.round(thb / rate).toLocaleString()}` : ''; };
 const localPrice = (thb, country = 'th') => { const c = (countryOf(country) || {}).currency || '฿', raw = thb * (FX_FROM_THB[country] || 1), mag = Math.pow(10, Math.max(0, Math.floor(Math.log10(raw || 1)) - 1)); return c + (Math.round(raw / mag) * mag).toLocaleString(); };
 const money = (thb, country = 'th') => `${localPrice(thb, country)} <span class="approx">${approx(thb)}</span>`;
-const curSelect = () => `<select class="select cur-select" data-cur aria-label="Show prices in">${Object.keys(CURRENCIES).map(k => `<option value="${k}" ${getCur() === k ? 'selected' : ''}>${k === 'NONE' ? 'Local only' : k + ' ' + CURRENCIES[k][0]}</option>`).join('')}</select>`;
+const curSelect = () => `<select class="select cur-select" data-cur aria-label="Show prices in">${Object.keys(CURRENCIES).map(k => `<option value="${k}" ${getCur() === k ? 'selected' : ''}>${k === 'NONE' ? 'THB ฿ (local only)' : k + ' ' + CURRENCIES[k][0]}</option>`).join('')}</select>`;
 document.addEventListener('change', e => { if (e.target.matches('[data-cur]')) { store.set('cur', e.target.value); location.reload(); } });
 const goodTag = k => GOOD_TAGS.find(t => t[0] === k);
 
@@ -118,19 +137,19 @@ document.addEventListener('click', e => {
 });
 document.addEventListener('keydown', e => { if (e.key === 'Escape') document.body.classList.remove('drawer-open'); });
 function tabbar(active) {
-  const t = [['search', '🔎', 'Explore', 'search.html'], ['map', '🗺️', 'Map', 'map.html'], ['deals', '🏷️', 'Deals', 'deals.html'], ['best', '🏆', 'Best', 'best.html'], ['account', '👤', 'Account', 'account/index.html']];
-  return `<nav class="tabbar" aria-label="Main">${t.map(([k, e, l, h]) => `<a href="${ROOT}${h}" class="${k === active ? 'on' : ''}"><span class="em">${e}</span>${l}</a>`).join('')}</nav>`;
+  const tabs = [['search', '🔎', 'Explore', 'search.html'], ['map', '🗺️', 'Map', 'map.html'], ['deals', '🏷️', 'Deals', 'deals.html'], ['best', '🏆', 'Best', 'best.html'], ['account', '👤', 'Account', 'account/index.html']];
+  return `<nav class="tabbar" aria-label="Main">${tabs.map(([k, e, l, h]) => `<a href="${ROOT}${h}" class="${k === active ? 'on' : ''}"><span class="em">${e}</span>${t(k)}</a>`).join('')}</nav>`;
 }
 function footer() {
   const cities = CITIES.filter(c => c.count >= 20).slice(0, 8);
   return `<footer class="ftr"><div class="wrap">
     <div class="ftr-grid">
-      <div><a class="logo" href="${ROOT}index.html">${LOGO}</a><p class="muted" style="max-width:34ch;margin-top:12px">The after-dark guide to Asia. Real venues, real prices, exclusive SwanPass deals.</p>
-        <div class="row" style="margin-top:16px"><button class="btn btn-ghost btn-sm">${icon('globe')} English</button><button class="btn btn-ghost btn-sm">฿ THB</button></div></div>
-      <div><h4>Cities</h4><ul>${cities.map(c => `<li><a href="${ROOT}place.html?city=${c.slug}">${c.name}</a></li>`).join('')}</ul></div>
-      <div><h4>Categories</h4><ul>${CATEGORIES.slice(0, 7).map(c => `<li><a href="${ROOT}search.html?cat=${c.slug}">${c.name}</a></li>`).join('')}</ul></div>
+      <div><a class="logo" href="${ROOT}index.html">${LOGO}</a><p class="muted" style="max-width:34ch;margin-top:12px">${t('tagline')}</p>
+        <div class="row" style="margin-top:16px"><button class="btn btn-ghost btn-sm" data-pick="lang">${icon('globe')} ${LANGS.find(l => l[0] === getLang())[2]}</button><button class="btn btn-ghost btn-sm" data-pick="cur">${getCur() === 'NONE' ? '฿ THB' : CURRENCIES[getCur()][0] + ' ' + getCur()}</button></div></div>
+      <div><h4>${t('cities')}</h4><ul>${cities.map(c => `<li><a href="${ROOT}place.html?city=${c.slug}">${c.name}</a></li>`).join('')}</ul></div>
+      <div><h4>${t('categories')}</h4><ul>${CATEGORIES.slice(0, 7).map(c => `<li><a href="${ROOT}search.html?cat=${c.slug}">${c.name}</a></li>`).join('')}</ul></div>
       <div><h4>SwanPass</h4><ul><li><a href="${ROOT}deals.html">Deals</a></li><li><a href="${ROOT}best.html">Best of 2026</a></li><li><a href="${ROOT}guides.html">Guides & articles</a></li><li><a href="${ROOT}hotels.html">Guest-friendly hotels</a></li><li><a href="#">About</a></li></ul></div>
-      <div><h4>Business</h4><ul><li><a href="${ROOT}shop/index.html">Claim your venue</a></li><li><a href="${ROOT}shop/index.html">Advertise / Featured</a></li><li><a href="#">Report a listing</a></li><li><a href="#">Feedback</a></li></ul></div>
+      <div><h4>${t('business')}</h4><ul><li><a href="${ROOT}shop/index.html">Claim your venue</a></li><li><a href="${ROOT}shop/index.html">Advertise / Featured</a></li><li><a href="#">Report a listing</a></li><li><a href="#">Feedback</a></li></ul></div>
     </div>
     <div class="legal"><span>© ${new Date().getFullYear()} SwanPass. Adults 18+ only. Listings are provided by venues and verified where marked.</span><span><a href="#">Privacy</a> · <a href="#">Terms</a></span></div>
   </div></footer>`;
@@ -146,12 +165,12 @@ function card(l, opts = {}) {
       <img loading="lazy" src="${l.img}" alt="" onerror="this.remove()">
       <div class="card-badges">${l.featured ? '<span class="badge b-feat">★ Featured</span>' : ''}${l.verified ? '<span class="badge b-ver">✓ Verified</span>' : ''}${l.isNew ? '<span class="badge b-new">New</span>' : ''}</div>
       <button class="card-save ${on ? 'on' : ''}" data-save="${l.slug}" aria-label="Save">${icon('heart')}</button>
-      ${l.priceFrom ? `<span class="card-price num"><small>from</small> ${cur}${l.priceFrom.toLocaleString()}${approx(l.thb) ? `<small class="ap"> ${approx(l.thb)}</small>` : ''}</span>` : l.bar ? `<span class="card-price num"><small>beer</small> ฿${l.bar.beer}<small class="ap"> · bar fine ฿${l.bar.fine}</small></span>` : ''}
+      ${l.priceFrom ? `<span class="card-price num"><small>${t('from')}</small> ${cur}${l.priceFrom.toLocaleString()}${approx(l.thb) ? `<small class="ap"> ${approx(l.thb)}</small>` : ''}</span>` : l.bar ? `<span class="card-price num"><small>beer</small> ฿${l.bar.beer}<small class="ap"> · bar fine ฿${l.bar.fine}</small></span>` : ''}
     </div>
     <div class="card-body">
       <div class="card-title"><span>${esc(l.name)}</span>${l.verified ? tick : ''}</div>
-      <div class="card-meta">${l.rating ? `<span class="rating">${starIcon}${l.rating.toFixed(1)}</span><span class="num">(${l.reviews})</span><span class="dot"></span>` : '<span>No reviews yet</span><span class="dot"></span>'}<span>${CAT_EMOJI[l.catSlug] || ''} ${esc(l.cat.replace('’', "'"))}</span></div>
-      <div class="card-meta"><span class="open-dot ${l.openNow ? '' : 'closed'}"></span><span>${l.openNow ? 'Open' : 'Opens ' + l.hours.opens + ':00'}</span><span class="dot"></span><span>📍 ${esc(l.areaName || l.cityName)}</span></div>
+      <div class="card-meta">${l.rating ? `<span class="rating">${starIcon}${l.rating.toFixed(1)}</span><span class="num">(${l.reviews})</span><span class="dot"></span>` : `<span>${t('noReviews')}</span><span class="dot"></span>`}<span>${CAT_EMOJI[l.catSlug] || ''} ${esc(l.cat.replace('’', "'"))}</span></div>
+      <div class="card-meta"><span class="open-dot ${l.openNow ? '' : 'closed'}"></span><span>${l.openNow ? t('open') : t('opens') + ' ' + l.hours.opens + ':00'}</span><span class="dot"></span><span>📍 ${esc(l.areaName || l.cityName)}</span></div>
       ${l.good && l.good.length ? `<div class="card-good">${l.good.slice(0, 2).map(k => `<span>${goodTag(k)[1]} ${goodTag(k)[2]}</span>`).join('')}</div>` : ''}
       ${l.deal ? `<div class="card-deal">🏷️ ${esc(l.deal)}</div>` : ''}
     </div></a>`;
@@ -514,3 +533,19 @@ function hotelRow(h) {
     <div class="h-guest"><span class="h-badge" style="color:${col};border-color:${col}">${label}${h.guest === 'fee' ? ' ฿' + h.fee.toLocaleString() : ''}</span></div>
     <div class="h-price"><span class="num"><b>฿${h.price.toLocaleString()}</b></span><span class="approx">${approx(h.price)} / night</span><span class="btn btn-ghost btn-sm">Book →</span></div></a>`;
 }
+
+/* ---------- footer pickers: language + currency (saved per visitor; production also saves to the member profile) ---------- */
+document.addEventListener('click', e => {
+  const b = e.target.closest('[data-pick]'); if (!b) return;
+  const lang = b.dataset.pick === 'lang';
+  const items = lang ? LANGS.map(([k, f, n]) => [k, `${f} ${n}`, getLang() === k])
+    : Object.keys(CURRENCIES).map(k => [k, k === 'NONE' ? '฿ THB — baht only' : `${CURRENCIES[k][0]} ${k} — baht + ≈ ${k}`, getCur() === k]);
+  const m = openModal('pick', `<div class="modal-head"><h3 style="flex:1">${lang ? 'Language' : 'Show prices in'}</h3><button class="icon-btn" data-close aria-label="Close">${icon('close')}</button></div>
+    <div class="modal-body"><div class="pick-grid">${items.map(([k, label, on]) => `<button class="pick ${on ? 'on' : ''}" data-set-${lang ? 'lang' : 'cur'}="${k}">${label}${on ? ' ✓' : ''}</button>`).join('')}</div>
+    <p class="muted" style="font-size:12.5px;margin:14px 0 0">${lang ? 'Menus and buttons are translated in this mockup. Production: every page at its own URL (/de/, /fr/…) so Google indexes each language.' : 'Venues are always priced in local currency. The ≈ amount uses today’s rate.'}</p></div>`);
+  m.addEventListener('click', ev => {
+    const l = ev.target.closest('[data-set-lang]'), c = ev.target.closest('[data-set-cur]');
+    if (l) { store.set('lang', l.dataset.setLang); location.reload(); }
+    if (c) { store.set('cur', c.dataset.setCur); location.reload(); }
+  });
+});
