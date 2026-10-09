@@ -21,7 +21,7 @@
   .chart .v { background: var(--surface-3); }
   .chart .c { background: var(--red); }
   .upgrade { padding: 22px; border-radius: var(--r-lg); background: radial-gradient(400px 200px at 100% 0%, rgba(212, 168, 71, .25), transparent), var(--surface); border: 1px solid rgba(212, 168, 71, .35); }
-  .plans { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-top: 14px; }
+  .plans { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-top: 14px; }
   .plan { padding: 14px; border-radius: 12px; border: 1px solid var(--line-2); background: var(--bg-2); }
   .plan.rec { border-color: var(--gold); }
   .plan b { display: block; font-size: 15px; }
@@ -32,7 +32,7 @@
   .steps { display: flex; gap: 8px; margin: 18px 0 22px; }
   .steps span { flex: 1; height: 4px; border-radius: 9px; background: var(--surface-3); }
   .steps span.on { background: var(--red); }
-  @media (max-width: 1100px) { .cols { grid-template-columns: 1fr; } .plans { grid-template-columns: 1fr; } }
+  @media (max-width: 1100px) { .cols { grid-template-columns: 1fr; } .plans { grid-template-columns: 1fr 1fr; } }
 </style>
 </head>
 <body>
@@ -86,6 +86,7 @@ $('#body').innerHTML = CLAIM ? `
           <div class="plan"><b>Verified</b><div class="p">฿0</div><ul><li>Blue tick after our visit</li><li>Second tier in every list</li><li>Blue map pin</li></ul></div>
           <div class="plan rec"><b>Featured</b><div class="p">฿9,900<small class="muted" style="font-size:12px;font-weight:500">/mo</small></div><ul><li>Top tier in every list</li><li>Photo pin on the map</li><li>Homepage + city rows</li></ul></div>
           <div class="plan"><b>Featured+</b><div class="p">฿19,900<small class="muted" style="font-size:12px;font-weight:500">/mo</small></div><ul><li>Everything in Featured</li><li>Area page hero slot</li><li>Newsletter push</li></ul></div>
+          <div class="plan"><b>Banner ad</b><div class="p">฿6,900<small class="muted" style="font-size:12px;font-weight:500">/mo per city</small></div><ul><li>Homepage, city & area pages</li><li>Inside search results</li><li>Max 3 rotating per slot</li><li>Views & clicks report</li></ul></div>
         </div>${note('Prices are placeholders. The point: the ranking rule (Featured → Verified → rest) is the product you sell, so it’s shown to owners plainly.')}</div>
     </div>
   </div>`;

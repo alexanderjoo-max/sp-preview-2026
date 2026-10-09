@@ -630,3 +630,34 @@ body.drawer-open .drawer-ov { opacity: 1; pointer-events: auto; }
 
 /* Explore: categories live in the sidebar on desktop; pill row only on mobile */
 @media (min-width: 1101px) { .cat-subbar { display: none; } }
+
+/* prices in the visitor's currency */
+.approx, .card-price .ap { color: var(--muted); font-weight: 500; font-size: .85em; }
+.cur-select { height: 36px; font-size: 13px; }
+/* "Good to know" tags on cards */
+.card-good { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 8px; }
+.card-good span { font-size: 11.5px; color: var(--text-2); background: var(--surface-2); border: 1px solid var(--line); padding: 2px 7px; border-radius: 6px; white-space: nowrap; }
+/* sponsored banner */
+.sponsor { display: flex; align-items: center; gap: 16px; padding: 12px; padding-right: 18px; border-radius: var(--r); border: 1px solid rgba(212, 168, 71, .35); background: linear-gradient(100deg, rgba(212, 168, 71, .1), var(--surface) 55%); }
+.sponsor:hover { border-color: var(--gold); }
+.sponsor img { width: 120px; height: 80px; object-fit: cover; border-radius: 8px; flex: none; }
+.sponsor .sp-in { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px; font-size: 13px; }
+.sponsor b { font-size: 17px; }
+.sponsor .sp-lbl { font-size: 10px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--gold); }
+.sponsor .sp-deal { color: var(--deal); font-weight: 600; }
+.sponsor-row { grid-column: 1 / -1; }
+@media (max-width: 720px) { .sponsor { gap: 10px; padding: 10px; } .sponsor img { width: 84px; height: 84px; } .sponsor .sp-cta { display: none; } }
+/* guest-friendly hotels */
+.hotel { display: grid; grid-template-columns: 44px 1fr auto auto; gap: 14px; align-items: center; padding: 12px 14px; border-radius: var(--r); background: var(--surface); border: 1px solid var(--line); }
+.hotel:hover { border-color: var(--line-2); }
+.hotel .h-ic { width: 44px; height: 44px; border-radius: 10px; background: var(--surface-2); display: grid; place-items: center; font-size: 20px; }
+.hotel .h-main { display: flex; flex-direction: column; gap: 2px; min-width: 0; font-size: 13px; }
+.hotel .h-main b { font-size: 15.5px; }
+.hotel .h-note { color: var(--text-2); font-size: 12.5px; }
+.hotel .h-badge { font-size: 12px; font-weight: 700; border: 1px solid; padding: 3px 9px; border-radius: 999px; white-space: nowrap; }
+.hotel .h-price { display: flex; flex-direction: column; align-items: flex-end; gap: 3px; font-size: 13px; text-align: right; }
+.hotel-list { display: flex; flex-direction: column; gap: 8px; }
+@media (max-width: 720px) { .hotel { grid-template-columns: 1fr auto; } .hotel .h-ic { display: none; } .hotel .h-guest { grid-column: 1; grid-row: 2; } .hotel .h-price { grid-row: 1 / 3; grid-column: 2; } }
+
+/* phones: account lives in the bottom tab bar, so drop the header avatar to stop horizontal overflow */
+@media (max-width: 480px) { .hdr-actions { display: none; } }

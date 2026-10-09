@@ -73,6 +73,8 @@
     <div class="scroller" id="featured"></div>
   </div></section>
 
+  <section class="section" style="padding-bottom:0"><div class="wrap" id="sponsor-home"></div></section>
+
   <section class="section"><div class="wrap">
     <div class="deal-strip" style="margin-bottom:22px">
       <div style="flex:1"><b style="font-size:15px">🏷️ Deals tonight in <span class="cityname">Bangkok</span></b><div class="muted" style="font-size:14px">No codes, no sign-up — just say “SwanPass” at the counter or show the venue page.</div></div>
@@ -144,6 +146,7 @@
     $('#featured').innerHTML = pool.filter(l => l.featured || l.verified).sort(SORTS.recommended[1]).slice(0, 14).map(card).join('');
     $('#deals').innerHTML = pool.filter(l => l.deal).sort(SORTS.recommended[1]).slice(0, 10).map(card).join('') || '<p class="muted">No deals in this city yet.</p>';
     const best = pool.filter(l => l.rating).sort((a, b) => score(b) - score(a)).slice(0, 6);
+    $('#sponsor-home').innerHTML = sponsor('home') + ' ' + note('Banner ads: sold directly to venues per city per month (max 3 rotating per slot). Sits between rows — never inside the Featured/Verified ordering and never on venue pages.');
     $('#best-top').textContent = 'Top 3: ' + best.slice(0, 3).map(l => l.name).join(' · ');
     $('#staff').innerHTML = [...pool].sort(SORTS.recommended[1]).slice(0, 6).map(l => `<a class="staff" href="staff.html"><img src="${l.img}" alt="" loading="lazy"><span class="reveal">${icon('eye')}</span><div class="cap"><b>${esc(l.name)}</b>${l.areaName || l.cityName}</div></a>`).join('');
     $('#articles').innerHTML = ARTICLES.map(([t, s, d]) => `<a class="article" href="article.html"><div class="im"><img src="${LISTINGS.find(l => l.slug === s).img}" alt="" loading="lazy"></div><span class="muted" style="font-size:12.5px">${d}</span><b>${t}</b></a>`).join('');

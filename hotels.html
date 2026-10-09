@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="robots" content="noindex, nofollow, noarchive">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Guest-Friendly Hotels — No Joiner Fee | SwanPass</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/sp.css">
+<style>
+  .h-hero { padding: 30px 0 20px; border-bottom: 1px solid var(--line); }
+  .h-hero h1 { font-size: clamp(28px, 4vw, 42px); }
+  .h-tools { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; margin: 16px 0 6px; }
+  .h-layout { display: grid; grid-template-columns: 1fr 300px; gap: 24px; align-items: start; }
+  .h-side { position: sticky; top: calc(var(--header-h) + 16px); display: flex; flex-direction: column; gap: 12px; }
+  .h-side .panel { padding: 16px; border-radius: var(--r); background: var(--surface); border: 1px solid var(--line); font-size: 13.5px; }
+  .h-side .panel p { margin: 6px 0 0; color: var(--text-2); }
+  .h-area { margin: 22px 0 10px; font-size: 13px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); }
+  @media (max-width: 1000px) { .h-layout { grid-template-columns: 1fr; } .h-side { position: static; } }
+</style>
+</head>
+<body>
+<main>
+  <section class="h-hero"><div class="wrap">
+    <div class="eyebrow">🏨 Stay near the nightlife</div>
+    <h1 class="display" style="margin-top:8px">Guest-friendly hotels in <em id="h-city">Bangkok</em></h1>
+    <p class="lede" style="margin-top:8px">Can you bring someone back without a joiner fee? Every hotel here is checked by members after their stay.</p>
+    <div class="h-tools"><div class="chips" id="h-cities"></div></div>
+    <div class="h-tools"><div class="seg" id="h-guest"></div><span style="flex:1"></span><span id="h-cur"></span></div>
+  </div></section>
+  <section class="section" style="padding-top:20px"><div class="wrap h-layout">
+    <div id="h-list"></div>
+    <aside class="h-side">
+      <div class="panel"><b>What “guest-friendly” means</b><p><span style="color:var(--deal)">✓ Guest-friendly</span> — no fee; reception may hold your guest’s ID until they leave.</p><p><span style="color:var(--gold)">Joiner fee</span> — you pay a one-off fee per guest, usually ฿500–1,000.</p><p><span style="color:var(--red)">✕ No guests</span> — visitors aren’t allowed in rooms.</p></div>
+      <div class="panel"><b>Stayed somewhere?</b><p>Tell us if the policy has changed. It takes ten seconds and keeps the list honest.</p><button class="btn btn-ghost btn-sm btn-block" style="margin-top:10px">Report a hotel policy</button></div>
+    </aside>
+  </div></section>
+</main>
+<script src="assets/data.js"></script>
+<script src="assets/sp.js"></script>
+<script>
+  shell('hotels');
+  let guest = 'all';
+  function render() {
+    const loc = getLoc();
+    const city = HOTELS.some(h => h.city === loc.city) ? loc.city : 'bangkok';
+    $('#h-city').textContent = cityOf(city).name;
+    $('#h-cities').innerHTML = [...new Set(HOTELS.map(h => h.city))].map(c => `<button class="chip ${c === city ? 'on' : ''}" data-hc="${c}">${cityOf(c).name}</button>`).join('') + '<span class="muted" style="font-size:13px;align-self:center">More cities soon</span>';
+    $('#h-guest').innerHTML = [['all', 'All'], ['yes', '✓ No joiner fee'], ['fee', 'Joiner fee OK']].map(([k, t]) => `<button data-hg="${k}" class="${guest === k ? 'on' : ''}">${t}</button>`).join('');
+    $('#h-cur').innerHTML = curSelect();
+    const list = HOTELS.filter(h => h.city === city && (guest === 'all' || h.guest === guest)).sort((a, b) => ({ yes: 0, fee: 1, no: 2 }[a.guest] - { yes: 0, fee: 1, no: 2 }[b.guest]) || a.price - b.price);
+    const areas = [...new Set(list.map(h => h.area))];
+    $('#h-list').innerHTML = areas.map(a => `<div class="h-area">📍 ${list.find(h => h.area === a).areaName} · <a href="place.html?city=${city}&area=${a}" style="color:var(--text-2)">nightlife here →</a></div><div class="hotel-list">${list.filter(h => h.area === a).map(hotelRow).join('')}</div>`).join('') || '<p class="muted">No hotels match.</p>';
+  }
+  document.addEventListener('click', e => {
+    const c = e.target.closest('[data-hc]'); if (c) { const ci = cityOf(c.dataset.hc); setLoc({ country: ci.country, city: ci.slug }); }
+    const g = e.target.closest('[data-hg]'); if (g) { guest = g.dataset.hg; render(); }
+  });
+  document.addEventListener('sp:loc', render);
+  render();
+  $('.h-hero .lede').insertAdjacentHTML('beforeend', ' ' + note('Revenue: “Book →” goes to a hotel booking partner with SwanPass’s affiliate ID (typically 4–7% commission). Guest policy comes from member reports after a stay and is re-checked quarterly. Hotel names here are samples.'));
+</script>
+</body>
+</html>

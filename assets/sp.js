@@ -73,7 +73,7 @@ const saved = () => store.get('saved', ['don-quixote', 'jelly-pop-bangkok', 'nom
 const toggleSaved = slug => { const s = saved(); const i = s.indexOf(slug); i > -1 ? s.splice(i, 1) : s.push(slug); store.set('saved', s); return i === -1; };
 
 /* ---------- header / footer / tab bar ---------- */
-const NAV = [['search', '🔎', 'Explore', 'search.html'], ['map', '🗺️', 'Map', 'map.html'], ['deals', '🏷️', 'Deals', 'deals.html'], ['best', '🏆', 'Best', 'best.html'], ['staff', '👩', 'Staff', 'staff.html'], ['guides', '📝', 'Guides', 'guides.html']];
+const NAV = [['search', '🔎', 'Explore', 'search.html'], ['map', '🗺️', 'Map', 'map.html'], ['deals', '🏷️', 'Deals', 'deals.html'], ['best', '🏆', 'Best', 'best.html'], ['hotels', '🏨', 'Hotels', 'hotels.html'], ['staff', '👩', 'Staff', 'staff.html'], ['guides', '📝', 'Guides', 'guides.html']];
 function header(active) {
   return `<header class="hdr"><div class="wrap">
     <button class="icon-btn hamb" data-drawer aria-label="Open menu">${icon('list')}</button>
@@ -98,7 +98,27 @@ function header(active) {
     <a class="dlink" href="${ROOT}shop/index.html">➕ List your business</a><a class="dlink" href="#">📝 Blog</a><a class="dlink" href="#">💬 Feedback</a>
   </aside>`;
 }
-const CAT_EMOJI = { massage: '💋', soapy: '🧼', 'go-go': '👯', 'gentlemens-clubs': '💃', 'red-light': '📍', freelancers: '❤️', ktv: '🎤', lgbtq: '🏳️‍🌈' };
+const CAT_EMOJI = { massage: '💋', soapy: '🧼', 'go-go': '👯', 'gentlemens-clubs': '💃', 'red-light': '📍', freelancers: '❤️', ktv: '🎤', lgbtq: '🏳️‍🌈', 'beer-bars': '🍺', nightclubs: '🪩' };
+
+/* ---------- visitor currency: every price shows local + ≈ the visitor's own currency ----------
+   production: default from Accept-Language / Cloudflare country header, saved in a cookie + member profile; rates refreshed daily */
+const CURRENCIES = { USD: ['$', 33.7], GBP: ['£', 44.5], EUR: ['€', 37.7], AUD: ['A$', 22.1], CAD: ['C$', 24.6], NONE: ['', 0] };
+const FX_FROM_THB = { th: 1, vn: 700, id: 450, kh: 0.028, my: 0.13, sg: 0.037 };
+const getCur = () => store.get('cur', 'USD');
+const approx = thb => { const [sym, rate] = CURRENCIES[getCur()] || CURRENCIES.USD; return rate ? `≈ ${sym}${Math.round(thb / rate).toLocaleString()}` : ''; };
+const localPrice = (thb, country = 'th') => { const c = (countryOf(country) || {}).currency || '฿', raw = thb * (FX_FROM_THB[country] || 1), mag = Math.pow(10, Math.max(0, Math.floor(Math.log10(raw || 1)) - 1)); return c + (Math.round(raw / mag) * mag).toLocaleString(); };
+const money = (thb, country = 'th') => `${localPrice(thb, country)} <span class="approx">${approx(thb)}</span>`;
+const curSelect = () => `<select class="select cur-select" data-cur aria-label="Show prices in">${Object.keys(CURRENCIES).map(k => `<option value="${k}" ${getCur() === k ? 'selected' : ''}>${k === 'NONE' ? 'Local only' : k + ' ' + CURRENCIES[k][0]}</option>`).join('')}</select>`;
+document.addEventListener('change', e => { if (e.target.matches('[data-cur]')) { store.set('cur', e.target.value); location.reload(); } });
+const goodTag = k => GOOD_TAGS.find(t => t[0] === k);
+
+/* ---------- sponsored banner — sold directly to venues, per city per month, max 3 rotating per slot ----------
+   Never inside the Featured/Verified ordering; never on venue pages. */
+function sponsor(slot, l) {
+  const c = getLoc().city, inCity = LISTINGS.filter(x => x.deal && (!c || x.city === c)), pool = inCity.filter(x => x.featured).length ? inCity.filter(x => x.featured) : inCity.length ? inCity : LISTINGS.filter(x => x.featured && x.deal);
+  l = l || pool[(new Date().getDate() + slot.length) % pool.length];
+  return `<a class="sponsor" href="${ROOT}listing.html?v=${l.slug}"><img src="${l.img}" alt="" loading="lazy"><div class="sp-in"><span class="sp-lbl">Sponsored</span><b>${esc(l.name)}</b><span class="muted">${CAT_EMOJI[l.catSlug] || ''} ${esc(l.cat)} · ${esc(l.areaName || l.cityName)}</span>${l.deal ? `<span class="sp-deal">🏷️ ${esc(l.deal)}</span>` : ''}</div><span class="btn btn-red btn-sm sp-cta">View venue →</span></a>`;
+}
 document.addEventListener('click', e => {
   if (e.target.closest('[data-drawer]')) document.body.classList.add('drawer-open');
   if (e.target.closest('[data-drawer-close]') || (e.target.closest('.drawer [data-open]'))) document.body.classList.remove('drawer-open');
@@ -116,7 +136,7 @@ function footer() {
         <div class="row" style="margin-top:16px"><button class="btn btn-ghost btn-sm">${icon('globe')} English</button><button class="btn btn-ghost btn-sm">฿ THB</button></div></div>
       <div><h4>Cities</h4><ul>${cities.map(c => `<li><a href="${ROOT}place.html?city=${c.slug}">${c.name}</a></li>`).join('')}</ul></div>
       <div><h4>Categories</h4><ul>${CATEGORIES.slice(0, 7).map(c => `<li><a href="${ROOT}search.html?cat=${c.slug}">${c.name}</a></li>`).join('')}</ul></div>
-      <div><h4>SwanPass</h4><ul><li><a href="${ROOT}deals.html">Deals</a></li><li><a href="${ROOT}best.html">Best of 2026</a></li><li><a href="${ROOT}guides.html">Guides & articles</a></li><li><a href="#">About</a></li></ul></div>
+      <div><h4>SwanPass</h4><ul><li><a href="${ROOT}deals.html">Deals</a></li><li><a href="${ROOT}best.html">Best of 2026</a></li><li><a href="${ROOT}guides.html">Guides & articles</a></li><li><a href="${ROOT}hotels.html">Guest-friendly hotels</a></li><li><a href="#">About</a></li></ul></div>
       <div><h4>Business</h4><ul><li><a href="${ROOT}shop/index.html">Claim your venue</a></li><li><a href="${ROOT}shop/index.html">Advertise / Featured</a></li><li><a href="#">Report a listing</a></li><li><a href="#">Feedback</a></li></ul></div>
     </div>
     <div class="legal"><span>© ${new Date().getFullYear()} SwanPass. Adults 18+ only. Listings are provided by venues and verified where marked.</span><span><a href="#">Privacy</a> · <a href="#">Terms</a></span></div>
@@ -133,12 +153,13 @@ function card(l, opts = {}) {
       <img loading="lazy" src="${l.img}" alt="" onerror="this.remove()">
       <div class="card-badges">${l.featured ? '<span class="badge b-feat">★ Featured</span>' : ''}${l.verified ? '<span class="badge b-ver">✓ Verified</span>' : ''}${l.isNew ? '<span class="badge b-new">New</span>' : ''}</div>
       <button class="card-save ${on ? 'on' : ''}" data-save="${l.slug}" aria-label="Save">${icon('heart')}</button>
-      ${l.priceFrom ? `<span class="card-price num"><small>from</small> ${cur}${l.priceFrom.toLocaleString()}</span>` : ''}
+      ${l.priceFrom ? `<span class="card-price num"><small>from</small> ${cur}${l.priceFrom.toLocaleString()}${approx(l.thb) ? `<small class="ap"> ${approx(l.thb)}</small>` : ''}</span>` : l.bar ? `<span class="card-price num"><small>beer</small> ฿${l.bar.beer}<small class="ap"> · bar fine ฿${l.bar.fine}</small></span>` : ''}
     </div>
     <div class="card-body">
       <div class="card-title"><span>${esc(l.name)}</span>${l.verified ? tick : ''}</div>
       <div class="card-meta">${l.rating ? `<span class="rating">${starIcon}${l.rating.toFixed(1)}</span><span class="num">(${l.reviews})</span><span class="dot"></span>` : '<span>No reviews yet</span><span class="dot"></span>'}<span>${CAT_EMOJI[l.catSlug] || ''} ${esc(l.cat.replace('’', "'"))}</span></div>
       <div class="card-meta"><span class="open-dot ${l.openNow ? '' : 'closed'}"></span><span>${l.openNow ? 'Open' : 'Opens ' + l.hours.opens + ':00'}</span><span class="dot"></span><span>📍 ${esc(l.areaName || l.cityName)}</span></div>
+      ${l.good && l.good.length ? `<div class="card-good">${l.good.slice(0, 2).map(k => `<span>${goodTag(k)[1]} ${goodTag(k)[2]}</span>`).join('')}</div>` : ''}
       ${l.deal ? `<div class="card-deal">🏷️ ${esc(l.deal)}</div>` : ''}
     </div></a>`;
 }
@@ -182,10 +203,10 @@ const SORTS = {
   distance: ['Nearest', tiered((a, b) => Math.hypot(a.lat - 13.7367, a.lng - 100.5602) - Math.hypot(b.lat - 13.7367, b.lng - 100.5602))],
 };
 /* group a sorted list into tier sections (used by result grids) */
-function withTierHeads(list, render, heads = true) {
+function withTierHeads(list, render, heads = true, inject = {}) {
   if (!heads) return list.map(l => render(l)).join('');
   let cur = -1, out = '';
-  list.forEach(l => { const t = tier(l); if (t !== cur) { cur = t; const n = list.filter(x => tier(x) === t).length; out += `<div class="tier-head">${t === 0 ? '<span class="badge b-feat">★ Featured</span>' : t === 1 ? '<span class="badge b-ver">✓ Verified</span>' : TIER_NAMES[2]}<small class="num">${n}</small></div>`; } out += render(l); });
+  list.forEach((l, i) => { if (inject[i]) out += inject[i]; const t = tier(l); if (t !== cur) { cur = t; const n = list.filter(x => tier(x) === t).length; out += `<div class="tier-head">${t === 0 ? '<span class="badge b-feat">★ Featured</span>' : t === 1 ? '<span class="badge b-ver">✓ Verified</span>' : TIER_NAMES[2]}<small class="num">${n}</small></div>`; } out += render(l); });
   return out;
 }
 
@@ -342,7 +363,7 @@ function directory({ el, title, preset = {}, render = card, gridClass = 'grid-ca
   const loc = getLoc();
   const S = {
     country: loc.country, city: loc.city, areas: [], cats: params.get('cat') ? [params.get('cat')] : [],
-    q: params.get('q') || '', openNow: false, deal: !!preset.deal, verified: false, isNew: false, featuredOnly: false,
+    q: params.get('q') || '', good: [], openNow: false, deal: !!preset.deal, verified: false, isNew: false, featuredOnly: false,
     minRating: 0, price: 0, sort: params.get('sort') || 'recommended', ...preset,
   };
   const scope = l => (!S.country || l.country === S.country) && (!S.city || l.city === S.city);
@@ -350,7 +371,7 @@ function directory({ el, title, preset = {}, render = card, gridClass = 'grid-ca
     scope(l) && (skip === 'area' || !S.areas.length || S.areas.includes(l.area)) &&
     (skip === 'cat' || !S.cats.length || S.cats.includes(l.catSlug)) &&
     (!S.q || (l.name + ' ' + l.tags.join(' ')).toLowerCase().includes(S.q.toLowerCase())) &&
-    (!S.openNow || l.openNow) && (!S.deal || l.deal) && (!S.verified || l.verified) && (!S.isNew || l.isNew) &&
+    (skip === 'good' || S.good.every(g => l.good.includes(g))) && (!S.openNow || l.openNow) && (!S.deal || l.deal) && (!S.verified || l.verified) && (!S.isNew || l.isNew) &&
     (!S.featuredOnly || l.featured) && (!S.minRating || (l.rating || 0) >= S.minRating) && (!S.price || l.priceLevel === S.price);
   const results = () => LISTINGS.filter(l => match(l)).sort(SORTS[S.sort][1]);
 
@@ -398,9 +419,10 @@ function directory({ el, title, preset = {}, render = card, gridClass = 'grid-ca
       <details class="fgroup" open><summary>Rating</summary><div class="fbody">
         <div class="seg">${[[0, 'Any'], [4, '4.0+'], [4.5, '4.5+']].map(([v, t]) => `<button data-rating="${v}" class="${S.minRating === v ? 'on' : ''}">${t}</button>`).join('')}</div>
       </div></details>
-      <details class="fgroup"><summary>Amenities</summary><div class="fbody">
-        ${['Jacuzzi', 'Private room', 'Couples OK', 'Credit card', 'English spoken', 'Outcall', 'VIP room'].map(a => `<label class="fcheck"><input type="checkbox">${a}</label>`).join('')}
-      </div></details>`;
+      <details class="fgroup" open><summary>Good to know</summary><div class="fbody">
+        ${GOOD_TAGS.map(([k, e, t]) => `<label class="fcheck"><input type="checkbox" data-good="${k}" ${S.good.includes(k) ? 'checked' : ''}>${e} ${t}<span class="n">${LISTINGS.filter(l => match(l) && (S.good.includes(k) || l.good.includes(k))).length}</span></label>`).join('')}
+      </div></details>
+      <details class="fgroup"><summary>Show prices in</summary><div class="fbody">${curSelect()}</div></details>`;
   };
 
   let limit = 36;
@@ -408,13 +430,14 @@ function directory({ el, title, preset = {}, render = card, gridClass = 'grid-ca
     const r = results();
     $('#d-title', el).textContent = typeof title === 'function' ? title(S) : title;
     $('#d-count', el).textContent = `${r.length} venue${r.length === 1 ? '' : 's'}` + (S.city ? ` in ${cityOf(S.city).name}` : S.country ? ` in ${countryOf(S.country).name}` : ' across Asia');
-    $('#d-grid', el).innerHTML = r.length ? withTierHeads(r.slice(0, limit), render) : `<div class="empty" style="grid-column:1/-1"><h3>No venues match</h3><p>Try removing a filter or widening the area.</p><button class="btn btn-ghost btn-sm" data-reset>Clear all filters</button></div>`;
+    $('#d-grid', el).innerHTML = r.length ? withTierHeads(r.slice(0, limit), render, true, render === card && r.length > 10 ? { [Math.max(1, r.slice(0, limit).findIndex(l => tier(l) > 0))]: `<div class="sponsor-row">${sponsor('results')}</div>` } : {}) : `<div class="empty" style="grid-column:1/-1"><h3>No venues match</h3><p>Try removing a filter or widening the area.</p><button class="btn btn-ghost btn-sm" data-reset>Clear all filters</button></div>`;
     $('#d-more', el).style.display = r.length > limit ? '' : 'none';
     $('#d-filters', el).innerHTML = filtersHTML();
     $('#d-cats', el).innerHTML = `<button class="chip ${!S.cats.length ? 'on' : ''}" data-chipcat="">🔥 All</button>` + CATEGORIES.map(c => `<button class="chip ${S.cats.includes(c.slug) ? 'on' : ''}" data-chipcat="${c.slug}">${CAT_EMOJI[c.slug]} ${c.name}</button>`).join('');
     const act = [];
     S.areas.forEach(a => act.push([`area:${a}`, AREAS[S.city].find(x => x.slug === a).name]));
     S.cats.forEach(c => act.push([`cat:${c}`, CATEGORIES.find(x => x.slug === c).name]));
+    S.good.forEach(g => act.push([`good:${g}`, goodTag(g)[2]]));
     ['openNow', 'deal', 'verified', 'isNew'].forEach(f => S[f] && !(preset[f]) && act.push([`flag:${f}`, { openNow: 'Open now', deal: 'Has deal', verified: 'Verified', isNew: 'New' }[f]]));
     if (S.minRating) act.push(['rating', S.minRating + '+ stars']);
     if (S.price) act.push(['price', '฿'.repeat(S.price)]);
@@ -429,6 +452,7 @@ function directory({ el, title, preset = {}, render = card, gridClass = 'grid-ca
     const t = e.target;
     if (t.name && t.name.startsWith('d-city')) { S.city = t.value || null; S.areas = []; }
     if (t.dataset.area) S.areas = t.checked ? [...S.areas, t.dataset.area] : S.areas.filter(a => a !== t.dataset.area);
+    if (t.dataset.good) S.good = t.checked ? [...S.good, t.dataset.good] : S.good.filter(g => g !== t.dataset.good);
     if (t.dataset.cat) S.cats = t.checked ? [...S.cats, t.dataset.cat] : S.cats.filter(c => c !== t.dataset.cat);
     if (t.dataset.flag) S[t.dataset.flag] = t.checked;
     if (t.id === 'd-sort') S.sort = t.value;
@@ -440,8 +464,8 @@ function directory({ el, title, preset = {}, render = card, gridClass = 'grid-ca
     if (t.dataset.price != null) S.price = +t.dataset.price;
     if (t.dataset.rating != null) S.minRating = +t.dataset.rating;
     if (t.dataset.chipcat != null) S.cats = t.dataset.chipcat ? [t.dataset.chipcat] : [];
-    if (t.dataset.rm) { const [k, v] = t.dataset.rm.split(':'); if (k === 'area') S.areas = S.areas.filter(a => a !== v); if (k === 'cat') S.cats = S.cats.filter(c => c !== v); if (k === 'flag') S[v] = false; if (k === 'rating') S.minRating = 0; if (k === 'price') S.price = 0; if (k === 'q') S.q = ''; }
-    if (t.dataset.reset != null) Object.assign(S, { areas: [], cats: [], q: '', openNow: false, deal: !!preset.deal, verified: false, isNew: false, minRating: 0, price: 0 });
+    if (t.dataset.rm) { const [k, v] = t.dataset.rm.split(':'); if (k === 'area') S.areas = S.areas.filter(a => a !== v); if (k === 'cat') S.cats = S.cats.filter(c => c !== v); if (k === 'good') S.good = S.good.filter(g => g !== v); if (k === 'flag') S[v] = false; if (k === 'rating') S.minRating = 0; if (k === 'price') S.price = 0; if (k === 'q') S.q = ''; }
+    if (t.dataset.reset != null) Object.assign(S, { areas: [], cats: [], good: [], q: '', openNow: false, deal: !!preset.deal, verified: false, isNew: false, minRating: 0, price: 0 });
     draw();
     if ($('#d-sheet-body')) $('#d-sheet-body').innerHTML = filtersHTML('d-city-m');
   };
@@ -489,3 +513,11 @@ document.addEventListener('click', e => {
   }
   /* production: also POST /listings/:id/events {type: ch} for the owner dashboard */
 });
+
+/* ---------- guest-friendly hotel row (Hotels page, city/area pages, venue pages) ---------- */
+function hotelRow(h) {
+  const [label, col] = GUEST[h.guest];
+  return `<a class="hotel" href="#" onclick="return false"><span class="h-ic">🏨</span><div class="h-main"><b>${esc(h.name)}</b><span class="muted">${'★'.repeat(h.stars)} · ${esc(h.areaName || '')} · ${h.score.toFixed(1)}/10</span><span class="h-note">${esc(h.note)}</span></div>
+    <div class="h-guest"><span class="h-badge" style="color:${col};border-color:${col}">${label}${h.guest === 'fee' ? ' ฿' + h.fee.toLocaleString() : ''}</span></div>
+    <div class="h-price"><span class="num"><b>฿${h.price.toLocaleString()}</b></span><span class="approx">${approx(h.price)} / night</span><span class="btn btn-ghost btn-sm">Book →</span></div></a>`;
+}

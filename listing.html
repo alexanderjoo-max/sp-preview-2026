@@ -94,6 +94,15 @@
   .mc-row .dur { color: var(--text-2); }
   .mc-row .pp { font-weight: 800; font-size: 15.5px; font-variant-numeric: tabular-nums; }
   .menu-card.alt .mc-row .pp { color: var(--gold); }
+  .pay-box { margin-top: 14px; padding: 14px 16px; border-radius: 12px; border: 1px solid var(--line); background: var(--surface); }
+  .pay-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 10px; margin-top: 12px; }
+  .pay-grid div { display: flex; flex-direction: column; gap: 2px; font-size: 13px; }
+  .pay-grid span { color: var(--muted); font-size: 12px; }
+  .rv-badge { font-size: 10.5px; font-weight: 700; padding: 2px 7px; border-radius: 6px; background: var(--surface-2); color: var(--text-2); border: 1px solid var(--line); vertical-align: 1px; }
+  .rv-badge.trip { color: var(--gold); border-color: rgba(212, 168, 71, .4); }
+  .review.trip { border: 1px solid rgba(212, 168, 71, .3); border-radius: 12px; padding: 14px; background: linear-gradient(110deg, rgba(212, 168, 71, .06), transparent 60%); }
+  .rv-form label { display: block; font-size: 13px; font-weight: 600; margin: 14px 0 6px; }
+  .rv-form .stars-in button { font-size: 26px; color: var(--gold); }
   .tagpop { position: absolute; left: 50%; transform: translateX(-50%); font-size: 9.5px; font-weight: 800; text-transform: uppercase; letter-spacing: .05em; color: var(--deal); background: var(--deal-bg); padding: 2px 7px; border-radius: 4px; }
 </style>
 </head>
@@ -134,28 +143,36 @@
             <span><span class="rating">${starIcon}${D.rating.toFixed(1)}</span><a href="#reviews" class="muted">(${D.reviewsCount} reviews)</a></span>
             <span>${icon('pin')}${D.area}, ${D.city}</span>
             <span><span class="open-dot"></span><b style="color:var(--deal)">Open now</b>&nbsp;· until ${fmt(dayHours[2])}</span>
-            <span>${icon('tag')}From ฿2,100</span>
+            <span>${icon('tag')}${L0.bar ? 'Beer ' + money(L0.bar.beer) : 'From ' + money(2100)}</span>
           </div>
         </div>
       </div>
       <div></div>
     </div>
 
-    <div class="anchors" id="anchors"><div class="chips">${[['overview', 'Overview'], ['deal', 'Deal'], ['prices', 'Prices'], ['staff', 'Staff'], ['reviews', 'Reviews'], ['hours', 'Hours & contact'], ['location', 'Location'], ['faq', 'FAQ'], ['nearby', 'Nearby']].filter(([k]) => k !== 'deal' || D.deal).map(([k, t], i) => `<a class="chip ${i ? '' : 'on'}" href="#${k}">${t}</a>`).join('')}</div></div>
+    <div class="anchors" id="anchors"><div class="chips">${[['overview', 'Overview'], ['deal', 'Deal'], ['prices', 'Prices'], ['staff', 'Staff'], ['reviews', 'Reviews'], ['hours', 'Hours & contact'], ['location', 'Location'], ['hotels', 'Stay nearby'], ['faq', 'FAQ'], ['nearby', 'Nearby']].filter(([k]) => k !== 'deal' || D.deal).map(([k, t], i) => `<a class="chip ${i ? '' : 'on'}" href="#${k}">${t}</a>`).join('')}</div></div>
 
     <div class="pdp">
       <div>
         <section class="blk" id="overview"><h2>About</h2><div class="prose"><p>${D.about}</p></div>
-          <div class="amen" style="margin-top:18px">${D.amenities.map(a => `<span>${icon('check')}${a}</span>`).join('')}</div></section>
+          <div class="amen" style="margin-top:18px">${D.amenities.map(a => `<span>${icon('check')}${a}</span>`).join('')}</div>
+          ${L0.good.length ? `<h3 style="margin:20px 0 8px;font-size:15px">Good to know ${note('Tags the venue ticks in the owner portal; SwanPass staff confirm on the verification visit, and members can flag them in reviews. They power the “Good to know” filters on Explore.')}</h3><div class="card-good" style="margin:0">${L0.good.map(k => `<span style="font-size:13px;padding:4px 10px">${goodTag(k)[1]} ${goodTag(k)[2]}</span>`).join('')}</div>` : ''}</section>
         ${D.deal ? `<section class="blk" id="deal"><h2>SwanPass deal</h2><div class="deal-box"><div class="eyebrow" style="color:var(--deal)">Exclusive · ${D.deal.expires}</div><div class="t" style="margin-top:6px">${esc(D.deal.title)}</div><p class="muted" style="margin:8px 0 14px">${D.deal.detail}</p><div class="row" style="flex-wrap:wrap"><button class="btn btn-red btn-sm">${icon('ticket')} Show at counter</button><a class="btn btn-ghost btn-sm" href="account/index.html#pass">Add to my pass</a></div></div></section>` : ''}
-        <section class="blk" id="prices"><h2>Prices</h2><div class="menu-cards">${D.menu.map((g, gi) => `<div class="menu-card ${gi ? 'alt' : ''}"><div class="mc-head"><span>${gi ? '🛁' : '💆'} ${g.group}</span><small>${g.items.length} options</small></div>${g.items.map((it, ii) => `<div class="mc-row"><span class="dur">⏱ ${it.dur} min</span><span class="pp">฿${it.price.toLocaleString()}</span>${ii === 0 ? '<span class="tagpop">Popular</span>' : ''}</div>`).join('')}</div>`).join('')}</div>
+        <section class="blk" id="prices"><h2>Prices</h2><div class="menu-cards">${(L0.bar ? [] : D.menu).map((g, gi) => `<div class="menu-card ${gi ? 'alt' : ''}"><div class="mc-head"><span>${gi ? '🛁' : '💆'} ${g.group}</span><small>${g.items.length} options</small></div>${g.items.map((it, ii) => `<div class="mc-row"><span class="dur">⏱ ${it.dur} min</span><span class="pp">฿${it.price.toLocaleString()} <span class="approx" style="font-size:12px">${approx(it.price)}</span></span>${ii === 0 ? '<span class="tagpop">Popular</span>' : ''}</div>`).join('')}</div>`).join('')}</div>
+          <div class="pay-box"><div class="row between" style="flex-wrap:wrap;gap:8px"><b>💵 What you’ll actually pay</b>${curSelect()}</div>
+            <div class="pay-grid">
+              ${L0.bar ? `<div><span>Beer / soft drink</span><b>${money(L0.bar.beer)}</b></div><div><span>Lady drink</span><b>${money(L0.bar.ladyDrink)}</b></div><div><span>Bar fine</span><b>${money(L0.bar.fine)}</b></div>` : `<div><span>Typical course (65 min)</span><b>${money(2400)}</b></div>`}
+              <div><span>Usual tip</span><b>${money(L0.tip || 300)}${L0.isBar ? '' : '–' + localPrice(1000)}</b></div>
+              <div><span>Hidden extras</span><b style="color:var(--deal)">${L0.good.includes('nohidden') ? 'None reported' : 'Ask before you start'}</b></div>
+            </div>
+            <p class="muted" style="font-size:12.5px;margin:10px 0 0">${L0.bar ? 'Bar fine = what you pay the bar to leave with a staff member. Agree anything else directly with her before leaving.' : 'Price covers the room, shower and the full service listed. Tips go straight to the staff.'}</p></div>
           <p class="muted" style="font-size:13px;margin-top:14px">Prices confirmed by the venue on 12 Sep 2026. Tips not included. ${note('Menu is structured data (group → duration → price) in one currency per venue. It also generates the “How much does it cost?” FAQ answer and the priceRange in the schema markup.')}</p></section>
         <section class="blk" id="staff"><h2>Staff</h2><div class="staff-grid" style="grid-template-columns:repeat(auto-fill,minmax(130px,1fr))">${D.photos.slice(1, 7).map(p => `<button class="staff"><img src="${p}" alt="" loading="lazy"><span class="reveal">${icon('eye')}</span></button>`).join('')}</div></section>
         <section class="blk" id="reviews"><h2>Reviews</h2>
           <div class="rev-sum"><div><div class="big">${D.rating}</div><div class="stars">★★★★☆</div><div class="muted" style="font-size:13px">${D.reviewsCount} reviews</div></div>
             <div style="display:grid;gap:6px">${[5, 4, 3, 2, 1].map(n => `<div class="bar"><span>${n}</span><i><b style="width:${(D.breakdown[n] / total * 100).toFixed(0)}%"></b></i><span class="num">${D.breakdown[n]}</span></div>`).join('')}</div></div>
-          <div class="row" style="margin-bottom:6px;flex-wrap:wrap"><button class="chip on">Most helpful</button><button class="chip">Newest</button><button class="chip">English</button><button class="chip">한국어</button><span style="flex:1"></span><button class="btn btn-red btn-sm">${icon('edit')} Write a review</button></div>
-          ${D.reviews.map(r => `<div class="review"><div class="who"><span class="av">${r.who.slice(0, 2)}</span><span>${r.who}<div class="muted" style="font-size:12px;font-weight:500">${r.when}</div></span><span class="stars" style="margin-left:auto">${'★'.repeat(r.stars)}${'☆'.repeat(5 - r.stars)}</span></div><p>${esc(r.translated || r.text)}</p>${r.translated ? `<div class="muted" style="font-size:12.5px">Translated from Korean · <a href="#" style="text-decoration:underline">Show original</a></div>` : ''}<div class="muted" style="font-size:12.5px;margin-top:4px">Helpful (${r.helpful}) · Report</div></div>`).join('')}
+          <div class="row" style="margin-bottom:6px;flex-wrap:wrap"><button class="chip on">Most helpful</button><button class="chip">Newest</button><button class="chip">English</button><button class="chip">한국어</button><button class="chip">🇬🇧🇺🇸🇦🇺 Western reviewers</button><button class="chip">📝 Trip reports</button><span style="flex:1"></span><button class="btn btn-red btn-sm" data-review>${icon('edit')} Review your visit</button></div>
+          ${D.reviews.map(r => `<div class="review ${r.trip ? 'trip' : ''}"><div class="who"><span class="av">${r.who.slice(0, 2)}</span><span>${r.flag || ''} ${r.who}${r.visits ? ` <span class="rv-badge">${r.visits}</span>` : ''}${r.trip ? ' <span class="rv-badge trip">📝 Trip report</span>' : ''}<div class="muted" style="font-size:12px;font-weight:500">${r.when}${r.paid ? ` · paid ${money(r.paid)}` : ''}</div></span><span class="stars" style="margin-left:auto">${'★'.repeat(r.stars)}${'☆'.repeat(5 - r.stars)}</span></div>${r.title ? `<b style="display:block;margin-top:8px">${esc(r.title)}</b>` : ''}<p>${esc(r.translated || r.text)}</p>${r.translated ? `<div class="muted" style="font-size:12.5px">Translated from Korean · <a href="#" style="text-decoration:underline">Show original</a></div>` : ''}<div class="muted" style="font-size:12.5px;margin-top:4px">Helpful (${r.helpful}) · Report</div></div>`).join('')}
           <button class="btn btn-ghost" style="margin-top:12px">Show all ${D.reviewsCount} reviews</button></section>
         <section class="blk" id="hours"><h2>Hours & contact</h2>
           <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:24px">
@@ -164,6 +181,9 @@
           </div></section>
         <section class="blk" id="location"><h2>Location</h2><p class="muted" style="margin:-6px 0 14px">${D.address}</p><div id="pdp-map"></div>
           <div class="row" style="margin-top:12px;flex-wrap:wrap"><a class="btn btn-ghost btn-sm" href="https://www.google.com/maps/dir//${D.lat},${D.lng}" target="_blank" rel="noopener">${icon('route')} Directions</a><button class="btn btn-ghost btn-sm">${icon('copy')} Copy address</button><span class="muted" style="font-size:13px">5 min walk from BTS Phrom Phong</span></div></section>
+        <section class="blk" id="hotels"><h2>Stay nearby</h2><p class="muted" style="margin:-6px 0 14px">Guest-friendly hotels near ${esc(D.area)} — no joiner fee unless marked.</p>
+          <div class="hotel-list">${HOTELS.filter(h => h.city === (L0.city in AREAS ? L0.city : 'bangkok')).sort((a, b) => (a.area === L0.area ? -1 : 0) - (b.area === L0.area ? -1 : 0) || ({ yes: 0, fee: 1, no: 2 }[a.guest] - { yes: 0, fee: 1, no: 2 }[b.guest])).slice(0, 3).map(hotelRow).join('')}</div>
+          <a class="link-arrow" style="display:inline-block;margin-top:12px" href="hotels.html">All guest-friendly hotels</a></section>
         <section class="blk faq" id="faq"><h2>Questions people ask</h2>
           <details open><summary>How much does ${esc(D.name)} cost?</summary><p>The menu runs ฿2,100–฿2,800 for 45 to 90 minutes. Large rooms with a jacuzzi start at ฿2,500.</p></details>
           <details><summary>Is ${esc(D.name)} open now?</summary><p>Today it’s open ${fmt(dayHours[1])}–${fmt(dayHours[2])}. Fridays and Saturdays it stays open until 3am.</p></details>
@@ -186,6 +206,20 @@
 
     <div class="actionbar">${note('Mobile: a fixed contact bar replaces the tab bar on venue pages — Call, LINE and Directions are always one tap away.')}<a class="btn btn-red" href="#" data-contact="phone" data-value="${D.phone}" data-venue="${esc(D.name)}">${icon('phone')} Call</a><a class="btn btn-line-app" href="#" data-contact="line" data-value="${D.line}" data-venue="${esc(D.name)}" target="_blank">LINE</a><a class="btn btn-wa" href="#" data-contact="whatsapp" data-value="${D.whatsapp}" data-venue="${esc(D.name)}" target="_blank">WhatsApp</a><a class="btn btn-ghost" href="#location">${icon('route')} Go</a><button class="btn btn-ghost" data-save="${slug}" aria-label="Save">${icon('heart')}</button></div>`;
   $('.actionbar .note').style.cssText = 'position:absolute;top:-30px;left:12px';
+
+  /* "Review your visit" — 30-second structured review; long text optional (becomes a Trip report when 300+ chars) */
+  document.addEventListener('click', e => {
+    if (!e.target.closest('[data-review]')) return;
+    openModal('rv', `<div class="modal-head"><h3 style="flex:1">Review your visit to ${esc(D.name)}</h3><button class="icon-btn" data-close aria-label="Close">${icon('close')}</button></div>
+      <div class="modal-body rv-form">
+        <label>How was it?</label><div class="stars-in">${'<button>★</button>'.repeat(5)}</div>
+        <label>What did you pay? <span class="muted" style="font-weight:500">(helps the next visitor)</span></label><div class="row" style="gap:8px"><input class="input" placeholder="฿2,400" style="max-width:140px"><span class="muted" style="font-size:13px">incl. tip?</span><div class="seg"><button class="on">No</button><button>Yes</button></div></div>
+        <label>Was it…</label><div class="chips" style="flex-wrap:wrap">${GOOD_TAGS.map(([k, e, t]) => `<button class="chip">${e} ${t}</button>`).join('')}<button class="chip">⚠️ Charged extra</button></div>
+        <label>Your visit</label><div class="row" style="gap:8px;flex-wrap:wrap"><div class="seg"><button class="on">First visit</button><button>Been before</button><button>Regular</button></div><select class="select"><option>🇬🇧 UK</option><option>🇺🇸 USA</option><option>🇦🇺 Australia</option><option>🇩🇪 Germany</option><option>🇨🇦 Canada</option><option>Other / hide</option></select></div>
+        <label>Tell the story <span class="muted" style="font-weight:500">(optional — 300+ characters becomes a Trip report)</span></label><textarea class="input" rows="4" style="width:100%;height:auto;padding:10px" placeholder="When you went, what you chose, how it went…"></textarea>
+      </div>
+      <div class="sheet-foot"><button class="btn btn-ghost" data-close>Cancel</button><button class="btn btn-red" style="flex:1" data-close>Post review</button></div>`);
+  });
 
   /* scroll-spy for the anchor chips */
   const links = $$('#anchors a');

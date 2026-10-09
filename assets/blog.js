@@ -1,6 +1,9 @@
 /* Guides & articles — 25 most recent posts from swanpass.com/blogs (6 Oct 2026). Topic/city tags added for the mockup. */
 const IMGP = 'https://images.swanpass.com/uploads/photo/image/';
 const POSTS = [
+  ['first-night-bangkok', 'First Night in Bangkok: What It Actually Costs', '17359/sp-blog-27-first-night-in-pattaya-checklist-02.jpg', '08 Oct 2026', 6, 'first', 'bangkok', 'Massage, beer, lady drinks, bar fines and tips — a real budget for one night on Sukhumvit, in baht and dollars.'],
+  ['bar-fines-explained', 'Bar Fines Explained: What You Pay and What You Don’t', '16938/sp-blog-13-nana-plaza-vs-soi-cowboy-vs-patpong-02.jpg', '07 Oct 2026', 5, 'first', 'all', 'The bar fine pays the bar, not the lady. What it covers, what it doesn’t, and how to avoid a nasty bill.'],
+  ['ladyboy-etiquette', 'Ladyboy Etiquette for First-Timers', '17188/hero.webp', '06 Oct 2026', 4, 'first', 'all', 'How to tell, how to ask without offending, and which bars are openly katoey.'],
   ['wow-or-vivi-nuru-soi-23', 'Wow or Vivi Nuru on Sukhumvit Soi 23?', '17359/sp-blog-27-first-night-in-pattaya-checklist-02.jpg', '05 Oct 2026', 4, 'compare', 'bangkok', 'Both SwanPass entries point to the same address: 12 Soi Sukhumvit 23. The older Wow entry says it changed to Vivi Nuru.'],
   ['honey-pattaya-1-2-or-3', 'Honey Massage in Pattaya: 1, 2 or Grand Honey3?', '14438/honey1.jpg', '05 Oct 2026', 3, 'compare', 'pattaya', 'Three differently named listings, three different address lines. Here’s how to tell them apart before you book a ride.'],
   ['patpong-soi-1-or-soi-2', 'Patpong Soi 1 or Soi 2? Find the Bar by Its Address', '16938/sp-blog-13-nana-plaza-vs-soi-cowboy-vs-patpong-02.jpg', '04 Oct 2026', 3, 'compare', 'bangkok', 'King’s Castle 1 and Pink Panther list Patpong 1; Badabing and XXX Lounge list Patpong 2.'],
@@ -27,5 +30,5 @@ const POSTS = [
   ['cash-cards-atms-thailand-nightlife', 'Cash, Cards and ATMs at Night: A Payment Checklist', '17373/sp-blog-32-cash-cards-atms-thailand-nightlife-01.jpg', '13 Sep 2026', 4, 'practical', 'all', 'The card machine is “down tonight” and the nearest ATM charges ฿220. Plan for it.'],
   ['dress-code-thailand-nightlife-venues', 'What to Wear: Dress Codes Across Thai Nightlife Venues', '17370/sp-blog-31-dress-code-thailand-nightlife-venues-01.jpg', '12 Sep 2026', 5, 'practical', 'all', 'Shorts and sandals are fine on Soi Cowboy — not at a gentlemen’s club a few streets away.'],
 ].map(([slug, title, img, date, min, topic, city, dek]) => ({ slug, title, img: IMGP + img, date, min, topic, city, dek }));
-const TOPICS = [['all', '📰', 'All guides'], ['compare', '⚖️', 'Venue comparisons'], ['areas', '📍', 'Area guides'], ['safety', '🛡️', 'Safety'], ['practical', '🧳', 'Practical'], ['law', '⚖️', 'Law & rules']];
+const TOPICS = [['all', '📰', 'All guides'], ['compare', '⚖️', 'Venue comparisons'], ['areas', '📍', 'Area guides'], ['first', '🧭', 'First-timer'], ['safety', '🛡️', 'Safety'], ['practical', '🧳', 'Practical'], ['law', '⚖️', 'Law & rules']];
 const TOPIC = Object.fromEntries(TOPICS.map(t => [t[0], t]));
