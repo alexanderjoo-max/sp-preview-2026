@@ -53,7 +53,8 @@
   const country = countryOf(P.get('country') || (city ? city.country : 'th'));
   const area = city && P.get('area') ? (AREAS[city.slug] || []).find(a => a.slug === P.get('area')) : null;
   const level = area ? 'area' : city ? 'city' : 'country';
-  if (city) setLocQuiet(city);
+  if (city) setLocQuiet(city); else if (P.get('country')) store.set('loc', { country: country.code, city: null });
+  renderLocPill();
   function setLocQuiet(c) { store.set('loc', { country: c.country, city: c.slug }); }
 
   const PROSE = {
