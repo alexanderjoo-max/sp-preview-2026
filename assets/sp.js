@@ -239,7 +239,7 @@ function openLocation() {
   drawCountries(); drawCities();
   m.addEventListener('click', e => {
     const c = e.target.closest('[data-c]'); if (c) { active = c.dataset.c; drawCountries(); drawCities(); return; }
-    const city = e.target.closest('[data-city]'); if (city) { const ci = cityOf(city.dataset.city); setLoc({ country: ci.country, city: ci.slug }); closeAll(); return; }
+    const city = e.target.closest('[data-city]'); if (city) { const ci = cityOf(city.dataset.city); setLoc({ country: ci.country, city: ci.slug }); location.href = `${ROOT}place.html?city=${ci.slug}`; return; }
     const all = e.target.closest('[data-country-all]'); if (all) { setLoc({ country: all.dataset.countryAll, city: null }); closeAll(); return; }
     if (e.target.closest('[data-all]')) { setLoc({ country: null, city: null }); closeAll(); return; }
     if (e.target.closest('[data-near]')) { setLoc({ country: 'th', city: 'bangkok', near: true }); closeAll(); }
@@ -256,7 +256,6 @@ function openSearch(prefill = '', focusLoc = false) {
   const inScope = LISTINGS.filter(l => (!loc.country || l.country === loc.country) && (!loc.city || l.city === loc.city));
   const catCount = slug => inScope.filter(l => l.catSlug === slug).length;
   const areas = (city && AREAS[city.slug]) || [];
-  const catImgs = { massage: 'don-quixote', soapy: 'pattaya-vice-massage-pattaya', 'go-go': 'chick-gogo-club-pattaya', 'gentlemens-clubs': 'boofies-pattaya' };
   const m = openModal('sp-search', `
     <div class="modal-head">${icon('search')}<input id="ms-q" placeholder="Search venues, areas, services…" autocomplete="off" value="${esc(prefill)}">
       <button class="icon-btn" data-close aria-label="Close">${icon('close')}</button></div>
@@ -274,28 +273,16 @@ function openSearch(prefill = '', focusLoc = false) {
   drawWhere();
   m.addEventListener('click', e => {
     const t = e.target.closest('[data-ctab]'); if (t) { ctab = t.dataset.ctab; drawWhere(); return; }
-    const c = e.target.closest('[data-city]'); if (c) { const ci = cityOf(c.dataset.city); setLoc({ country: ci.country, city: ci.slug }); refresh(); return; }
-    const a = e.target.closest('[data-allc]'); if (a) { setLoc({ country: a.dataset.allc, city: null }); refresh(); return; }
+    const c = e.target.closest('[data-city]'); if (c) { const ci = cityOf(c.dataset.city); setLoc({ country: ci.country, city: ci.slug }); location.href = `${ROOT}place.html?city=${ci.slug}`; return; }
+    const a = e.target.closest('[data-allc]'); if (a) { setLoc({ country: a.dataset.allc, city: null }); location.href = `${ROOT}place.html?country=${a.dataset.allc}`; return; }
     if (e.target.closest('[data-allasia]')) { setLoc({ country: null, city: null }); refresh(); return; }
     if (e.target.closest('[data-near]')) { setLoc({ country: 'th', city: 'bangkok', near: true }); refresh(); }
   });
   function refresh() { closeAll(); openSearch($('#ms-q', m).value); }
-  const idle = () => `<div class="ms-grid">
-      <div class="ms-cats">${Object.entries(catImgs).map(([s, v]) => { const c = CATEGORIES.find(x => x.slug === s); const l = LISTINGS.find(x => x.slug === v); return `<a class="ms-cat" href="${ROOT}search.html?cat=${s}"><img src="${l.img}" alt=""><b>${c.name}</b><span class="num">${catCount(s) || "—"} venue${catCount(s) === 1 ? "" : "s"}${city ? ' in ' + city.name : ''}</span></a>`; }).join('')}</div>
-      <div>
-        <p class="ms-label">Quick picks</p>
-        <div class="ms-recos">
-          <a class="ms-reco" href="${ROOT}search.html?sort=reviews">${icon('flame')}Trending</a>
-          <a class="ms-reco" href="${ROOT}deals.html">${icon('tag')}Deals</a>
-          <a class="ms-reco" href="${ROOT}search.html?sort=newest">${icon('sparkle')}New</a>
-          <a class="ms-reco" href="${ROOT}map.html">${icon('locate')}Near me</a>
-        </div>
-        ${areas.length ? `<p class="ms-label">Popular areas in ${city.name}</p><div class="ms-chips">${areas.map(a => `<a class="chip" href="${ROOT}place.html?city=${city.slug}&area=${a.slug}">${icon('pin')}${a.name}</a>`).join('')}</div>` : ''}
-        <p class="ms-label">Popular searches</p>
-        <div class="ms-chips">${['Nuru', 'Jacuzzi', 'Soapy', 'Outcall', 'Couples OK', 'Open late', 'Japanese style', 'VIP room', 'LGBTQ+ friendly', 'Karaoke'].map(t => `<button class="chip" data-q="${t}">${t}</button>`).join('')}</div>
-        <p class="ms-label">Recently viewed</p>
-        <div class="ms-results">${LISTINGS.slice(0, 3).map(l => hit(l)).join('')}</div>
-      </div></div>`;
+  const idle = () => `
+      ${areas.length ? `<p class="ms-label">Popular areas in ${city.name}</p><div class="ms-chips">${areas.map(a => `<a class="chip" href="${ROOT}place.html?city=${city.slug}&area=${a.slug}">${icon('pin')}${a.name}</a>`).join('')}</div>` : ''}
+      <p class="ms-label">Browse ${city ? city.name : ''} by category</p>
+      <div class="ms-chips">${CATEGORIES.map(c => `<a class="chip" href="${ROOT}search.html?cat=${c.slug}">${CAT_EMOJI[c.slug]} ${c.name}${catCount(c.slug) ? ` <span class="muted num">${catCount(c.slug)}</span>` : ''}</a>`).join('')}</div>`;
   function hit(l, q = '') {
     const name = q ? esc(l.name).replace(new RegExp('(' + q.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + ')', 'ig'), '<mark>$1</mark>') : esc(l.name);
     return `<a class="ms-hit" href="${ROOT}listing.html?v=${l.slug}"><img src="${l.img}" alt="" loading="lazy"><div><div class="t">${name} ${l.verified ? tick : ''}</div><div class="s">${esc(l.cat)} · ${esc(l.areaName || l.cityName)}${l.deal ? ' · <span style="color:var(--deal)">' + esc(l.deal) + '</span>' : ''}</div></div></a>`;
@@ -368,17 +355,16 @@ function directory({ el, title, preset = {}, render = card, gridClass = 'grid-ca
   const results = () => LISTINGS.filter(l => match(l)).sort(SORTS[S.sort][1]);
 
   el.innerHTML = `
-    <div class="subbar"><div class="wrap">
+    <div class="subbar cat-subbar"><div class="wrap">
       <div class="chips" id="d-cats" style="flex:1"></div>
-      <button class="btn btn-ghost btn-sm mobile-only" id="d-open-filters">${icon('filter')} Filters <span id="d-fcount"></span></button>
-      <a class="btn btn-ghost btn-sm desktop-only" href="${ROOT}map.html">${icon('map')} Map</a>
+      <button class="btn btn-ghost btn-sm" id="d-open-filters">${icon('filter')} Filters <span id="d-fcount"></span></button>
     </div></div>
     <div class="wrap dir">
       <aside class="filters" id="d-filters" aria-label="Filters"></aside>
       <section>
         <div class="results-head">
           <div><h1 id="d-title"></h1><div class="count num" id="d-count"></div></div>
-          <div class="row"><span class="sort-hint desktop-only">${note('Paid placement rule: whatever the sort, Featured venues come first, then Verified, then the rest. The sort only reorders inside each group. Featured order rotates daily so every paying venue gets time in the top spot.')} Featured & Verified always first</span><select class="select" id="d-sort" aria-label="Sort">${Object.entries(SORTS).map(([k, [t]]) => `<option value="${k}" ${k === S.sort ? 'selected' : ''}>${t}</option>`).join('')}</select></div>
+          <div class="row"><span class="sort-hint desktop-only">${note('Paid placement rule: whatever the sort, Featured venues come first, then Verified, then the rest. The sort only reorders inside each group. Featured order rotates daily so every paying venue gets time in the top spot.')} Featured & Verified always first</span><a class="btn btn-ghost btn-sm desktop-only" href="${ROOT}map.html">${icon('map')} Map</a><select class="select" id="d-sort" aria-label="Sort">${Object.entries(SORTS).map(([k, [t]]) => `<option value="${k}" ${k === S.sort ? 'selected' : ''}>${t}</option>`).join('')}</select></div>
         </div>
         <div class="active-filters" id="d-active"></div>
         <div class="${gridClass}" id="d-grid"></div>

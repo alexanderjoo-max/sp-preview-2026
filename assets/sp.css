@@ -627,3 +627,6 @@ body.drawer-open .drawer-ov { opacity: 1; pointer-events: auto; }
 .nav a { font-size: 14px; font-weight: 400; color: rgba(255, 255, 255, .85); padding: 6px 8px; gap: 4px; }
 .nav a.on { font-weight: 600; color: #fff; }
 .nav .em { font-size: 13px; }
+
+/* Explore: categories live in the sidebar on desktop; pill row only on mobile */
+@media (min-width: 1101px) { .cat-subbar { display: none; } }
