@@ -657,3 +657,13 @@ body.drawer-open .drawer-ov { opacity: 1; pointer-events: auto; }
 .pick { text-align: left; padding: 12px 14px; border-radius: 10px; border: 1px solid var(--line); background: var(--surface); font-size: 14px; font-weight: 600; }
 .pick:hover { border-color: var(--line-2); }
 .pick.on { border-color: var(--red); background: rgba(232, 20, 42, .1); }
+
+/* Header sized to match live swanpass.com (measured 9 Oct 2026): 59px bar, 206×28 logo, 12px/500 nav links with 8×10 padding */
+@media (min-width: 1101px) {
+  :root { --header-h: 59px; }
+  .logo img.logo-img { height: 28px; }
+  .nav { gap: 2px; }
+  .nav a { font-size: 12px; font-weight: 500; padding: 8px 10px; gap: 4px; }
+  .nav a.on { font-weight: 600; }
+  .nav .em { font-size: 12px; }
+}
