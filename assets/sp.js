@@ -112,13 +112,6 @@ const curSelect = () => `<select class="select cur-select" data-cur aria-label="
 document.addEventListener('change', e => { if (e.target.matches('[data-cur]')) { store.set('cur', e.target.value); location.reload(); } });
 const goodTag = k => GOOD_TAGS.find(t => t[0] === k);
 
-/* ---------- sponsored banner — sold directly to venues, per city per month, max 3 rotating per slot ----------
-   Never inside the Featured/Verified ordering; never on venue pages. */
-function sponsor(slot, l) {
-  const c = getLoc().city, inCity = LISTINGS.filter(x => x.deal && (!c || x.city === c)), pool = inCity.filter(x => x.featured).length ? inCity.filter(x => x.featured) : inCity.length ? inCity : LISTINGS.filter(x => x.featured && x.deal);
-  l = l || pool[(new Date().getDate() + slot.length) % pool.length];
-  return `<a class="sponsor" href="${ROOT}listing.html?v=${l.slug}"><img src="${l.img}" alt="" loading="lazy"><div class="sp-in"><span class="sp-lbl">Sponsored</span><b>${esc(l.name)}</b><span class="muted">${CAT_EMOJI[l.catSlug] || ''} ${esc(l.cat)} · ${esc(l.areaName || l.cityName)}</span>${l.deal ? `<span class="sp-deal">🏷️ ${esc(l.deal)}</span>` : ''}</div><span class="btn btn-red btn-sm sp-cta">View venue →</span></a>`;
-}
 document.addEventListener('click', e => {
   if (e.target.closest('[data-drawer]')) document.body.classList.add('drawer-open');
   if (e.target.closest('[data-drawer-close]') || (e.target.closest('.drawer [data-open]'))) document.body.classList.remove('drawer-open');
@@ -430,7 +423,7 @@ function directory({ el, title, preset = {}, render = card, gridClass = 'grid-ca
     const r = results();
     $('#d-title', el).textContent = typeof title === 'function' ? title(S) : title;
     $('#d-count', el).textContent = `${r.length} venue${r.length === 1 ? '' : 's'}` + (S.city ? ` in ${cityOf(S.city).name}` : S.country ? ` in ${countryOf(S.country).name}` : ' across Asia');
-    $('#d-grid', el).innerHTML = r.length ? withTierHeads(r.slice(0, limit), render, true, render === card && r.length > 10 ? { [Math.max(1, r.slice(0, limit).findIndex(l => tier(l) > 0))]: `<div class="sponsor-row">${sponsor('results')}</div>` } : {}) : `<div class="empty" style="grid-column:1/-1"><h3>No venues match</h3><p>Try removing a filter or widening the area.</p><button class="btn btn-ghost btn-sm" data-reset>Clear all filters</button></div>`;
+    $('#d-grid', el).innerHTML = r.length ? withTierHeads(r.slice(0, limit), render, true) : `<div class="empty" style="grid-column:1/-1"><h3>No venues match</h3><p>Try removing a filter or widening the area.</p><button class="btn btn-ghost btn-sm" data-reset>Clear all filters</button></div>`;
     $('#d-more', el).style.display = r.length > limit ? '' : 'none';
     $('#d-filters', el).innerHTML = filtersHTML();
     $('#d-cats', el).innerHTML = `<button class="chip ${!S.cats.length ? 'on' : ''}" data-chipcat="">🔥 All</button>` + CATEGORIES.map(c => `<button class="chip ${S.cats.includes(c.slug) ? 'on' : ''}" data-chipcat="${c.slug}">${CAT_EMOJI[c.slug]} ${c.name}</button>`).join('');

@@ -75,7 +75,6 @@
   const knowBlock = n => `<section class="section"><div class="wrap"><div class="sec-head"><div><div class="eyebrow">First time in ${n}?</div><h2 class="display">Know before you go</h2></div><a class="link-arrow" href="guides.html">All guides</a></div>
     <div class="know-grid">${KNOW.map(([e, t, d, h]) => `<a class="know" href="${h || 'article.html'}"><span class="em">${e}</span><b>${t}</b><span class="muted">${d}</span></a>`).join('')}</div></div></section>`;
   const hotelsBlock = (c, a) => { const hs = HOTELS.filter(h => h.city === c && (!a || h.area === a)); const list = (hs.length ? hs : HOTELS.filter(h => h.city === c)).filter(h => h.guest !== 'no').slice(0, 3); return list.length ? `<section class="section"><div class="wrap"><div class="sec-head"><div><h2 class="display">🏨 Guest-friendly hotels nearby</h2><p>No joiner fee unless marked — checked by members after their stay.</p></div><a class="link-arrow" href="hotels.html">All hotels</a></div><div class="hotel-list">${list.map(hotelRow).join('')}</div></div></section>` : ''; };
-  const sponsorBlock = `<section class="section" style="padding-top:22px;padding-bottom:0"><div class="wrap">${sponsor('place')}</div></section>`;
   const seoCard = `<div class="seo-card">
     <b>SEO — what Google sees</b>
     <div class="serp-t">${esc(title)}</div><div class="serp-u">${url}</div>
@@ -107,7 +106,7 @@
       <section class="section"><div class="wrap"><h2 class="display" style="margin-bottom:16px">Other countries</h2><div class="chips">${COUNTRIES.filter(c => c.code !== country.code).map(c => `<a class="chip" href="place.html?country=${c.code}">${c.flag} ${c.name}${c.soon ? ' · soon' : ''}</a>`).join('')}</div></div></section>`;
   }
   if (level === 'city') {
-    html += sponsorBlock + `<section class="section"><div class="wrap"><div class="sec-head"><div><h2 class="display">Popular areas</h2><p>Each area has its own guide and venue list.</p></div></div>${areaGrid(city.slug) || '<p class="muted">Area guides for this city are coming soon.</p>'}</div></section>
+    html += `<section class="section"><div class="wrap"><div class="sec-head"><div><h2 class="display">Popular areas</h2><p>Each area has its own guide and venue list.</p></div></div>${areaGrid(city.slug) || '<p class="muted">Area guides for this city are coming soon.</p>'}</div></section>
       <section class="section"><div class="wrap"><div class="sec-head"><div><div class="eyebrow">Top picks · rotates weekly</div><h2 class="display">Featured in ${name}</h2></div><a class="link-arrow" href="search.html">All ${count} venues</a></div><div class="scroller">${pool.sort(SORTS.recommended[1]).slice(0, 10).map(card).join('')}</div></div></section>
       <section class="section"><div class="wrap"><div class="sec-head"><div><h2 class="display">Newest in ${name}</h2></div></div><div class="scroller">${[...new Set(pool.filter(l => l.isNew).concat(pool))].sort(SORTS.newest[1]).slice(0, 8).map(card).join('')}</div></div></section>
 ` + knowBlock(name) + hotelsBlock(city.slug) + `
@@ -120,7 +119,7 @@
   }
   if (level === 'area') {
     const siblings = (AREAS[city.slug] || []).filter(a => a.slug !== area.slug);
-    html += sponsorBlock + `<section class="section"><div class="wrap two"><div>
+    html += `<section class="section"><div class="wrap two"><div>
         <div class="sec-head"><div><h2 class="display">Venues in ${name}</h2></div><button class="btn btn-ghost btn-sm">${icon('filter')} Filter</button></div>
         <div class="area-list">${withTierHeads(pool.sort(SORTS.recommended[1]), l => `<a class="rowcard" href="listing.html?v=${l.slug}"><img src="${l.img}" alt="" loading="lazy"><div style="min-width:0"><div class="eyebrow" style="font-size:10.5px">${l.cat}</div><div class="card-title" style="font-size:17px;margin-top:2px"><span>${esc(l.name)}</span>${l.verified ? tick : ''}</div><div class="card-meta"><span class="rating">${starIcon}${l.rating ? l.rating.toFixed(1) : "—"}</span>${l.priceFrom ? `<span>· from ฿${l.priceFrom.toLocaleString()}</span>` : ''}<span>· ${l.hours.opens}:00 – ${l.hours.closes}:00</span></div>${l.deal ? `<div class="card-deal" style="padding-top:4px">${icon('tag')}${esc(l.deal)}</div>` : ''}</div></a>`)}</div>
         <div class="prose" style="margin-top:34px">${prose.slice(1).map(p => `<p>${p}</p>`).join('')}</div>
