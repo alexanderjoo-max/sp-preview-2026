@@ -2,7 +2,8 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow, noarchive">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Don Quixote — Sukhumvit, Bangkok | SwanPass</title>
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
@@ -28,7 +29,7 @@
   .facts { display: flex; flex-wrap: wrap; gap: 8px 18px; color: var(--text-2); font-size: 14.5px; }
   .facts > span { display: inline-flex; align-items: center; gap: 6px; }
   .facts .ico { width: 16px; height: 16px; color: var(--muted); }
-  .anchors { position: sticky; top: var(--header-h); z-index: 40; background: rgba(11, 9, 14, .92); backdrop-filter: blur(16px); border-bottom: 1px solid var(--line); margin: 26px 0 0; }
+  .anchors { position: sticky; top: var(--hdr-total); z-index: 40; background: rgba(11, 9, 14, .92); backdrop-filter: blur(16px); border-bottom: 1px solid var(--line); margin: 26px 0 0; }
   .anchors .chips { padding: 10px 0; }
   .anchors .chip.on { background: var(--red); border-color: var(--red); color: #fff; }
   .blk { padding: 34px 0; border-bottom: 1px solid var(--line); }
@@ -57,7 +58,7 @@
   .review p { margin: 8px 0 6px; color: var(--text-2); }
   .stars { color: var(--gold); letter-spacing: 1px; font-size: 13px; }
   #pdp-map { height: 300px; border-radius: var(--r-lg); overflow: hidden; border: 1px solid var(--line); }
-  .side { position: sticky; top: calc(var(--header-h) + 76px); display: flex; flex-direction: column; gap: 14px; }
+  .side { position: sticky; top: calc(var(--hdr-total) + 76px); display: flex; flex-direction: column; gap: 14px; }
   .panel { padding: 18px; border-radius: var(--r-lg); background: var(--surface); border: 1px solid var(--line); }
   .cta-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
   .btn-line-app { background: #06c755; color: #fff; }
@@ -69,7 +70,7 @@
     .gallery { display: flex; overflow-x: auto; scroll-snap-type: x mandatory; border-radius: 0; margin: 0 calc(var(--gutter) * -1); height: 300px; gap: 0; scrollbar-width: none; }
     .gallery::-webkit-scrollbar { display: none; }
     .gallery button { flex: 0 0 100%; scroll-snap-align: start; }
-    .gal-wrap .all { display: none; }
+    .gal-wrap .all { top: 12px; right: 12px; bottom: auto; height: 30px; font-size: 12px; padding: 0 10px; background: rgba(0,0,0,.55); }
     .gal-count { display: block; position: absolute; right: 12px; bottom: 12px; font-size: 12px; font-weight: 700; background: rgba(0,0,0,.6); padding: 4px 9px; border-radius: 8px; }
     .gal-wrap { position: relative; }
     .gal-tabs { bottom: 12px; left: 12px; }
@@ -80,7 +81,8 @@
     .amen { grid-template-columns: 1fr 1fr; }
     .rev-sum { grid-template-columns: 1fr; gap: 12px; }
     .tabbar { display: none; }
-    .actionbar { display: grid; grid-template-columns: 1fr 1fr 1fr 1fr 52px; gap: 8px; position: fixed; left: 0; right: 0; bottom: 0; z-index: 70; padding: 10px 12px calc(10px + env(safe-area-inset-bottom)); background: rgba(11, 9, 14, .95); backdrop-filter: blur(16px); border-top: 1px solid var(--line); }
+    .actionbar { display: grid; grid-template-columns: 1fr 1fr 1fr 1fr 52px; gap: 8px; position: fixed; left: 0; right: 0; bottom: 0; z-index: 70; padding: 10px max(12px, var(--sar)) calc(10px + var(--sab)) max(12px, var(--sal)); background: rgba(11, 9, 14, .95); backdrop-filter: blur(16px); border-top: 1px solid var(--line); }
+    body { padding-bottom: calc(70px + var(--sab)); }
     .actionbar .btn { height: 46px; padding: 0 8px; font-size: 13.5px; }
   }
   .menu-cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 12px; }
@@ -116,6 +118,10 @@
   const L0 = LISTINGS.find(l => l.slug === slug) || LISTINGS[0];
   /* every venue uses Don Quixote's rich detail in the mockup, re-labelled with its own name/photo */
   const D = slug === 'don-quixote' ? DETAIL : { ...DETAIL, name: L0.name, cats: [L0.cat], area: L0.areaName || L0.cityName, city: L0.cityName, rating: L0.rating, deal: L0.deal ? { ...DETAIL.deal, title: L0.deal } : null, photos: [L0.img, ...DETAIL.photos.slice(1)] };
+  /* real photo split: Venue = property photos, Staff = talent photos */
+  const SETS = { venue: L0.venueImgs, staff: L0.staffImgs };
+  const MOSAIC = [['venue', 0], ['venue', 1], ['venue', 2], ['staff', 0], ['staff', 1]].map(([k, i]) => SETS[k][i] ? [k, i] : null).filter(Boolean);
+  while (MOSAIC.length < 5 && MOSAIC.length < SETS.venue.length + SETS.staff.length) { const all = [...SETS.venue.map((_, i) => ['venue', i]), ...SETS.staff.map((_, i) => ['staff', i])]; const nx = all.find(([k, i]) => !MOSAIC.some(([k2, i2]) => k2 === k && i2 === i)); MOSAIC.push(nx); }
   document.title = `${D.name} — ${D.area}, ${D.city} | SwanPass`;
   const today = (new Date().getDay() + 6) % 7;
   const dayHours = D.hours[today];
@@ -126,11 +132,11 @@
   $('#pdp').innerHTML = `
     <nav class="crumbs" style="margin-top:18px"><a href="index.html">Home</a><a href="place.html?country=th">${D.country}</a><a href="place.html?city=bangkok">${D.city}</a><a href="place.html?city=bangkok&area=phrom-phong">${D.area}</a><span>${esc(D.name)}</span></nav>
     <div class="gal-wrap">
-      <div class="gallery" id="gallery">${D.photos.slice(0, 5).map((p, i) => `<button aria-label="Photo ${i + 1}" class="${i ? 'g-staff' : ''}"><img src="${p}" alt="" ${i ? 'loading="lazy"' : ''}>${i ? `<span class="g-reveal">${icon('eye')}</span>` : ''}</button>`).join('')}
+      <div class="gallery" id="gallery">${MOSAIC.map(([set, i], n) => `<button aria-label="${set === 'staff' ? 'Staff' : 'Venue'} photo ${i + 1}" class="${set === 'staff' ? 'g-staff' : ''}" data-set="${set}" data-i="${i}"><img src="${SETS[set][i]}" alt="" ${n ? 'loading="lazy"' : ''}>${set === 'staff' ? `<span class="g-reveal">${icon('eye')}</span>` : ''}</button>`).join('')}
       </div>
-      <div class="gal-tabs"><button class="chip on">Venue · 12</button>${L0.staffCount ? `<button class="chip">Staff · ${L0.staffCount}</button>` : ''}</div>
-      <button class="btn btn-ghost btn-sm all">${icon('grid')} All 31 photos</button>
-      <span class="gal-count num">1 / 31</span>
+      <div class="gal-tabs"><button class="chip on" data-open-gal="venue">Venue · ${SETS.venue.length}</button>${SETS.staff.length ? `<button class="chip" data-open-gal="staff">Staff · ${SETS.staff.length}</button>` : ''}</div>
+      <button class="btn btn-ghost btn-sm all" data-open-gal="venue">${icon('grid')} All ${SETS.venue.length + SETS.staff.length} photos</button>
+      <span class="gal-count num">1 / ${MOSAIC.length}</span>
     </div>
 
     <div class="pdp" style="margin-top:22px">
@@ -166,7 +172,7 @@
             </div>
             <p class="muted" style="font-size:12.5px;margin:10px 0 0">${L0.bar ? 'Bar fine = what you pay the bar to leave with a staff member. Agree anything else directly with her before leaving.' : 'Price covers the room, shower and the full service listed. Tips go straight to the staff.'}</p></div>
           <p class="muted" style="font-size:13px;margin-top:14px">Prices confirmed by the venue on 12 Sep 2026. Tips not included. ${note('Menu is structured data (group → duration → price) in one currency per venue. It also generates the “How much does it cost?” FAQ answer and the priceRange in the schema markup.')}</p></section>
-        ${L0.staffCount ? `<section class="blk" id="staff"><h2>Staff <span class="muted" style="font-size:15px;font-weight:500">· ${L0.staffCount} photos</span></h2><div class="staff-grid" style="grid-template-columns:repeat(auto-fill,minmax(130px,1fr))">${L0.staffImgs.map(p => `<button class="staff"><img src="${p}" alt="" loading="lazy"><span class="reveal">${icon('eye')}</span></button>`).join('')}</div></section>` : ''}
+        ${L0.staffCount ? `<section class="blk" id="staff"><h2>Staff <span class="muted" style="font-size:15px;font-weight:500">· ${L0.staffCount} photos</span></h2><div class="staff-grid" style="grid-template-columns:repeat(auto-fill,minmax(130px,1fr))">${L0.staffImgs.map((p, i) => `<button class="staff" data-set="staff" data-i="${i}"><img src="${p}" alt="" loading="lazy"><span class="reveal">${icon('eye')}</span></button>`).join('')}</div></section>` : ''}
         <section class="blk" id="reviews"><h2>Reviews</h2>
           <div class="rev-sum"><div><div class="big">${D.rating}</div><div class="stars">★★★★☆</div><div class="muted" style="font-size:13px">${D.reviewsCount} reviews</div></div>
             <div style="display:grid;gap:6px">${[5, 4, 3, 2, 1].map(n => `<div class="bar"><span>${n}</span><i><b style="width:${(D.breakdown[n] / total * 100).toFixed(0)}%"></b></i><span class="num">${D.breakdown[n]}</span></div>`).join('')}</div></div>
@@ -224,9 +230,16 @@
   const links = $$('#anchors a');
   const io = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) links.forEach(a => a.classList.toggle('on', a.getAttribute('href') === '#' + e.target.id)); }), { rootMargin: '-40% 0px -55% 0px' });
   $$('.blk, #nearby').forEach(s => io.observe(s));
-  $('#gallery').addEventListener('scroll', e => { const i = Math.round(e.target.scrollLeft / e.target.clientWidth) + 1; $('.gal-count').textContent = `${i} / 31`; });
+  $('#gallery').addEventListener('scroll', e => { const i = Math.round(e.target.scrollLeft / e.target.clientWidth) + 1; $('.gal-count').textContent = `${i} / ${MOSAIC.length}`; });
   document.body.classList.add('safe');
-  document.addEventListener('click', e => { const s = e.target.closest('.staff, .g-staff'); if (s && !s.classList.contains('revealed')) { e.preventDefault(); s.classList.add('revealed'); } });
+  /* tap a photo: blurred staff photos reveal first, then open the full gallery at that photo */
+  document.addEventListener('click', e => {
+    const og = e.target.closest('[data-open-gal]'); if (og) { openGallery(SETS, og.dataset.openGal); return; }
+    const s = e.target.closest('.staff, .gallery button'); if (!s) return;
+    e.preventDefault();
+    if ((s.classList.contains('staff') || s.classList.contains('g-staff')) && document.body.classList.contains('safe') && !s.classList.contains('revealed')) { s.classList.add('revealed'); return; }
+    openGallery(SETS, s.dataset.set || 'staff', +(s.dataset.i || 0));
+  });
 
   if (window.L) {
     const map = L.map('pdp-map', { scrollWheelZoom: false, zoomControl: false }).setView([D.lat, D.lng], 16);

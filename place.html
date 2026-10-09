@@ -2,7 +2,8 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow, noarchive">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Bangkok Nightlife — Massage, Soapy, Go-Go & KTV | SwanPass</title>
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
@@ -127,7 +128,7 @@
         <div class="sec-head"><div><h2 class="display">Venues in ${name}</h2></div><button class="btn btn-ghost btn-sm">${icon('filter')} Filter</button></div>
         <div class="area-list">${withTierHeads(pool.sort(SORTS.recommended[1]), l => `<a class="rowcard" href="listing.html?v=${l.slug}"><img src="${l.img}" alt="" loading="lazy"><div style="min-width:0"><div class="eyebrow" style="font-size:10.5px">${l.cat}</div><div class="card-title" style="font-size:17px;margin-top:2px"><span>${esc(l.name)}</span>${l.verified ? tick : ''}</div><div class="card-meta"><span class="rating">${starIcon}${l.rating ? l.rating.toFixed(1) : "—"}</span>${l.priceFrom ? `<span>· from ฿${l.priceFrom.toLocaleString()}</span>` : ''}<span>· ${l.hours.opens}:00 – ${l.hours.closes}:00</span></div>${l.deal ? `<div class="card-deal" style="padding-top:4px">${icon('tag')}${esc(l.deal)}</div>` : ''}</div></a>`)}</div>
         <div class="prose" style="margin-top:34px">${prose.slice(1).map(p => `<p>${p}</p>`).join('')}</div>
-      </div><div class="stack" style="position:sticky;top:calc(var(--header-h) + 16px)"><div id="area-map"></div>
+      </div><div class="stack" style="position:sticky;top:calc(var(--hdr-total) + 16px)"><div id="area-map"></div>
         <div><h3 style="margin:18px 0 10px">Nearby areas</h3><div class="chips" style="flex-wrap:wrap">${siblings.map(a => `<a class="chip" href="place.html?city=${city.slug}&area=${a.slug}">${a.name} →</a>`).join('')}</div></div>${seoCard}</div></div></section>`;
   }
   if (level === 'area') html += knowBlock(name) + hotelsBlock(city.slug, area.slug);

@@ -550,3 +550,37 @@ document.addEventListener('click', e => {
     if (c) { store.set('cur', c.dataset.setCur); location.reload(); }
   });
 });
+
+/* ---------- Photo gallery: grid of all photos → full-screen viewer (swipe on touch, arrows/keys on desktop) ----------
+   sets = { venue: [urls], staff: [urls] }. Staff thumbnails stay blurred in Safe view until tapped. */
+function openGallery(sets, tab = 'venue', index = null) {
+  const m = openModal('gal', '', 'full gal');
+  const tabs = Object.keys(sets).filter(k => sets[k].length);
+  if (!tabs.includes(tab)) tab = tabs[0];
+  const safe = () => document.body.classList.contains('safe');
+  const head = () => `<div class="gal-head"><div class="chips">${tabs.map(k => `<button class="chip ${k === tab ? 'on' : ''}" data-gtab="${k}">${k === 'venue' ? 'Venue' : 'Staff'} · ${sets[k].length}</button>`).join('')}</div>
+    ${index != null ? `<button class="btn btn-ghost btn-sm" data-ggrid>${icon('grid')} All photos</button>` : ''}<button class="icon-btn" data-close aria-label="Close gallery">${icon('close')}</button></div>`;
+  const grid = () => `<div class="gal-grid">${sets[tab].map((u, i) => `<button class="gal-th ${tab === 'staff' && safe() ? 'blur' : ''}" data-gi="${i}" aria-label="Photo ${i + 1}"><img src="${u}" alt="" loading="lazy">${tab === 'staff' && safe() ? `<span class="g-reveal">${icon('eye')}</span>` : ''}</button>`).join('')}</div>`;
+  const viewer = () => `<div class="gal-view"><div class="gal-track" id="gal-track">${sets[tab].map(u => `<div class="gal-slide"><img src="${u}" alt="" loading="lazy"></div>`).join('')}</div>
+    <button class="gal-nav prev" data-gstep="-1" aria-label="Previous photo">‹</button><button class="gal-nav next" data-gstep="1" aria-label="Next photo">›</button>
+    <span class="gal-n num" id="gal-n"></span></div>`;
+  const draw = () => {
+    m.innerHTML = head() + (index == null ? grid() : viewer());
+    if (index != null) {
+      const tr = $('#gal-track', m); tr.scrollLeft = index * tr.clientWidth;
+      const upd = () => { index = Math.round(tr.scrollLeft / tr.clientWidth); $('#gal-n', m).textContent = `${index + 1} / ${sets[tab].length}`; };
+      tr.addEventListener('scroll', upd, { passive: true }); upd();
+    }
+  };
+  const go = d => { const tr = $('#gal-track', m); if (!tr) return; const n = Math.max(0, Math.min(sets[tab].length - 1, index + d)); tr.scrollTo({ left: n * tr.clientWidth, behavior: 'smooth' }); };
+  m.onclick = e => {
+    const t = e.target.closest('[data-gtab]'); if (t) { tab = t.dataset.gtab; index = null; draw(); return; }
+    if (e.target.closest('[data-ggrid]')) { index = null; draw(); return; }
+    const s = e.target.closest('[data-gstep]'); if (s) { go(+s.dataset.gstep); return; }
+    const th = e.target.closest('[data-gi]'); if (th) { if (th.classList.contains('blur')) { th.classList.remove('blur'); return; } index = +th.dataset.gi; draw(); }
+  };
+  const key = e => { if (!m.classList.contains('open')) return document.removeEventListener('keydown', key); if (e.key === 'ArrowRight') go(1); if (e.key === 'ArrowLeft') go(-1); };
+  document.addEventListener('keydown', key);
+  draw();
+  return m;
+}
