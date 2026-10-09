@@ -62,7 +62,7 @@
     const pick = (fn, label) => { const l = LISTINGS.filter(x => x.city === (loc.city || x.city)).find(fn) || pool[0]; return `<a class="award" href="listing.html?v=${l.slug}"><img src="${l.img}" alt=""><div><small>${label}</small><div style="font-weight:600">${esc(l.name)}</div></div></a>`; };
     $('#awards').innerHTML = pick(l => l.featured, 'Best overall') + pick(l => l.deal, 'Best deal') + pick(l => l.isNew, 'Best newcomer') + pick(l => l.priceLevel === 1 && l.rating >= 4.5, 'Best value');
     $('#ranked').innerHTML = pool.slice(0, 10).map((l, i) => `<a class="r-item ${i < 3 ? 'top' : ''}" href="listing.html?v=${l.slug}"><div class="r-num">${i + 1}</div><img src="${l.img}" alt="" loading="lazy"><div>
-      <h2>${esc(l.name)} ${l.verified ? tick : ''}${l.featured ? '<span class="badge b-feat">★ Featured</span>' : ''}</h2>
+      <h2>${esc(l.name)} ${l.verified ? tick : ''}</h2>
       <div class="card-meta"><span>${l.cat}</span><span class="dot"></span><span class="rating">${starIcon}${l.rating.toFixed(1)}</span><span>(${l.reviews})</span><span class="dot"></span><span>${l.areaName || l.cityName}</span>${l.priceFrom ? `<span class="dot"></span><span>from ฿${l.priceFrom.toLocaleString()}</span>` : ''}</div>
       <p>${WHY[i % WHY.length]}</p>
       ${l.deal ? `<div class="card-deal" style="padding:0;margin-top:4px">${icon('tag')}${esc(l.deal)}</div>` : ''}
