@@ -100,7 +100,7 @@ function header(active) {
       <button class="loc-pill find-pill" data-open="search" aria-label="Change city or search"><span class="flag">${locFlag()}</span><span class="t">${esc(locLabel())}</span><span class="sep"></span>${icon('search')}</button>
     <nav class="nav">${NAV.map(([k, e, _, h]) => `<a href="${ROOT}${h}" class="${k === active ? 'on' : ''}"><span class="em">${e}</span>${t(k)}</a>`).join('')}</nav>
     <div class="hdr-actions">
-      <a class="btn btn-ghost btn-sm desktop-only" href="${ROOT}shop/index.html">➕ List your business</a>
+      <a class="btn btn-ghost btn-sm desktop-only" href="https://swanpass.com/add-listing">➕ List your business</a>
       <a class="avatar" href="${ROOT}account/index.html" aria-label="Your account">AJ</a>
     </div>
   </div></header>
@@ -114,7 +114,7 @@ function header(active) {
     <div class="dlabel">You</div>
     <a class="dlink" href="${ROOT}account/index.html">👤 My account</a><a class="dlink" href="${ROOT}account/index.html#saved">❤️ Saved</a><a class="dlink" href="${ROOT}account/index.html#pass">🎟️ Member pass</a>
     <div class="dlabel">Business</div>
-    <a class="dlink" href="${ROOT}shop/index.html">➕ List your business</a><a class="dlink" href="#">📝 Blog</a><a class="dlink" href="#">💬 Feedback</a>
+    <a class="dlink" href="https://swanpass.com/add-listing">➕ List your business</a><a class="dlink" href="#">📝 Blog</a><a class="dlink" href="#">💬 Feedback</a>
   </aside>`;
 }
 const CAT_EMOJI = { massage: '💋', soapy: '🧼', 'go-go': '👯', 'gentlemens-clubs': '💃', 'red-light': '📍', freelancers: '❤️', ktv: '🎤', lgbtq: '🏳️‍🌈', 'beer-bars': '🍺', nightclubs: '🪩' };
@@ -149,7 +149,8 @@ function footer() {
       <div><h4>${t('cities')}</h4><ul>${cities.map(c => `<li><a href="${ROOT}place.html?city=${c.slug}">${c.name}</a></li>`).join('')}</ul></div>
       <div><h4>${t('categories')}</h4><ul>${CATEGORIES.slice(0, 7).map(c => `<li><a href="${ROOT}search.html?cat=${c.slug}">${c.name}</a></li>`).join('')}</ul></div>
       <div><h4>SwanPass</h4><ul><li><a href="${ROOT}deals.html">Deals</a></li><li><a href="${ROOT}best.html">Best of 2026</a></li><li><a href="${ROOT}guides.html">Guides & articles</a></li><li><a href="${ROOT}hotels.html">Guest-friendly hotels</a></li><li><a href="#">About</a></li></ul></div>
-      <div><h4>${t('business')}</h4><ul><li><a href="${ROOT}shop/index.html">Claim your venue</a></li><li><a href="${ROOT}shop/index.html">Advertise / Featured</a></li><li><a href="#">Report a listing</a></li><li><a href="#">Feedback</a></li></ul></div>
+      <div><h4>${t('business')}</h4><ul><li><a href="https://swanpass.com/add-listing"><b>➕ List your business</b></a></li><li><a href="${ROOT}shop/index.html">Claim your venue</a></li><li><a href="${ROOT}shop/index.html">Advertise / Featured</a></li><li><a href="#">Report a listing</a></li></ul>
+        <h4 style="margin-top:18px">Contact</h4><ul><li><a href="mailto:hello@swanpass.com">✉️ hello@swanpass.com</a></li><li><a href="https://line.me/R/ti/p/@swanpass" target="_blank" rel="noopener">💬 LINE: @swanpass</a></li></ul></div>
     </div>
     <div class="legal"><span>© ${new Date().getFullYear()} SwanPass. Adults 18+ only. Listings are provided by venues and verified where marked.</span><span><a href="#">Privacy</a> · <a href="#">Terms</a></span></div>
   </div></footer>`;
