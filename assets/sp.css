@@ -150,8 +150,8 @@ h3 { font-size: 17px; margin: 0; font-weight: 650; letter-spacing: -.01em; }
 /* ---------- cards ---------- */
 .card { position: relative; display: flex; flex-direction: column; background: var(--surface); border: 1px solid var(--line); border-radius: var(--r-lg); overflow: hidden; transition: transform .2s, border-color .2s, box-shadow .2s; }
 .card:hover { transform: translateY(-3px); border-color: var(--line-2); box-shadow: var(--shadow); }
-.card.is-feat { border-color: rgba(212, 168, 71, .4); box-shadow: 0 0 0 1px rgba(212, 168, 71, .12), 0 10px 30px -18px rgba(212, 168, 71, .5); }
-.card.is-ver { border-color: rgba(59, 130, 246, .25); }
+/* Featured + Verified cards get a subtle light-gray outline; the badges carry the gold/blue */
+.card.is-feat, .card.is-ver { border-color: rgba(255, 255, 255, .22); }
 .card-media { position: relative; aspect-ratio: 4 / 3; background: linear-gradient(135deg, #2a1a24, #120d16); overflow: hidden; }
 .card-media img { width: 100%; height: 100%; object-fit: cover; transition: transform .5s; }
 .card:hover .card-media img { transform: scale(1.04); }
