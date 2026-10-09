@@ -14,8 +14,6 @@
   .pass { position: relative; border-radius: 18px; padding: 20px; overflow: hidden; isolation: isolate; background: linear-gradient(135deg, #1d0508, #0a0a0a 55%), #0a0a0a; border: 1px solid rgba(232, 20, 42, .35); box-shadow: 0 30px 60px -30px rgba(232, 20, 42, .5); }
   .pass::before { content: ''; position: absolute; inset: -40% -20% auto auto; width: 260px; height: 260px; border-radius: 50%; background: radial-gradient(circle, rgba(232, 20, 42, .45), transparent 70%); z-index: -1; }
   .pass .tier { font-size: 11px; font-weight: 900; letter-spacing: .14em; text-transform: uppercase; color: var(--gold); }
-  .qr { width: 132px; height: 132px; background: #fff; border-radius: 12px; padding: 8px; display: grid; grid-template-columns: repeat(21, 1fr); }
-  .qr i { background: #0a0a0a; } .qr i.w { background: transparent; }
   .side-card { padding: 18px; border-radius: var(--r-lg); background: var(--surface); border: 1px solid var(--line); margin-top: 14px; }
   .lists { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 12px; margin-bottom: 24px; }
   .listcard { border-radius: var(--r-lg); overflow: hidden; background: var(--surface); border: 1px solid var(--line); }
@@ -37,7 +35,7 @@
       <div class="row between"><span class="tier">SwanPass member · Gold</span><img src="https://swanpass.com/swanpass_logo_rev.png" alt="" style="height:18px"></div>
       <div style="font-size:22px;font-weight:800;margin:14px 0 2px">Alexander J.</div>
       <div class="muted" style="font-size:12.5px">Member since 2023 · ID 4821-7702</div>
-      <div class="row" style="margin-top:16px;align-items:flex-end;gap:16px"><div class="qr" id="qr"></div><div style="font-size:12.5px;color:var(--text-2)">Show this at the counter.<br><b style="color:var(--text)">12 deals</b> unlocked in Bangkok.<br><span style="color:var(--deal)">฿4,300 saved</span> so far.</div></div>
+      <div style="margin-top:16px;font-size:12.5px;color:var(--text-2)">Say “SwanPass” at the counter.<br><b style="color:var(--text)">12 deals</b> unlocked in Bangkok.<br><span style="color:var(--deal)">฿4,300 saved</span> so far.</div>
     </div>
     <div class="side-card"><div class="row"><span class="avatar">AJ</span><div><b>Alexander Joo</b><div class="muted" style="font-size:12.5px">Home city: Bangkok · English · ฿ THB</div></div></div></div>
     <nav class="side-card" style="padding:8px" id="acct-nav">
@@ -60,8 +58,6 @@
 shell('account', { gate: false });
 const TABS = [['overview', 'Overview', 'home'], ['saved', 'Saved & lists', 'heart'], ['pass', 'My pass & deals', 'ticket'], ['reviews', 'My reviews', 'star'], ['alerts', 'Alerts', 'bell'], ['prefs', 'Preferences', 'settings']];
 $('#acct-nav').innerHTML = TABS.map(([k, t, i]) => `<a class="side-link" href="#${k}" data-tab="${k}">${icon(i)}${t}</a>`).join('') + `<a class="side-link" href="#">${icon('close')}Log out</a>`;
-// fake QR
-$('#qr').innerHTML = Array.from({ length: 441 }, (_, i) => { const x = i % 21, y = Math.floor(i / 21); const finder = (a, b) => x >= a && x < a + 7 && y >= b && y < b + 7 && !(x > a && x < a + 6 && y > b && y < b + 6 && !(x > a + 1 && x < a + 5 && y > b + 1 && y < b + 5)); const f = finder(0, 0) || finder(14, 0) || finder(0, 14); const inF = (x < 8 && y < 8) || (x > 12 && y < 8) || (x < 8 && y > 12); return `<i class="${f || (!inF && ((x * 7 + y * 13 + x * y) % 5 < 2)) ? '' : 'w'}"></i>`; }).join('');
 
 const SAVED = saved().map(s => LISTINGS.find(l => l.slug === s)).filter(Boolean);
 const lists = [['Bangkok — October trip', LISTINGS.filter(l => l.featured).slice(0, 6)], ['Want to try', LISTINGS.filter(l => l.isNew).slice(0, 4)], ['Pattaya', LISTINGS.filter(l => l.city === 'pattaya').slice(0, 5)]];
@@ -76,7 +72,7 @@ $('#p-saved').innerHTML = `<div class="sec-head"><div><h2 class="display">Your l
   <div class="lists">${lists.map(([n, ls]) => `<a class="listcard" href="#"><div class="mosaic">${ls.slice(0, 3).map(l => `<img src="${l.img}" alt="">`).join('')}</div><div class="b"><b>${n}</b><div class="muted" style="font-size:12.5px">${ls.length} venues · private</div></div></a>`).join('')}</div>
   <div class="sec-head"><div><h2 class="display">All saved</h2></div><select class="select"><option>Recently saved</option><option>Nearest</option></select></div>
   <div class="grid-cards">${SAVED.concat(lists[0][1]).slice(0, 9).map(l => card(l)).join('')}</div>`;
-$('#p-pass').innerHTML = `<div class="sec-head"><div><h2 class="display">Deals you can use</h2><p>Show your pass QR or say “SwanPass”. Gold members get an extra 5% at venues marked Gold.</p></div></div>
+$('#p-pass').innerHTML = `<div class="sec-head"><div><h2 class="display">Deals you can use</h2><p>Say “SwanPass” or show the venue page. Gold members get an extra 5% at venues marked Gold.</p></div></div>
   <div class="grid-cards">${LISTINGS.filter(l => l.deal && l.city === 'bangkok').sort(SORTS.recommended[1]).slice(0, 6).map(l => card(l)).join('')}</div>
   <div class="sec-head" style="margin-top:30px"><div><h2 class="display">History</h2></div></div>
   <table class="table"><thead><tr><th>Date</th><th>Venue</th><th>Deal</th><th style="text-align:right">Saved</th></tr></thead><tbody>
@@ -97,7 +93,7 @@ $('#p-prefs').innerHTML = `<div class="sec-head"><div><h2 class="display">Prefer
 
 function show() { const k = (location.hash || '#overview').slice(1); $$('.pane').forEach(p => p.classList.toggle('on', p.id === 'p-' + k)); $$('[data-tab]').forEach(a => a.classList.toggle('on', a.dataset.tab === k)); }
 window.addEventListener('hashchange', show); show();
-$('#p-overview').insertAdjacentHTML('afterbegin', `<div style="float:right">${note('Members area: digital pass (QR) that venues scan or staff tap “Redeemed” — gives you real redemption numbers per venue. Lists replace the single “favorites” page. Alerts are the reason to sign up.')}</div>`);
+$('#p-overview').insertAdjacentHTML('afterbegin', `<div style="float:right">${note('Members area: member card with deals unlocked and money saved. Lists replace the single “favorites” page. Alerts are the reason to sign up.')}</div>`);
 </script>
 </body>
 </html>
