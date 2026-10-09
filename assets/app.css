@@ -184,3 +184,26 @@
 .dur-chips input { width: 58px; }
 .app-side .logo img.logo-img { height: 21px; }
 .app-side .logo small { margin-left: 0; font-size: 9.5px; }
+
+/* Mobile editor fixes: section tabs stay one slim row; each price row = duration chips on top, price + delete below */
+@media (max-width: 720px) {
+  .toc { align-items: center; }
+  .editor { grid-template-columns: minmax(0, 1fr); }
+  .editor > div, .fcard { min-width: 0; }
+  .grid2 { grid-template-columns: minmax(0, 1fr) !important; }
+  .field, .field .input { min-width: 0; }
+  .toc > div { display: none; }
+  .mrow { grid-template-columns: 1fr 34px; grid-template-areas: "durs durs" "price del"; gap: 8px; padding: 10px 12px; }
+  .mrow .handle { display: none; }
+  .mrow .dur-chips { grid-area: durs; }
+  .mrow .input-affix { grid-area: price; }
+  .mrow [data-deli] { grid-area: del; }
+  .dur-chips { flex-wrap: nowrap; gap: 4px; }
+  .dur-chips button { flex: 1; min-width: 0; padding: 0 4px; }
+  .dur-chips input { width: 54px; flex: none; padding: 0 6px; }
+  .day-row { grid-template-columns: minmax(0, 1fr) auto; gap: 8px; }
+  .day-row .slots { grid-column: 1 / -1; min-width: 0; }
+  .slot { width: 100%; min-width: 0; }
+  .slot select { flex: 1; min-width: 0; }
+  .slot .nd { font-size: 10px; padding-right: 2px; }
+}
