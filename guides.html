@@ -43,7 +43,6 @@
   .g-pop:first-of-type { border-top: 0; }
   .g-pop span { font-weight: 900; color: var(--red); }
   .g-topics { display: flex; flex-wrap: wrap; gap: 6px; }
-  .tg-box { background: linear-gradient(135deg, rgba(42, 171, 238, .16), var(--surface)); border-color: rgba(42, 171, 238, .3); }
   @media (max-width: 1000px) { .g-layout { grid-template-columns: 1fr; } .g-aside { position: static; } .g-top { grid-template-columns: 1fr; } }
   @media (max-width: 600px) { .g-row { grid-template-columns: 96px 1fr; gap: 10px; padding: 10px 2px; } .g-row img { width: 96px; height: 72px; } .g-row p { -webkit-line-clamp: 1; } .g-lead { min-height: 230px; } .g-search { flex: 1 1 100%; } }
 </style>
@@ -66,7 +65,6 @@
     <aside class="g-aside">
       <div class="g-box"><h3>🔥 Most read this week</h3><div id="gpop"></div></div>
       <div class="g-box"><h3>📍 Guides by city</h3><div class="g-topics"><a class="chip" href="#">🇹🇭 Bangkok · 31</a><a class="chip" href="#">🏖️ Pattaya · 22</a><a class="chip" href="#">🏝️ Phuket · 12</a><a class="chip" href="#">🇻🇳 Vietnam · 4</a><a class="chip" href="#">🇮🇩 Bali · 3</a></div></div>
-      <div class="g-box tg-box"><h3>✈️ Get new guides on Telegram</h3><p class="muted" style="font-size:13px;margin:0 0 10px">One message a day: the new guide plus tonight’s deals.</p><a class="btn btn-sm btn-block" style="background:#2aabee;color:#fff" href="#">Join the channel</a></div>
     </aside>
   </div>
 </main>
@@ -96,7 +94,7 @@
   $('#gq').addEventListener('input', e => { q = e.target.value.toLowerCase(); render(); });
   $('#gcity').addEventListener('change', e => { city = e.target.value; render(); });
   render();
-  $('.g-head p').insertAdjacentHTML('beforeend', ' ' + note('Live /blogs is one long grid of big cards with 3 pages. New: topic tabs, search, city filter, one lead story + 3 secondary, then a compact list grouped by month (2-line excerpts). Sidebar: most read, guides by city, Telegram sign-up.'));
+  $('.g-head p').insertAdjacentHTML('beforeend', ' ' + note('Live /blogs is one long grid of big cards with 3 pages. New: topic tabs, search, city filter, one lead story + 3 secondary, then a compact list grouped by month (2-line excerpts). Sidebar: most read, guides by city.'));
 </script>
 </body>
 </html>
