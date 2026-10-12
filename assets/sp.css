@@ -757,3 +757,7 @@ body.drawer-open .drawer-ov { opacity: 1; pointer-events: auto; }
 
 /* Safe view switch */
 .safe-toggle { display: inline-flex; align-items: center; gap: 8px; font-size: 13.5px; font-weight: 600; color: var(--text-2); white-space: nowrap; cursor: pointer; }
+/* hide the Google translate toolbar/tooltips; keep our own language picker */
+.goog-te-banner-frame, .skiptranslate > iframe, #goog-gt-tt, .goog-te-balloon-frame, .VIpgJd-ZVi9od-ORHb-OEVmcd { display: none !important; }
+body { top: 0 !important; }
+.goog-text-highlight { background: none !important; box-shadow: none !important; }

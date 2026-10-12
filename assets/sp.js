@@ -96,7 +96,7 @@ const NAV = [['search', '🔎', 'Explore', 'search.html'], ['map', '🗺️', 'M
 function header(active) {
   return `<header class="hdr"><div class="wrap">
     <button class="icon-btn hamb" data-drawer aria-label="Open menu">${icon('list')}</button>
-    <a class="logo" href="${ROOT}index.html" aria-label="SwanPass home">${LOGO}</a>
+    <a class="logo notranslate" href="${ROOT}index.html" aria-label="SwanPass home">${LOGO}</a>
       <button class="loc-pill find-pill" data-open="search" aria-label="Change city or search"><span class="flag">${locFlag()}</span><span class="t">${esc(locLabel())}</span><span class="sep"></span>${icon('search')}</button>
     <nav class="nav">${NAV.map(([k, e, _, h]) => `<a href="${ROOT}${h}" class="${k === active ? 'on' : ''}"><span class="em">${e}</span>${t(k)}</a>`).join('')}</nav>
     <div class="hdr-actions">
@@ -166,10 +166,10 @@ function card(l, opts = {}) {
       <img loading="lazy" src="${l.img}" alt="" onerror="this.remove()">
       <div class="card-badges">${l.featured ? '<span class="badge b-feat">★ Featured</span>' : ''}${l.verified ? '<span class="badge b-ver">✓ Verified</span>' : ''}${l.isNew ? '<span class="badge b-new">New</span>' : ''}</div>
       <button class="card-save ${on ? 'on' : ''}" data-save="${l.slug}" aria-label="Save">${icon('heart')}</button>
-      ${l.priceFrom ? `<span class="card-price num"><small>${t('from')}</small> ${cur}${l.priceFrom.toLocaleString()}${approx(l.thb) ? `<small class="ap"> ${approx(l.thb)}</small>` : ''}</span>` : l.bar ? `<span class="card-price num"><small>beer</small> ฿${l.bar.beer}<small class="ap"> · bar fine ฿${l.bar.fine}</small></span>` : ''}
+      ${l.priceFrom ? `<span class="card-price num notranslate"><small>${t('from')}</small> ${cur}${l.priceFrom.toLocaleString()}${approx(l.thb) ? `<small class="ap"> ${approx(l.thb)}</small>` : ''}</span>` : l.bar ? `<span class="card-price num notranslate"><small>beer</small> ฿${l.bar.beer}<small class="ap"> · bar fine ฿${l.bar.fine}</small></span>` : ''}
     </div>
     <div class="card-body">
-      <div class="card-title"><span>${esc(l.name)}</span>${l.verified ? tick : ''}</div>
+      <div class="card-title"><span class="notranslate">${esc(l.name)}</span>${l.verified ? tick : ''}</div>
       <div class="card-meta">${l.rating ? `<span class="rating">${starIcon}${l.rating.toFixed(1)}</span><span class="num">(${l.reviewCount})</span><span class="dot"></span>` : `<span>${t('noReviews')}</span><span class="dot"></span>`}<span>${(l.cats || [l.catSlug]).slice(0, 2).map(c => `${CAT_EMOJI[c] || ''} ${esc((CATEGORIES.find(x => x.slug === c) || { name: l.cat }).name.replace(' & Strip', '').replace(' & Hostess Bars', ' bar'))}`).join(' · ')}</span></div>
       <div class="card-meta">${l.openNow === null ? '' : `<span class="open-dot ${l.openNow ? '' : 'closed'}"></span><span>${l.openNow ? t('open') : t('opens') + ' ' + l.hoursToday.opens}</span><span class="dot"></span>`}<span>📍 ${esc(l.areaName || l.cityName)}</span></div>
       ${l.deal ? `<div class="card-deal">🏷️ ${esc(l.deal)}</div>` : ''}
@@ -647,3 +647,31 @@ function checkIn(slug) {
   const after = levelFor(checkins().length);
   return { n: checkins().length, levelUp: after !== before ? after : null };
 }
+
+/* ---------- Whole-page translation (mockup): Google Website Translator translates ALL copy, including venue descriptions,
+   when the visitor picks a language other than English. Venue names, prices and the logo are marked notranslate.
+   Production: Rails I18n for UI strings (reviewed translations) + DeepL/LLM for venue text, cached per language under /de/, /fr/… with hreflang. */
+(function () {
+  const lang = getLang();
+  const GT = { zh: 'zh-CN' }[lang] || lang;
+  const expire = lang === 'en' ? 'expires=Thu, 01 Jan 1970 00:00:00 GMT;' : '';
+  document.cookie = `googtrans=/en/${GT};path=/;${expire}`;
+  document.cookie = `googtrans=/en/${GT};path=/;domain=${location.hostname};${expire}`;
+  if (lang === 'en') return;
+  window.gtInit = () => {
+    new google.translate.TranslateElement({ pageLanguage: 'en', autoDisplay: false }, 'gt-el');
+    /* drive the hidden widget: pick the language in its select and fire change (retry until it's built) */
+    let tries = 0;
+    const go = () => { const c = document.querySelector('#gt-el select.goog-te-combo'); if (c && c.options.length > 1) { c.value = GT; c.dispatchEvent(new Event('change')); } else if (tries++ < 40) setTimeout(go, 150); };
+    go();
+  };
+  document.addEventListener('DOMContentLoaded', () => {
+    document.body.insertAdjacentHTML('beforeend', '<div id="gt-el" style="display:none"></div>');
+    const s = document.createElement('script'); s.src = 'https://translate.google.com/translate_a/element.js?cb=gtInit'; document.body.appendChild(s);
+  });
+})();
+
+/* short UI labels with reviewed translations — machine translation gets one-word labels wrong ("About" → "Um", "Deal" → "Handeln").
+   Rendered with class "notranslate" so the page translator leaves them alone. */
+const LBL = {"Overview": {"de": "Überblick", "fr": "Aperçu", "es": "Resumen", "ru": "Обзор", "zh": "概览", "ja": "概要", "ko": "개요", "th": "ภาพรวม"}, "About": {"de": "Über", "fr": "À propos", "es": "Acerca de", "ru": "О заведении", "zh": "简介", "ja": "紹介", "ko": "소개", "th": "เกี่ยวกับ"}, "Deal": {"de": "Angebot", "fr": "Offre", "es": "Oferta", "ru": "Скидка", "zh": "优惠", "ja": "特典", "ko": "할인", "th": "ดีล"}, "SwanPass deal": {"de": "SwanPass-Angebot", "fr": "Offre SwanPass", "es": "Oferta SwanPass", "ru": "Скидка SwanPass", "zh": "SwanPass 优惠", "ja": "SwanPass 特典", "ko": "SwanPass 할인", "th": "ดีล SwanPass"}, "Prices": {"de": "Preise", "fr": "Tarifs", "es": "Precios", "ru": "Цены", "zh": "价格", "ja": "料金", "ko": "가격", "th": "ราคา"}, "Staff": {"de": "Personal", "fr": "Équipe", "es": "Chicas", "ru": "Девушки", "zh": "小姐", "ja": "スタッフ", "ko": "스태프", "th": "พนักงาน"}, "Reviews": {"de": "Bewertungen", "fr": "Avis", "es": "Reseñas", "ru": "Отзывы", "zh": "评价", "ja": "レビュー", "ko": "리뷰", "th": "รีวิว"}, "Hours & contact": {"de": "Öffnungszeiten & Kontakt", "fr": "Horaires & contact", "es": "Horario y contacto", "ru": "Часы и контакты", "zh": "营业时间与联系方式", "ja": "営業時間・連絡先", "ko": "영업시간 및 연락처", "th": "เวลาเปิดและติดต่อ"}, "Location": {"de": "Lage", "fr": "Adresse", "es": "Ubicación", "ru": "Расположение", "zh": "位置", "ja": "場所", "ko": "위치", "th": "ที่ตั้ง"}, "Stay nearby": {"de": "Hotels in der Nähe", "fr": "Hôtels à proximité", "es": "Hoteles cerca", "ru": "Отели рядом", "zh": "附近住宿", "ja": "近くのホテル", "ko": "근처 숙소", "th": "ที่พักใกล้เคียง"}, "Q&A": {"de": "Fragen", "fr": "Questions", "es": "Preguntas", "ru": "Вопросы", "zh": "问答", "ja": "Q&A", "ko": "Q&A", "th": "ถาม-ตอบ"}, "Questions & answers": {"de": "Fragen & Antworten", "fr": "Questions & réponses", "es": "Preguntas y respuestas", "ru": "Вопросы и ответы", "zh": "问答", "ja": "質問と回答", "ko": "질문과 답변", "th": "คำถามและคำตอบ"}, "FAQ": {"de": "FAQ", "fr": "FAQ", "es": "FAQ", "ru": "FAQ", "zh": "常见问题", "ja": "よくある質問", "ko": "자주 묻는 질문", "th": "คำถามที่พบบ่อย"}, "Questions people ask": {"de": "Häufige Fragen", "fr": "Questions fréquentes", "es": "Preguntas frecuentes", "ru": "Частые вопросы", "zh": "常见问题", "ja": "よくある質問", "ko": "자주 묻는 질문", "th": "คำถามที่พบบ่อย"}, "Nearby": {"de": "In der Nähe", "fr": "À proximité", "es": "Cerca", "ru": "Рядом", "zh": "附近", "ja": "近く", "ko": "근처", "th": "ใกล้เคียง"}};
+const tl = en => `<span class="notranslate">${(LBL[en] || {})[getLang()] || en}</span>`;

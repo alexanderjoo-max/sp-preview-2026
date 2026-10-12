@@ -2,7 +2,6 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta name="robots" content="noindex, nofollow, noarchive">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>List Your Business — Plans & Pricing | SwanPass</title>
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -49,7 +48,7 @@
 
   <section class="section" style="padding-top:26px"><div class="wrap">
     <div class="sec-head"><div><h2 class="display">📦 Plans & pricing in <em id="lb-city">Bangkok</em></h2><p>Prices for your city. Venues in more than one city? Pick each one to see its price.</p></div></div>
-    <div class="city-pick"><label for="lb-sel">Your venue is in</label><select class="select" id="lb-sel"></select><label for="lb-cat" style="margin-left:6px">and is a</label><select class="select" id="lb-cat" style="min-width:170px"></select><span id="lb-cur"></span></div>
+    <div class="city-pick"><label for="lb-sel">Your venue is in</label><select class="select" id="lb-sel"></select><span id="lb-cur"></span></div>
     <div class="city-stats" id="lb-stats"></div>
     <div class="pkg-grid" id="lb-plans"></div>
     <p class="muted" style="font-size:12.5px;margin-top:12px">All paid plans are activated manually. Email <a href="mailto:hello@swanpass.com" style="color:var(--gold);font-weight:700">hello@swanpass.com</a> or LINE <a href="https://line.me/R/ti/p/@swanpass" style="color:var(--gold);font-weight:700">@swanpass</a> with your venue name and city.</p>
@@ -73,7 +72,7 @@
     /* counter only when it helps sell: a cap exists AND ≤30% left (or full) */
     const showSlots = cap && left / cap <= .3;
     $('#lb-city').textContent = c.name;
-    history.replaceState(null, '', `?city=${city}&cat=${cat}`);
+    history.replaceState(null, '', `?city=${city}`);
     $('#lb-stats').innerHTML = `<div><b class="num">${c.count}</b><span>Venues listed</span></div><div><b class="num">${c.deals || 0}</b><span>Live deals</span></div>${feat ? `<div><b class="num">${feat}</b><span>Featured venues now</span></div>` : `<div><b style="color:var(--gold)">Be the first</b><span>Featured in ${esc(c.name)}</span></div>`}`;
     const ap = thb => approx(thb) ? `<span class="approx">${approx(thb)}</span>` : '';
     $('#lb-plans').innerHTML = `
@@ -85,11 +84,9 @@
         <a class="btn btn-ghost btn-block" href="mailto:hello@swanpass.com?subject=${encodeURIComponent('Verified plan — ' + c.name)}">Get Verified</a></div>
       <div class="pkg pop">${p.promo ? `<span class="lbl">${p.promoLabel}</span>` : ''}${showSlots ? `<div class="slots ${left ? '' : 'full'}"><b>${left ? `🔥 Only ${left} of ${cap} ${catName} spots left in ${esc(c.name)}` : `All ${cap} ${catName} spots taken in ${esc(c.name)}`}</b><i><b style="width:${Math.min(100, featCat / cap * 100)}%"></b></i></div>` : ''}<div class="nm">⭐ Featured</div><div class="pr num">${p.promo ? `<s>${price(p.featured, c.country)}</s>${price(p.promo, c.country)}` : price(p.featured, c.country)}</div><div class="per">/ month ${ap(p.promo || p.featured)}</div>
         <ul><li>Everything in Verified</li><li>Featured badge & photo map pin</li><li>Top of every ${c.name} list — homepage, city & area pages, search, map</li><li>Promoted deal placement</li><li>Newsletter to 13,000+ members</li><li>Account manager</li></ul>
-        <a class="btn ${left !== 0 ? 'btn-red' : 'btn-ghost'} btn-block" href="mailto:hello@swanpass.com?subject=${encodeURIComponent((left !== 0 ? 'Featured plan — ' : 'Featured waitlist — ') + catName + ' — ' + c.name)}">${left !== 0 ? `Get Featured in ${esc(c.name)}` : 'Join the waitlist'}</a></div>`;
+        <a class="btn ${left !== 0 ? 'btn-red' : 'btn-ghost'} btn-block" href="mailto:hello@swanpass.com?subject=${encodeURIComponent((left !== 0 ? 'Featured plan — ' : 'Featured waitlist — ')  + c.name)}">${left !== 0 ? `Get Featured in ${esc(c.name)}` : 'Join the waitlist'}</a></div>`;
   }
-  let cat = P.get('cat') || 'massage';
-  $('#lb-cat').innerHTML = CATEGORIES.map(x => `<option value="${x.slug}" ${x.slug === cat ? 'selected' : ''}>${CAT_EMOJI[x.slug]} ${x.name}</option>`).join('');
-  $('#lb-cat').onchange = e => { cat = e.target.value; render(); };
+  let cat = null; /* category caps are enforced by staff at sign-up; no category picker on the public page */
   sel.onchange = () => { city = sel.value; render(); };
   document.addEventListener('sp:loc', e => { if (e.detail.city && cities.some(c => c.slug === e.detail.city)) { city = e.detail.city; sel.value = city; render(); } });
   $('#lb-cur').innerHTML = curSelect();
