@@ -170,9 +170,8 @@ function card(l, opts = {}) {
     </div>
     <div class="card-body">
       <div class="card-title"><span>${esc(l.name)}</span>${l.verified ? tick : ''}</div>
-      <div class="card-meta">${l.rating ? `<span class="rating">${starIcon}${l.rating.toFixed(1)}</span><span class="num">(${l.reviews})</span><span class="dot"></span>` : `<span>${t('noReviews')}</span><span class="dot"></span>`}<span>${(l.cats || [l.catSlug]).slice(0, 2).map(c => `${CAT_EMOJI[c] || ''} ${esc((CATEGORIES.find(x => x.slug === c) || { name: l.cat }).name.replace(' & Strip', '').replace(' & Hostess Bars', ' bar'))}`).join(' · ')}</span></div>
-      <div class="card-meta"><span class="open-dot ${l.openNow ? '' : 'closed'}"></span><span>${l.openNow ? t('open') : t('opens') + ' ' + l.hours.opens + ':00'}</span><span class="dot"></span><span>📍 ${esc(l.areaName || l.cityName)}</span></div>
-      ${l.good && l.good.length ? `<div class="card-good">${l.good.slice(0, 2).map(k => `<span>${goodTag(k)[1]} ${goodTag(k)[2]}</span>`).join('')}</div>` : ''}
+      <div class="card-meta">${l.rating ? `<span class="rating">${starIcon}${l.rating.toFixed(1)}</span><span class="num">(${l.reviewCount})</span><span class="dot"></span>` : `<span>${t('noReviews')}</span><span class="dot"></span>`}<span>${(l.cats || [l.catSlug]).slice(0, 2).map(c => `${CAT_EMOJI[c] || ''} ${esc((CATEGORIES.find(x => x.slug === c) || { name: l.cat }).name.replace(' & Strip', '').replace(' & Hostess Bars', ' bar'))}`).join(' · ')}</span></div>
+      <div class="card-meta">${l.openNow === null ? '' : `<span class="open-dot ${l.openNow ? '' : 'closed'}"></span><span>${l.openNow ? t('open') : t('opens') + ' ' + l.hoursToday.opens}</span><span class="dot"></span>`}<span>📍 ${esc(l.areaName || l.cityName)}</span></div>
       ${l.deal ? `<div class="card-deal">🏷️ ${esc(l.deal)}</div>` : ''}
     </div></a>`;
 }
@@ -439,9 +438,6 @@ function directory({ el, title, preset = {}, render = card, gridClass = 'grid-ca
       </div></details>
       <details class="fgroup" open><summary>Rating</summary><div class="fbody">
         <div class="seg">${[[0, 'Any'], [4, '4.0+'], [4.5, '4.5+']].map(([v, t]) => `<button data-rating="${v}" class="${S.minRating === v ? 'on' : ''}">${t}</button>`).join('')}</div>
-      </div></details>
-      <details class="fgroup" open><summary>Good to know</summary><div class="fbody">
-        ${GOOD_TAGS.map(([k, e, t]) => `<label class="fcheck"><input type="checkbox" data-good="${k}" ${S.good.includes(k) ? 'checked' : ''}>${e} ${t}<span class="n">${LISTINGS.filter(l => match(l) && (S.good.includes(k) || l.good.includes(k))).length}</span></label>`).join('')}
       </div></details>
       <details class="fgroup"><summary>Show prices in</summary><div class="fbody">${curSelect()}</div></details>`;
   };

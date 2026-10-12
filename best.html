@@ -56,7 +56,8 @@
 <script>
   shell('best');
   let cat = '';
-  const WHY = ['Consistently the highest-rated in the city, with a rare 5-star cleanliness record.', 'Japanese-style rooms with private jacuzzis, and staff who speak English.', 'Best value on the strip — the SwanPass deal makes it cheaper than walking in.', 'The most polished front-of-house we tested; good for first-timers.', 'Late hours and a big, rotating line-up.', 'Small and quiet, with regulars who keep coming back.', 'Large rooms, spotless showers, fair prices.', 'Newcomer that went straight into the top ten on reviews.'];
+  /* the venue's own description (first sentence) — no invented editorial claims */
+  const why = l => { const d = (REAL[l.slug] || {}).desc || ''; const m = d.match(/^.{20,160}?[.!?](\s|$)/); return m ? m[0].trim() : ''; };
   function render() {
     const loc = getLoc();
     $('#b-city').textContent = locLabel();
@@ -68,8 +69,8 @@
     $('#awards').innerHTML = pick(l => l.featured, 'Best overall') + pick(l => l.deal, 'Best deal') + pick(l => l.isNew, 'Best newcomer') + pick(l => l.priceLevel === 1 && l.rating >= 4.5, 'Best value');
     $('#ranked').innerHTML = pool.slice(0, 10).map((l, i) => `<a class="r-item ${i < 3 ? 'top' : ''}" href="listing.html?v=${l.slug}"><div class="r-num">${i + 1}</div><img src="${l.img}" alt="" loading="lazy"><div>
       <h2>${esc(l.name)} ${l.verified ? tick : ''}</h2>
-      <div class="card-meta"><span>${l.cat}</span><span class="dot"></span><span class="rating">${starIcon}${l.rating.toFixed(1)}</span><span>(${l.reviews})</span><span class="dot"></span><span>${l.areaName || l.cityName}</span>${l.priceFrom ? `<span class="dot"></span><span>from ฿${l.priceFrom.toLocaleString()}</span>` : ''}</div>
-      <p>${WHY[i % WHY.length]}</p>
+      <div class="card-meta"><span>${l.cat}</span><span class="dot"></span><span class="rating">${starIcon}${l.rating.toFixed(1)}</span><span>(${l.reviewCount})</span><span class="dot"></span><span>${l.areaName || l.cityName}</span>${l.priceFrom ? `<span class="dot"></span><span>from ฿${l.priceFrom.toLocaleString()}</span>` : ''}</div>
+      ${why(l) ? `<p>${esc(why(l))}</p>` : ''}
       ${l.deal ? `<div class="card-deal" style="padding:0;margin-top:4px">${icon('tag')}${esc(l.deal)}</div>` : ''}
     </div></a>`).join('');
   }
