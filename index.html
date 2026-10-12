@@ -85,7 +85,7 @@
   </div></section>
 
   <section class="section"><div class="wrap">
-    <div class="sec-head"><div><h2 class="display">👩 Meet the staff</h2><p>Photos are blurred by default — tap to reveal. Turn safe view off in your account.</p></div><a class="link-arrow" href="staff.html">Browse staff</a></div>
+    <div class="sec-head"><div><h2 class="display">👩 Meet the staff</h2><p>Photos are blurred by default — tap one to reveal it.</p></div><div class="row" style="gap:16px"><span id="safe-home"></span><a class="link-arrow" href="staff.html">Browse staff</a></div></div>
     <div class="staff-grid" id="staff"></div>
   </div></section>
 
@@ -149,7 +149,7 @@
     $('#articles').innerHTML = ARTICLES.map(([t, s, d]) => `<a class="article" href="article.html"><div class="im"><img src="${LISTINGS.find(l => l.slug === s).img}" alt="" loading="lazy"></div><span class="muted" style="font-size:12.5px">${d}</span><b>${t}</b></a>`).join('');
     $('#newest').innerHTML = [...new Set(pool.filter(l => l.isNew).concat(LISTINGS.filter(l => l.isNew)))].sort(SORTS.newest[1]).slice(0, 10).map(card).join('');
   }
-  document.body.classList.add('safe');
+  $('#safe-home').innerHTML = safeToggle();
   document.addEventListener('click', e => { const c = e.target.closest('[data-ct]'); if (c) { countryTab = c.dataset.ct; render(); } });
   document.addEventListener('click', e => { const s = e.target.closest('.staff'); if (s && !s.classList.contains('revealed') && document.body.classList.contains('safe')) { e.preventDefault(); s.classList.add('revealed'); } });
   document.addEventListener('sp:loc', e => { countryTab = e.detail.country || countryTab; render(); });

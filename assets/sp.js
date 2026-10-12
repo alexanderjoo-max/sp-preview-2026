@@ -372,6 +372,7 @@ function shell(active, { gate = true } = {}) {
   document.body.insertAdjacentHTML('beforeend', footer() + tabbar(active));
   if (gate) ageGate();
   mockBar();
+  applySafe();
 }
 
 /* ==========================================================================
@@ -573,7 +574,7 @@ function openGallery(sets, tab = 'venue', index = null) {
   if (!tabs.includes(tab)) tab = tabs[0];
   const safe = () => document.body.classList.contains('safe');
   const head = () => `<div class="gal-head"><div class="chips">${tabs.map(k => `<button class="chip ${k === tab ? 'on' : ''}" data-gtab="${k}">${k === 'venue' ? 'Venue' : 'Staff'} · ${sets[k].length}</button>`).join('')}</div>
-    ${index != null ? `<button class="btn btn-ghost btn-sm" data-ggrid>${icon('grid')} All photos</button>` : ''}<button class="icon-btn" data-close aria-label="Close gallery">${icon('close')}</button></div>`;
+    ${tab === 'staff' ? safeToggle() : ''}${index != null ? `<button class="btn btn-ghost btn-sm" data-ggrid>${icon('grid')} All photos</button>` : ''}<button class="icon-btn" data-close aria-label="Close gallery">${icon('close')}</button></div>`;
   const grid = () => `<div class="gal-grid">${sets[tab].map((u, i) => `<button class="gal-th ${tab === 'staff' && safe() ? 'blur' : ''}" data-gi="${i}" aria-label="Photo ${i + 1}"><img src="${u}" alt="" loading="lazy">${tab === 'staff' && safe() ? `<span class="g-reveal">${icon('eye')}</span>` : ''}</button>`).join('')}</div>`;
   const viewer = () => `<div class="gal-view"><div class="gal-track" id="gal-track">${sets[tab].map(u => `<div class="gal-slide"><img src="${u}" alt="" loading="lazy"></div>`).join('')}</div>
     <button class="gal-nav prev" data-gstep="-1" aria-label="Previous photo">‹</button><button class="gal-nav next" data-gstep="1" aria-label="Next photo">›</button>
@@ -587,6 +588,7 @@ function openGallery(sets, tab = 'venue', index = null) {
     }
   };
   const go = d => { const tr = $('#gal-track', m); if (!tr) return; const n = Math.max(0, Math.min(sets[tab].length - 1, index + d)); tr.scrollTo({ left: n * tr.clientWidth, behavior: 'smooth' }); };
+  m.addEventListener('change', e => { if (e.target.matches('[data-safe-toggle]')) setTimeout(draw); });
   m.onclick = e => {
     const t = e.target.closest('[data-gtab]'); if (t) { tab = t.dataset.gtab; index = null; draw(); return; }
     if (e.target.closest('[data-ggrid]')) { index = null; draw(); return; }
@@ -598,3 +600,15 @@ function openGallery(sets, tab = 'venue', index = null) {
   draw();
   return m;
 }
+
+
+/* ---------- Safe view: blur staff photos until tapped. ONE remembered setting (cookie/profile in production), a switch wherever staff photos appear ---------- */
+const getSafe = () => store.get('safe', true);
+function applySafe() {
+  const on = getSafe();
+  document.body.classList.toggle('safe', on);
+  if (on) $$('.revealed').forEach(e => e.classList.remove('revealed'));
+  $$('[data-safe-toggle]').forEach(i => { i.checked = on; });
+}
+const safeToggle = () => `<label class="safe-toggle"><input type="checkbox" class="switch" data-safe-toggle ${getSafe() ? 'checked' : ''}> Safe view</label>`;
+document.addEventListener('change', e => { if (e.target.matches('[data-safe-toggle]')) { store.set('safe', e.target.checked); applySafe(); } });

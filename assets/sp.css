@@ -754,3 +754,6 @@ body.drawer-open .drawer-ov { opacity: 1; pointer-events: auto; }
 .hotel .h-book { display: flex; gap: 6px; }
 .hotel .h-book .btn { height: 30px; padding: 0 10px; font-size: 12px; }
 @media (max-width: 720px) { .hotel .h-book { flex-direction: column; } }
+
+/* Safe view switch */
+.safe-toggle { display: inline-flex; align-items: center; gap: 8px; font-size: 13.5px; font-weight: 600; color: var(--text-2); white-space: nowrap; cursor: pointer; }

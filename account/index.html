@@ -85,7 +85,7 @@ $('#p-prefs').innerHTML = `<div class="sec-head"><div><h2 class="display">Prefer
   <div class="pref"><div><b>Home city</b><p>Pages open on this city first.</p></div><button class="btn btn-ghost btn-sm" data-open="loc">🇹🇭 Bangkok</button></div>
   <div class="pref"><div><b>Language</b><p>Venue text is machine-translated where needed.</p></div><select class="select"><option>English</option><option>中文</option><option>한국어</option><option>日本語</option><option>ไทย</option></select></div>
   <div class="pref"><div><b>Currency</b><p>Prices are shown in the venue’s currency, with your currency next to them.</p></div><select class="select"><option>Show THB + USD</option><option>Venue currency only</option></select></div>
-  <div class="pref"><div><b>Safe view</b><p>Blur explicit staff photos until tapped.</p></div><input type="checkbox" class="switch" checked></div>
+  <div class="pref"><div><b>Safe view</b><p>Blur explicit staff photos until tapped. Same switch as on the Staff page, venue pages and the photo gallery.</p></div><input type="checkbox" class="switch" data-safe-toggle ${getSafe() ? 'checked' : ''}></div>
   <div class="pref"><div><b>Show only LGBTQ+ friendly venues</b><p>Applies to search, map and deals.</p></div><input type="checkbox" class="switch"></div>
   <div class="pref"><div><b>Private profile</b><p>Your reviews show as “AJ***”.</p></div><input type="checkbox" class="switch" checked></div>
   <div class="pref"><div><b>Delete my account</b><p>Removes your lists, history and reviews.</p></div><button class="btn btn-ghost btn-sm" style="color:#ff7d8d">Delete</button></div>`;

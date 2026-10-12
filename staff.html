@@ -11,10 +11,9 @@
   .staff-hero { padding: 44px 0 24px; border-bottom: 1px solid var(--line); }
   .staff .venue { position: absolute; top: 8px; left: 8px; z-index: 1; }
   .staff .cnt { position: absolute; top: 8px; right: 8px; font-size: 11px; font-weight: 700; background: rgba(0,0,0,.6); padding: 2px 7px; border-radius: 6px; }
-  .safe-toggle { display: inline-flex; align-items: center; gap: 10px; font-size: 14px; font-weight: 600; }
 </style>
 </head>
-<body class="safe">
+<body>
 <main>
   <section class="staff-hero"><div class="wrap row between" style="flex-wrap:wrap;gap:20px">
     <div>
@@ -22,7 +21,7 @@
       <h1 class="display" style="font-size:clamp(40px,6vw,72px);margin-top:10px">Meet the staff</h1>
       <p class="lede" style="margin-top:10px">Browse beautiful staff from venues across Southeast Asia.</p>
     </div>
-    <label class="safe-toggle"><input type="checkbox" class="switch" id="safe" checked> Safe view (blur photos)</label>
+    <span id="safe-staff"></span>
   </div></section>
   <div id="app"></div>
 </main>
@@ -31,8 +30,8 @@
 <script>
   shell('staff');
   $('.staff-hero .lede').insertAdjacentHTML('beforeend', note('Copy changed from “talent girls” to “beautiful staff” (ClickUp: Staff page text change).'));
+  $('#safe-staff').innerHTML = safeToggle();
   $('.safe-toggle').insertAdjacentHTML('afterbegin', note('Explicit photos blurred until tapped. Keeps the page usable in public, and lowers the risk with Google SafeSearch and ad networks. Members can turn it off for good in Account → Preferences.'));
-  $('#safe').onchange = e => document.body.classList.toggle('safe', e.target.checked);
   directory({
     el: $('#app'),
     gridClass: 'staff-grid',
