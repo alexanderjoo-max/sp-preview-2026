@@ -807,3 +807,6 @@ body { top: 0 !important; }
 .cookie-bar a { color: var(--gold); text-decoration: underline; }
 .cookie-bar .cb-btns { display: flex; gap: 8px; flex: none; }
 @media (max-width: 900px) { .cookie-bar { bottom: calc(72px + var(--sab)); flex-direction: column; align-items: stretch; } .cookie-bar .cb-btns .btn { flex: 1; } }
+
+/* search panel: no empty strip under the location chooser until the visitor types */
+#ms-body:empty { display: none; }

@@ -322,10 +322,8 @@ function openSearch(prefill = '', focusLoc = false) {
     if (e.target.closest('[data-near]')) { setLoc({ country: 'th', city: 'bangkok', near: true }); refresh(); }
   });
   function refresh() { closeAll(); openSearch($('#ms-q', m).value); }
-  const idle = () => `
-      ${areas.length ? `<p class="ms-label">Popular areas in ${city.name}</p><div class="ms-chips">${areas.map(a => `<a class="chip" href="${ROOT}place.html?city=${city.slug}&area=${a.slug}">${icon('pin')}${a.name}</a>`).join('')}</div>` : ''}
-      <p class="ms-label">Browse ${city ? city.name : ''} by category</p>
-      <div class="ms-chips">${CATEGORIES.map(c => `<a class="chip" href="${ROOT}search.html?cat=${c.slug}">${CAT_EMOJI[c.slug]} ${c.name}${catCount(c.slug) ? ` <span class="muted num">${catCount(c.slug)}</span>` : ''}</a>`).join('')}</div>`;
+  /* nothing below the location chooser until the visitor types: picking a city already opens that city's page */
+  const idle = () => '';
   function hit(l, q = '') {
     const name = q ? esc(l.name).replace(new RegExp('(' + q.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + ')', 'ig'), '<mark>$1</mark>') : esc(l.name);
     return `<a class="ms-hit" href="${ROOT}listing.html?v=${l.slug}"><img src="${l.img}" alt="" loading="lazy"><div><div class="t">${name} ${l.verified ? tick : ''}</div><div class="s">${esc(l.cat)} · ${esc(l.areaName || l.cityName)}${l.deal ? ' · <span style="color:var(--deal)">' + esc(l.deal) + '</span>' : ''}</div></div></a>`;
