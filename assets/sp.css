@@ -860,3 +860,14 @@ body { top: 0 !important; }
 .btn-agoda, .btn-trip { gap: 7px; }
 .bk-ic { width: 18px; height: 18px; border-radius: 4px; flex: none; }
 .btn-sm .bk-ic { width: 15px; height: 15px; }
+
+/* phones: first screen = top cities + all countries; desktop hides the top-cities block (country column + city pane already show both) */
+.mtop { display: none; }
+@media (max-width: 720px) {
+  .where2.step-home .mtop { display: block; }
+  .where2.step-home .cpane { display: none; }
+  .where2.step-home .cnav { display: flex; }
+  .where2.step-home .cn.sel { box-shadow: none; background: none; }
+  .mtop .cbig { grid-template-columns: 1fr 1fr; }
+  .mtop .cb { height: 80px; }
+}

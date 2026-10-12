@@ -305,11 +305,16 @@ function openSearch(prefill = '', focusLoc = false) {
     <div class="ms-where" id="ms-where"></div>
     <div class="modal-body" id="ms-body"></div>`, 'full');
   /* Location chooser: countries in a vertical list (left), that country's cities (right). Phones: tap a country → its cities, "‹ Countries" goes back. */
-  let mstep = 'cities';
+  /* phones start on 'home' (top cities + every country); desktop always shows both columns */
+  let mstep = 'home';
   const drawWhere = () => {
     const cur = getLoc(), co = countryOf(ctab), cities = CITIES.filter(c => c.country === ctab);
     const big = cities.filter(c => c.count >= 20), small = cities.filter(c => c.count < 20);
+    const top = [...CITIES].filter(c => !countryOf(c.country).soon && c.img).sort((a, b) => b.count - a.count).slice(0, 6);
     $('#ms-where', m).innerHTML = `<div class="where2 step-${mstep}">
+      <div class="mtop"><div class="csmall-h" style="margin-top:0">Top cities</div>
+        <div class="cbig">${top.map(c => `<button class="cb ${cur.city === c.slug ? 'on' : ''}" data-city="${c.slug}"><img src="${c.img}" alt="" loading="lazy"><span class="in"><b>${countryOf(c.country).flag} ${c.name}</b><small class="num">${c.count} venues</small></span></button>`).join('')}</div>
+        <div class="csmall-h">All countries</div></div>
       <nav class="cnav" aria-label="Country">
         <button class="cn ${cur.near ? 'on' : ''}" data-near><span class="fl">📍</span><span class="nm">Near me</span></button>
         <button class="cn ${!cur.country ? 'on' : ''}" data-allasia><span class="fl">🌏</span><span class="nm">All of Asia</span><span class="n num">${COUNTRIES.reduce((a, c) => a + c.count, 0)}</span></button>
@@ -317,7 +322,7 @@ function openSearch(prefill = '', focusLoc = false) {
         ${COUNTRIES.map(c => `<button class="cn ${c.code === ctab ? 'sel' : ''} ${c.soon ? 'soon' : ''}" data-ctab="${c.code}"><span class="fl">${c.flag}</span><span class="nm">${c.name}</span>${c.soon ? '<span class="soon-tag">Soon</span>' : `<span class="n num">${c.count}</span>`}<span class="chev">›</span></button>`).join('')}
       </nav>
       <section class="cpane">
-        <div class="cpane-head"><button class="cback" data-cback>‹ Countries</button><div><b>${co.flag} ${co.name}</b>${co.soon ? '' : `<span class="muted num"> · ${co.count} venues</span>`}</div>${co.soon ? '' : `<button class="link-arrow" data-allc="${ctab}">All of ${co.name}</button>`}</div>
+        <div class="cpane-head"><button class="cback" data-cback>‹ All countries</button><div><b>${co.flag} ${co.name}</b>${co.soon ? '' : `<span class="muted num"> · ${co.count} venues</span>`}</div>${co.soon ? '' : `<button class="link-arrow" data-allc="${ctab}">All of ${co.name}</button>`}</div>
         ${co.soon ? `<div class="soon-box"><b>${co.name} is coming soon.</b><p class="muted">We’re adding venues now. Follow us on LINE <a href="${CONTACT.lineUrl}" target="_blank" rel="noopener" style="color:var(--gold)">${CONTACT.line}</a> to hear when it opens.</p></div>` : `
         <div class="cbig">${big.map(c => `<button class="cb ${cur.city === c.slug ? 'on' : ''}" data-city="${c.slug}">${c.img ? `<img src="${c.img}" alt="" loading="lazy">` : ''}<span class="in"><b>${c.name}</b><small class="num">${c.count} venues${c.deals ? ` · ${c.deals} deals` : ''}</small></span></button>`).join('')}</div>
         ${small.length ? `<div class="csmall-h">More cities</div><div class="csmall">${small.map(c => `<button class="cs ${cur.city === c.slug ? 'on' : ''}" data-city="${c.slug}"><span>${c.name}</span><span class="muted num">${c.count}</span></button>`).join('')}</div>` : ''}`}
@@ -326,7 +331,7 @@ function openSearch(prefill = '', focusLoc = false) {
   drawWhere();
   m.addEventListener('click', e => {
     const t = e.target.closest('[data-ctab]'); if (t) { ctab = t.dataset.ctab; mstep = 'cities'; drawWhere(); return; }
-    if (e.target.closest('[data-cback]')) { mstep = 'countries'; drawWhere(); return; }
+    if (e.target.closest('[data-cback]')) { mstep = 'home'; drawWhere(); return; }
     const c = e.target.closest('[data-city]'); if (c) { const ci = cityOf(c.dataset.city); setLoc({ country: ci.country, city: ci.slug }); goPlace(`city=${ci.slug}`); return; }
     const a = e.target.closest('[data-allc]'); if (a) { setLoc({ country: a.dataset.allc, city: null }); goPlace(`country=${a.dataset.allc}`); return; }
     if (e.target.closest('[data-allasia]')) { setLoc({ country: null, city: null }); refresh(); return; }
