@@ -304,18 +304,29 @@ function openSearch(prefill = '', focusLoc = false) {
       <button class="icon-btn" data-close aria-label="Close">${icon('close')}</button></div>
     <div class="ms-where" id="ms-where"></div>
     <div class="modal-body" id="ms-body"></div>`, 'full');
+  /* Location chooser: countries in a vertical list (left), that country's cities (right). Phones: tap a country → its cities, "‹ Countries" goes back. */
+  let mstep = 'cities';
   const drawWhere = () => {
-    const cur = getLoc();
-    $('#ms-where', m).innerHTML = `
-      <div class="where-top"><span class="ms-label" style="margin:0">📍 Where</span><span class="where-links"><button data-near>📍 Near me</button><button data-allasia class="${!cur.country ? 'on' : ''}">🌏 All of Asia</button></span></div>
-      <div class="ctabs">${COUNTRIES.map(c => `<button class="ctab ${c.code === ctab ? 'on' : ''}" data-ctab="${c.code}"><span class="fl">${c.flag}</span>${c.name}${c.soon ? '<small>soon</small>' : ''}</button>`).join('')}</div>
-      ${countryOf(ctab).soon ? '<p class="muted" style="font-size:13px;margin:12px 0 0">Coming soon — we’ll notify you when it launches.</p>' : `<div class="cgrid">
-        <button class="ccity all ${cur.country === ctab && !cur.city ? 'on' : ''}" data-allc="${ctab}"><span class="ph">${countryOf(ctab).flag}</span><span><b>All of ${countryOf(ctab).name}</b><small class="num">${countryOf(ctab).count} venues</small></span></button>
-        ${CITIES.filter(c => c.country === ctab).map(c => `<button class="ccity ${cur.city === c.slug ? 'on' : ''}" data-city="${c.slug}">${c.img ? `<img src="${c.img}" alt="" loading="lazy" onerror="this.replaceWith(Object.assign(document.createElement('span'),{className:'ph'}))">` : '<span class="ph"></span>'}<span><b>${c.name}</b><small class="num">${c.count} venues</small></span></button>`).join('')}</div>`}`;
+    const cur = getLoc(), co = countryOf(ctab), cities = CITIES.filter(c => c.country === ctab);
+    const big = cities.filter(c => c.count >= 20), small = cities.filter(c => c.count < 20);
+    $('#ms-where', m).innerHTML = `<div class="where2 step-${mstep}">
+      <nav class="cnav" aria-label="Country">
+        <button class="cn ${cur.near ? 'on' : ''}" data-near><span class="fl">📍</span><span class="nm">Near me</span></button>
+        <button class="cn ${!cur.country ? 'on' : ''}" data-allasia><span class="fl">🌏</span><span class="nm">All of Asia</span><span class="n num">${COUNTRIES.reduce((a, c) => a + c.count, 0)}</span></button>
+        <div class="cn-sep"></div>
+        ${COUNTRIES.map(c => `<button class="cn ${c.code === ctab ? 'sel' : ''} ${c.soon ? 'soon' : ''}" data-ctab="${c.code}"><span class="fl">${c.flag}</span><span class="nm">${c.name}</span>${c.soon ? '<span class="soon-tag">Soon</span>' : `<span class="n num">${c.count}</span>`}<span class="chev">›</span></button>`).join('')}
+      </nav>
+      <section class="cpane">
+        <div class="cpane-head"><button class="cback" data-cback>‹ Countries</button><div><b>${co.flag} ${co.name}</b>${co.soon ? '' : `<span class="muted num"> · ${co.count} venues</span>`}</div>${co.soon ? '' : `<button class="link-arrow" data-allc="${ctab}">All of ${co.name}</button>`}</div>
+        ${co.soon ? `<div class="soon-box"><b>${co.name} is coming soon.</b><p class="muted">We’re adding venues now. Follow us on LINE <a href="${CONTACT.lineUrl}" target="_blank" rel="noopener" style="color:var(--gold)">${CONTACT.line}</a> to hear when it opens.</p></div>` : `
+        <div class="cbig">${big.map(c => `<button class="cb ${cur.city === c.slug ? 'on' : ''}" data-city="${c.slug}">${c.img ? `<img src="${c.img}" alt="" loading="lazy">` : ''}<span class="in"><b>${c.name}</b><small class="num">${c.count} venues${c.deals ? ` · ${c.deals} deals` : ''}</small></span></button>`).join('')}</div>
+        ${small.length ? `<div class="csmall-h">More cities</div><div class="csmall">${small.map(c => `<button class="cs ${cur.city === c.slug ? 'on' : ''}" data-city="${c.slug}"><span>${c.name}</span><span class="muted num">${c.count}</span></button>`).join('')}</div>` : ''}`}
+      </section></div>`;
   };
   drawWhere();
   m.addEventListener('click', e => {
-    const t = e.target.closest('[data-ctab]'); if (t) { ctab = t.dataset.ctab; drawWhere(); return; }
+    const t = e.target.closest('[data-ctab]'); if (t) { ctab = t.dataset.ctab; mstep = 'cities'; drawWhere(); return; }
+    if (e.target.closest('[data-cback]')) { mstep = 'countries'; drawWhere(); return; }
     const c = e.target.closest('[data-city]'); if (c) { const ci = cityOf(c.dataset.city); setLoc({ country: ci.country, city: ci.slug }); goPlace(`city=${ci.slug}`); return; }
     const a = e.target.closest('[data-allc]'); if (a) { setLoc({ country: a.dataset.allc, city: null }); goPlace(`country=${a.dataset.allc}`); return; }
     if (e.target.closest('[data-allasia]')) { setLoc({ country: null, city: null }); refresh(); return; }
