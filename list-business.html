@@ -48,7 +48,7 @@
 
   <section class="section" style="padding-top:26px"><div class="wrap">
     <div class="sec-head"><div><h2 class="display">📦 Plans & pricing in <em id="lb-city">Bangkok</em></h2><p>Prices for your city. Venues in more than one city? Pick each one to see its price.</p></div></div>
-    <div class="city-pick"><label for="lb-sel">Your venue is in</label><select class="select" id="lb-sel"></select><span id="lb-cur"></span></div>
+    <div class="city-pick"><label for="lb-sel">Your venue is in</label><select class="select" id="lb-sel"></select><label for="lb-cat" style="margin-left:6px">and is a</label><select class="select" id="lb-cat" style="min-width:170px"></select><span id="lb-cur"></span></div>
     <div class="city-stats" id="lb-stats"></div>
     <div class="pkg-grid" id="lb-plans"></div>
     <p class="muted" style="font-size:12.5px;margin-top:12px">All paid plans are activated manually. Email <a href="mailto:hello@swanpass.com" style="color:var(--gold);font-weight:700">hello@swanpass.com</a> or LINE <a href="https://line.me/R/ti/p/@swanpass" style="color:var(--gold);font-weight:700">@swanpass</a> with your venue name and city.</p>
@@ -66,10 +66,14 @@
   sel.innerHTML = COUNTRIES.filter(co => cities.some(c => c.country === co.code)).map(co => `<optgroup label="${co.flag} ${co.name}">${cities.filter(c => c.country === co.code).map(c => `<option value="${c.slug}" ${c.slug === city ? 'selected' : ''}>${c.name}</option>`).join('')}</optgroup>`).join('');
   const price = (thb, country) => `${localPrice(thb, country)}`;
   function render() {
-    const c = cityOf(city), p = planFor(city), feat = LISTINGS.filter(l => l.city === city && l.featured).length, left = Math.max(0, p.slots - feat);
+    const c = cityOf(city), p = planFor(city), feat = LISTINGS.filter(l => l.city === city && l.featured).length;
+    const cap = featuredCap(city, cat), featCat = LISTINGS.filter(l => l.city === city && l.featured && l.catSlug === cat).length, left = cap ? Math.max(0, cap - featCat) : null;
+    const catName = (CATEGORIES.find(x => x.slug === cat) || { name: '' }).name.toLowerCase();
+    /* counter only when it helps sell: a cap exists AND ≤30% left (or full) */
+    const showSlots = cap && left / cap <= .3;
     $('#lb-city').textContent = c.name;
-    history.replaceState(null, '', `?city=${city}`);
-    $('#lb-stats').innerHTML = `<div><b class="num">${c.count}</b><span>Venues listed</span></div><div><b class="num">${c.deals || 0}</b><span>Live deals</span></div><div><b class="num" style="color:${left ? 'var(--deal)' : 'var(--red)'}">${left}</b><span>Featured spots left</span></div>`;
+    history.replaceState(null, '', `?city=${city}&cat=${cat}`);
+    $('#lb-stats').innerHTML = `<div><b class="num">${c.count}</b><span>Venues listed</span></div><div><b class="num">${c.deals || 0}</b><span>Live deals</span></div>${feat ? `<div><b class="num">${feat}</b><span>Featured venues now</span></div>` : `<div><b style="color:var(--gold)">Be the first</b><span>Featured in ${esc(c.name)}</span></div>`}`;
     const ap = thb => approx(thb) ? `<span class="approx">${approx(thb)}</span>` : '';
     $('#lb-plans').innerHTML = `
       <div class="pkg"><div class="nm">📋 Free</div><div class="pr num">${price(0, c.country)}</div><div class="per">forever</div>
@@ -78,14 +82,17 @@
       <div class="pkg"><div class="nm">✅ Verified</div><div class="pr num">${price(p.verified, c.country)}</div><div class="per">/ month ${ap(p.verified)}</div>
         <ul><li>Everything in Free</li><li>Verified badge & blue map pin</li><li>Claim & manage your listing</li><li>Shown above free listings</li><li>Post deals & offers</li></ul>
         <a class="btn btn-ghost btn-block" href="mailto:hello@swanpass.com?subject=${encodeURIComponent('Verified plan — ' + c.name)}">Get Verified</a></div>
-      <div class="pkg pop">${p.promo ? `<span class="lbl">${p.promoLabel}</span>` : ''}<div class="slots ${left ? '' : 'full'}"><div class="row between"><b>${!left ? `All ${p.slots} spots taken in ${esc(c.name)}` : left / p.slots <= .3 ? `🔥 Only ${left} of ${p.slots} spots left in ${esc(c.name)}` : `${left} of ${p.slots} Featured spots open in ${esc(c.name)}`}</b></div><i><b style="width:${Math.min(100, feat / p.slots * 100)}%"></b></i></div><div class="nm">⭐ Featured</div><div class="pr num">${p.promo ? `<s>${price(p.featured, c.country)}</s>${price(p.promo, c.country)}` : price(p.featured, c.country)}</div><div class="per">/ month ${ap(p.promo || p.featured)}</div>
+      <div class="pkg pop">${p.promo ? `<span class="lbl">${p.promoLabel}</span>` : ''}${showSlots ? `<div class="slots ${left ? '' : 'full'}"><b>${left ? `🔥 Only ${left} of ${cap} ${catName} spots left in ${esc(c.name)}` : `All ${cap} ${catName} spots taken in ${esc(c.name)}`}</b><i><b style="width:${Math.min(100, featCat / cap * 100)}%"></b></i></div>` : ''}<div class="nm">⭐ Featured</div><div class="pr num">${p.promo ? `<s>${price(p.featured, c.country)}</s>${price(p.promo, c.country)}` : price(p.featured, c.country)}</div><div class="per">/ month ${ap(p.promo || p.featured)}</div>
         <ul><li>Everything in Verified</li><li>Featured badge & photo map pin</li><li>Top of every ${c.name} list — homepage, city & area pages, search, map</li><li>Promoted deal placement</li><li>Newsletter to 13,000+ members</li><li>Account manager</li></ul>
-        <a class="btn ${left ? 'btn-red' : 'btn-ghost'} btn-block" href="mailto:hello@swanpass.com?subject=${encodeURIComponent((left ? 'Featured plan — ' : 'Featured waitlist — ') + c.name)}">${left ? `Get Featured in ${esc(c.name)}` : 'Join the waitlist'}</a></div>`;
+        <a class="btn ${left !== 0 ? 'btn-red' : 'btn-ghost'} btn-block" href="mailto:hello@swanpass.com?subject=${encodeURIComponent((left !== 0 ? 'Featured plan — ' : 'Featured waitlist — ') + catName + ' — ' + c.name)}">${left !== 0 ? `Get Featured in ${esc(c.name)}` : 'Join the waitlist'}</a></div>`;
   }
+  let cat = P.get('cat') || 'massage';
+  $('#lb-cat').innerHTML = CATEGORIES.map(x => `<option value="${x.slug}" ${x.slug === cat ? 'selected' : ''}>${CAT_EMOJI[x.slug]} ${x.name}</option>`).join('');
+  $('#lb-cat').onchange = e => { cat = e.target.value; render(); };
   sel.onchange = () => { city = sel.value; render(); };
   $('#lb-cur').innerHTML = curSelect();
   render();
-  $('.sec-head p').insertAdjacentHTML('beforeend', ' ' + note('Exact prices are public per city (no cross-city comparison table, so a Bangkok shop doesn’t anchor on Chiang Mai prices). Featured is capped per city — the “spots left” counter creates urgency; when full the button becomes a waitlist. Prices + caps live in one table (city → tier → plan prices + slots), editable in admin. Bangkok = today’s live prices. Pattaya/Phuket/HCMC/Singapore = tier B, Chiang Mai/Hanoi/Bali/Jakarta = tier C, everything else = tier D — prices and caps (24/12/8/5) are PLACEHOLDERS until you set them. Owner portal shows the plans for the owner’s own city.'));
+  $('.sec-head p').insertAdjacentHTML('beforeend', ' ' + note('Exact prices are public per city (no cross-city comparison table, so a Bangkok shop doesn’t anchor on Chiang Mai prices). Featured is unlimited by default. Optional cap per city + category (FEATURED_CAPS); the “spots left” counter only appears when a cap exists and ≤30% is left, and when full the button becomes a waitlist. Prices + caps editable in admin. Bangkok = today’s live prices. Pattaya/Phuket/HCMC/Singapore = tier B, Chiang Mai/Hanoi/Bali/Jakarta = tier C, everything else = tier D — prices are PLACEHOLDERS until you set them; the only cap set is Bangkok massage = 22 (placeholder, to show the counter). Owner portal shows the plans for the owner’s own city.'));
 </script>
 </body>
 </html>

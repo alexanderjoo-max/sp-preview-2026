@@ -195,13 +195,16 @@ const GUEST = { yes: ['✓ Guest-friendly', 'var(--deal)'], fee: ['Joiner fee', 
 
 /* Advertising plans per city — monthly, in THB (shown in the city's own currency).
    Bangkok = live swanpass.com/add-listing prices (Featured ฿10,000, low-season ฿8,000). Every other city is a PLACEHOLDER tier until Alex sets real prices.
-   promo = optional time-limited price shown with the regular one struck through.
-   slots = max Featured venues per city (scarcity keeps Featured valuable; PLACEHOLDER numbers). */
+   promo = optional time-limited price shown with the regular one struck through. */
 const PLAN_TIERS = {
-  A: { verified: 5000, featured: 10000, promo: 8000, promoLabel: 'Low season special', slots: 24 },
-  B: { verified: 4000, featured: 7000, slots: 12 },
-  C: { verified: 3000, featured: 5000, slots: 8 },
-  D: { verified: 2000, featured: 3500, slots: 5 },
+  A: { verified: 5000, featured: 10000, promo: 8000, promoLabel: 'Low season special' },
+  B: { verified: 4000, featured: 7000 },
+  C: { verified: 3000, featured: 5000 },
+  D: { verified: 2000, featured: 3500 },
 };
 const CITY_TIER = { bangkok: 'A', pattaya: 'B', phuket: 'B', 'ho-chi-minh-city': 'B', 'chiang-mai': 'C', hanoi: 'C', bali: 'C', jakarta: 'C', singapore: 'B' };
+/* Featured is UNLIMITED by default. Optional cap per city + category (a massage shop competes with massage shops, not go-go bars).
+   Set a cap once a city/category gets crowded (~25–30 Featured) — or raise the price there instead. PLACEHOLDER: Bangkok massage = 22. */
+const FEATURED_CAPS = { bangkok: { massage: 22 } };
+const featuredCap = (citySlug, cat) => (FEATURED_CAPS[citySlug] || {})[cat] || null;
 const planFor = citySlug => ({ tier: CITY_TIER[citySlug] || 'D', ...PLAN_TIERS[CITY_TIER[citySlug] || 'D'] });
