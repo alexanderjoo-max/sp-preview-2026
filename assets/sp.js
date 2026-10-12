@@ -63,7 +63,9 @@ const store = {
   get(k, d) { try { const v = localStorage.getItem('sp_' + k); return v ? JSON.parse(v) : d; } catch (e) { return d; } },
   set(k, v) { try { localStorage.setItem('sp_' + k, JSON.stringify(v)); } catch (e) { } },
 };
-const getLoc = () => store.get('loc', { country: 'th', city: 'bangkok' });
+/* home city (member preference) = where a fresh visit starts; the header picker changes the city you're browsing right now */
+const getHome = () => store.get('home', 'bangkok');
+const getLoc = () => store.get('loc', (() => { const c = CITIES.find(x => x.slug === getHome()) || CITIES[0]; return { country: c.country, city: c.slug }; })());
 const setLoc = loc => { store.set('loc', loc); document.dispatchEvent(new CustomEvent('sp:loc', { detail: loc })); renderLocPill(); };
 const cityOf = slug => CITIES.find(c => c.slug === slug);
 const countryOf = code => COUNTRIES.find(c => c.code === code);

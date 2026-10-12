@@ -48,7 +48,7 @@
 <main class="wrap acct">
   <aside>
     <div class="pass" id="pass"></div>
-    <div class="side-card"><div class="row"><span class="avatar">AJ</span><div><b>Alexander Joo</b><div class="muted" style="font-size:12.5px">Home city: Bangkok · English · ฿ THB</div></div></div></div>
+    <div class="side-card"><div class="row"><span class="avatar">AJ</span><div><b>Alexander Joo</b><div class="muted" style="font-size:12.5px" id="me-sum"></div></div></div></div>
     <nav class="side-card" style="padding:8px" id="acct-nav">
       ${''}
     </nav>
@@ -119,14 +119,21 @@ $('#p-reviews').innerHTML = `<div class="sec-head"><div><h2 class="display">My r
 $('#p-alerts').innerHTML = `<div class="sec-head"><div><h2 class="display">Alerts</h2><p>We’ll message you — by email or LINE — when something you follow changes.</p></div></div>
   ${[['A venue on your lists posts a new deal', 'Instantly · LINE', 1], ['New venues in Bangkok', 'Weekly digest · email', 1], ['New venues in Phrom Phong & Asok', 'Weekly · email', 1], ['A venue on your lists closes or moves', 'Instantly · email', 1], ['SwanPass launches in a new country', 'Once · email', 0]].map(([t, d, on]) => `<div class="pref"><div><b>${t}</b><p>${d}</p></div><input type="checkbox" class="switch" ${on ? 'checked' : ''}></div>`).join('')}`;
 $('#p-prefs').innerHTML = `<div class="sec-head"><div><h2 class="display">Preferences</h2></div></div>
-  <div class="pref"><div><b>Home city</b><p>Pages open on this city first.</p></div><button class="btn btn-ghost btn-sm" data-open="loc">🇹🇭 Bangkok</button></div>
-  <div class="pref"><div><b>Language</b><p>Venue text is machine-translated where needed.</p></div><select class="select"><option>English</option><option>中文</option><option>한국어</option><option>日本語</option><option>ไทย</option></select></div>
-  <div class="pref"><div><b>Currency</b><p>Prices are shown in the venue’s currency, with your currency next to them.</p></div><select class="select"><option>Show THB + USD</option><option>Venue currency only</option></select></div>
+  <div class="pref"><div><b>Home city</b><p>Pages open on this city first.</p></div><select class="select" id="pref-home">${CITIES.filter(c => c.count >= 5).map(c => `<option value="${c.slug}" ${c.slug === getHome() ? 'selected' : ''}>${countryOf(c.country).flag} ${c.name}</option>`).join('')}</select></div>
+  <div class="pref"><div><b>Language</b><p>The whole site, including venue descriptions, is shown in this language.</p></div><select class="select" id="pref-lang">${LANGS.map(([k, f, n]) => `<option value="${k}" ${k === getLang() ? 'selected' : ''}>${f} ${n}</option>`).join('')}</select></div>
+  <div class="pref"><div><b>Currency</b><p>Prices are shown in the venue’s currency, with your currency next to them.</p></div>${curSelect()}</div>
   <div class="pref"><div><b>Safe view</b><p>Blur explicit staff photos until tapped. Same switch as on the Staff page, venue pages and the photo gallery.</p></div><input type="checkbox" class="switch" data-safe-toggle ${getSafe() ? 'checked' : ''}></div>
   <div class="pref"><div><b>Show only LGBTQ+ friendly venues</b><p>Applies to search, map and deals.</p></div><input type="checkbox" class="switch"></div>
   <div class="pref"><div><b>Private profile</b><p>Your reviews show as “AJ***”.</p></div><input type="checkbox" class="switch" checked></div>
   <div class="pref"><div><b>Delete my account</b><p>Removes your lists, history and reviews.</p></div><button class="btn btn-ghost btn-sm" style="color:#ff7d8d">Delete</button></div>`;
 
+/* preferences are real settings: home city = where fresh visits start; language + currency apply site-wide */
+const summary = () => { const c = cityOf(getHome()); $('#me-sum').textContent = `Home city: ${c.name} · ${LANGS.find(l => l[0] === getLang())[2]} · ${getCur() === 'NONE' ? '฿ THB' : getCur()}`; };
+summary();
+document.addEventListener('change', e => {
+  if (e.target.id === 'pref-home') { const c = cityOf(e.target.value); store.set('home', c.slug); setLoc({ country: c.country, city: c.slug }); summary(); { const t = document.getElementById('toast') || document.body.appendChild(Object.assign(document.createElement('div'), { id: 'toast', className: 'toast' })); t.textContent = `Home city set to ${c.name}`; t.classList.add('show'); setTimeout(() => t.classList.remove('show'), 2200); } }
+  if (e.target.id === 'pref-lang') { store.set('lang', e.target.value); location.reload(); }
+});
 function show() { const k = (location.hash || '#overview').slice(1); $$('.pane').forEach(p => p.classList.toggle('on', p.id === 'p-' + k)); $$('[data-tab]').forEach(a => a.classList.toggle('on', a.dataset.tab === k)); }
 window.addEventListener('hashchange', show); show();
 $('#p-overview').insertAdjacentHTML('afterbegin', `<div style="float:right">${note('Members area: Airbnb-style lists (private notes, share link), self-reported check-ins with levels and badges (no fake “money saved” — we can’t know visits), alerts by email/LINE. Demo member data; venue details are real.')}</div>`);
