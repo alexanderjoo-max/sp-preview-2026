@@ -745,3 +745,12 @@ body.drawer-open .drawer-ov { opacity: 1; pointer-events: auto; }
 .cat-subbar #d-open-filters { flex: none; position: relative; margin-left: 10px; padding-left: 14px; border-radius: 10px; background: var(--surface-2); border: 1px solid var(--line-2); font-weight: 700; }
 .cat-subbar #d-open-filters::before { content: ''; position: absolute; left: -11px; top: 6px; bottom: 6px; width: 1px; background: var(--line-2); }
 .cat-subbar #d-fcount:not(:empty) { display: inline-grid; place-items: center; min-width: 18px; height: 18px; padding: 0 5px; border-radius: 9px; background: var(--red); color: #fff; font-size: 11px; }
+
+/* booking buttons (plain links via /go redirect; affiliate later) */
+.btn-agoda { background: #fff; color: #111; font-weight: 700; }
+.btn-agoda:hover { background: #eee; }
+.btn-trip { background: #287dfa; color: #fff; font-weight: 700; }
+.btn-trip:hover { background: #1b6be0; }
+.hotel .h-book { display: flex; gap: 6px; }
+.hotel .h-book .btn { height: 30px; padding: 0 10px; font-size: 12px; }
+@media (max-width: 720px) { .hotel .h-book { flex-direction: column; } }

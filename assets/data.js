@@ -190,7 +190,11 @@ const HOTELS = [
   ['pattaya', 'walking-street', 'Bali Hai Pier Hotel', 4, 8.4, 2600, 'yes', 0, 'End of Walking Street'],
   ['pattaya', 'lk-metro', 'Buakhao Central Rooms', 3, 8.0, 950, 'yes', 0, 'Two minutes to LK Metro'],
   ['pattaya', 'walking-street', 'Pattaya Bay Grand', 5, 9.0, 5400, 'fee', 1000, 'Joiner fee ฿1,000, ID required'],
-].map(([city, area, name, stars, score, price, guest, fee, note]) => ({ city, area, name, stars, score, price, guest, fee, note, areaName: (AREAS[city] || []).find(a => a.slug === area)?.name }));
+].map(([city, area, name, stars, score, price, guest, fee, note]) => {
+  const ar = (AREAS[city] || []).find(a => a.slug === area) || {}, rnd = seeded(name);
+  return { slug: name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, ''), city, area, name, stars, score, price, guest, fee, note, areaName: ar.name,
+    lat: (ar.lat || 13.74) + (rnd() - .5) * .008, lng: (ar.lng || 100.56) + (rnd() - .5) * .008 };
+});
 const GUEST = { yes: ['✓ Guest-friendly', 'var(--deal)'], fee: ['Joiner fee', 'var(--gold)'], no: ['✕ No guests', 'var(--red)'] };
 
 /* Advertising plans per city — monthly, in THB (shown in the city's own currency).

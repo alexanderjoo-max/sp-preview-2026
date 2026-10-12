@@ -536,11 +536,21 @@ document.addEventListener('click', e => {
 });
 
 /* ---------- guest-friendly hotel row (Hotels page, city/area pages, venue pages) ---------- */
+/* Booking links always go through our own redirect: /go/hotel/:slug?to=agoda|trip
+   → counts the click (hotel, city, site, page) → 302 to the partner. Today the target is a plain hotel search link;
+   once Agoda / Trip.com approve SwanPass, only the redirect's URL template changes and every button starts earning.
+   Buttons: rel="nofollow noopener" now; add "sponsored" when they become affiliate links. */
+const BOOK_SITES = { agoda: 'Agoda', trip: 'Trip.com' };
+const goHotel = (h, to) => `${ROOT}go.html?hotel=${h.slug}&to=${to}`;
+const hotelOf = slug => HOTELS.find(h => h.slug === slug);
+/* walking minutes ≈ straight-line km × 1.3 (streets) ÷ 5 km/h */
+const walkMin = (a, b) => { const km = Math.hypot((a.lat - b.lat) * 111, (a.lng - b.lng) * 111 * Math.cos(a.lat * Math.PI / 180)); return Math.max(1, Math.round(km * 1.3 / 5 * 60)); };
+const bookBtns = (h, cls = 'btn-sm') => `<a class="btn btn-agoda ${cls}" href="${goHotel(h, 'agoda')}" target="_blank" rel="nofollow noopener">View on Agoda</a><a class="btn btn-trip ${cls}" href="${goHotel(h, 'trip')}" target="_blank" rel="nofollow noopener">View on Trip.com</a>`;
 function hotelRow(h) {
   const [label, col] = GUEST[h.guest];
-  return `<a class="hotel" href="#" onclick="return false"><span class="h-ic">🏨</span><div class="h-main"><b>${esc(h.name)}</b><span class="muted">${'★'.repeat(h.stars)} · ${esc(h.areaName || '')} · ${h.score.toFixed(1)}/10</span><span class="h-note">${esc(h.note)}</span></div>
+  return `<div class="hotel"><a class="h-ic" href="${ROOT}hotel.html?h=${h.slug}" aria-hidden="true" tabindex="-1">🏨</a><a class="h-main" href="${ROOT}hotel.html?h=${h.slug}"><b>${esc(h.name)}</b><span class="muted">${'★'.repeat(h.stars)} · ${esc(h.areaName || '')} · ${h.score.toFixed(1)}/10</span><span class="h-note">${esc(h.note)}</span></a>
     <div class="h-guest"><span class="h-badge" style="color:${col};border-color:${col}">${label}${h.guest === 'fee' ? ' ฿' + h.fee.toLocaleString() : ''}</span></div>
-    <div class="h-price"><span class="num"><b>฿${h.price.toLocaleString()}</b></span><span class="approx">${approx(h.price)} / night</span><span class="btn btn-ghost btn-sm">Book →</span></div></a>`;
+    <div class="h-price"><span class="num"><b>฿${h.price.toLocaleString()}</b> <span class="approx">${approx(h.price)} / night</span></span><span class="h-book">${bookBtns(h)}</span></div></div>`;
 }
 
 /* ---------- footer pickers: language + currency (saved per visitor; production also saves to the member profile) ---------- */

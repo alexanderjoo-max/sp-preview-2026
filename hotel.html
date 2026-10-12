@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="robots" content="noindex, nofollow, noarchive">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Hotel — SwanPass</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/sp.css">
+<style>
+  .ho-top { padding: 18px 0 8px; }
+  .ho-top h1 { font-size: clamp(28px, 4vw, 40px); margin: 6px 0 4px; }
+  .ho-meta { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; color: var(--text-2); }
+  .score { display: inline-flex; align-items: center; gap: 4px; padding: 3px 8px; border-radius: 8px; background: #fff; color: #111; font-weight: 800; font-size: 13px; }
+  .walk { display: flex; gap: 6px; overflow-x: auto; scrollbar-width: none; margin-top: 12px; padding-bottom: 2px; }
+  .walk::-webkit-scrollbar { display: none; }
+  .walk a { flex: none; display: inline-flex; gap: 6px; align-items: center; height: 32px; padding: 0 12px; border-radius: 999px; background: var(--surface); border: 1px solid var(--line); font-size: 13px; font-weight: 600; white-space: nowrap; }
+  .walk a:hover { border-color: var(--line-2); }
+  .walk b { color: var(--muted); font-weight: 600; }
+  .ho-hero { position: relative; height: 340px; border-radius: var(--r-lg); overflow: hidden; margin-top: 16px; background: linear-gradient(135deg, #1c1822, #141118); display: grid; place-items: center; }
+  .ho-hero img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; opacity: .55; }
+  .ho-hero span { position: relative; font-size: 13px; color: var(--text-2); background: rgba(0, 0, 0, .55); padding: 6px 12px; border-radius: 8px; }
+  .ho-grid { display: grid; grid-template-columns: 1fr 340px; gap: 28px; margin-top: 24px; align-items: start; }
+  .ho-box { padding: 18px; border-radius: var(--r-lg); background: var(--surface); border: 1px solid var(--line); }
+  .ho-box h2 { font-size: 18px; margin: 0 0 10px; }
+  .gtk { display: flex; gap: 10px; align-items: flex-start; font-size: 14px; color: var(--text-2); }
+  .book-side { position: sticky; top: calc(var(--hdr-total) + 16px); }
+  .book-side .pr { font-size: 26px; font-weight: 900; }
+  .book-side .btn { width: 100%; height: 46px; margin-top: 8px; font-size: 15px; }
+  .bookbar { display: none; }
+  @media (max-width: 900px) {
+    .ho-grid { grid-template-columns: 1fr; }
+    .book-side { display: none; }
+    .tabbar { display: none !important; }
+    /* sticky booking bar: background pinned to bottom:0, buttons padded above the home indicator; page padded to clear it */
+    .bookbar { display: block; position: fixed; left: 0; right: 0; bottom: 0; z-index: 70; padding: 10px max(12px, var(--sar)) calc(10px + var(--sab)) max(12px, var(--sal)); background: rgba(11, 9, 14, .96); backdrop-filter: blur(16px); border-top: 1px solid var(--line); }
+    .bookbar .pr { text-align: center; font-size: 13px; color: var(--text-2); margin-bottom: 8px; }
+    .bookbar .row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+    .bookbar .btn { height: 46px; }
+    body { padding-bottom: calc(120px + var(--sab)) !important; }
+    .ho-hero { height: 220px; margin-left: calc(var(--gutter) * -1); margin-right: calc(var(--gutter) * -1); border-radius: 0; }
+  }
+</style>
+</head>
+<body>
+<main class="wrap" id="ho"></main>
+<script src="assets/data.js"></script>
+<script src="assets/sp.js"></script>
+<script>
+  shell('hotels');
+  const h = hotelOf(new URLSearchParams(location.search).get('h')) || HOTELS[0];
+  const city = cityOf(h.city), [glabel, gcol] = GUEST[h.guest];
+  store.set('loc', { country: city.country, city: city.slug }); renderLocPill();
+  document.title = `${h.name} — ${h.areaName}, ${city.name} | SwanPass`;
+  const areasAll = (AREAS[h.city] || []).map(a => ({ ...a, m: walkMin(h, a) })).sort((a, b) => a.m - b.m);
+  const areas = areasAll.filter((a, i) => a.m <= 20 || i < 3);
+  const venues = LISTINGS.filter(l => l.city === h.city).map(l => ({ l, m: walkMin(h, l) })).sort((a, b) => tier(a.l) - tier(b.l) || a.m - b.m);
+  const near = venues.filter(v => v.m <= 15).slice(0, 8).map(v => v.l);
+  const stays = HOTELS.filter(x => x.city === h.city && x.slug !== h.slug).sort((a, b) => walkMin(h, a) - walkMin(h, b)).slice(0, 3);
+  const books = bookBtns(h, '');
+  $('#ho').innerHTML = `
+    <nav class="crumbs" style="margin-top:18px"><a href="index.html">Home</a><a href="hotels.html">Hotels</a><a href="place.html?city=${city.slug}">${city.name}</a><span>${esc(h.areaName)}</span></nav>
+    <section class="ho-top">
+      <div class="ho-meta"><span style="color:var(--gold)">${'★'.repeat(h.stars)}</span><span class="score">${h.score.toFixed(1)}</span><span class="muted">guest rating</span></div>
+      <h1 class="display">${esc(h.name)}</h1>
+      <div class="ho-meta">📍 ${esc(city.name)} · ${esc(h.areaName)}</div>
+      <div class="walk">${areas.map(a => `<a href="place.html?city=${city.slug}&area=${a.slug}">🚶 ${esc(a.name)} <b>${a.m} min</b></a>`).join('')}</div>
+    </section>
+    <div class="ho-hero"><span>🏨 Hotel photos (pool, rooms, view) come from the booking partner's feed</span></div>
+    <div class="ho-grid"><div class="stack" style="gap:16px">
+      <div class="ho-box"><h2>Good to know</h2>
+        <div class="gtk"><span style="color:${gcol};font-weight:700;white-space:nowrap">${glabel}${h.guest === 'fee' ? ' ฿' + h.fee.toLocaleString() : ''}</span><span>${esc(h.note)} <span class="muted">· reported by members after their stay</span></span></div></div>
+      <section><div class="sec-head"><div><h2 class="display">Nightlife nearby</h2><p>Venues within a 15-minute walk.</p></div><a class="link-arrow" href="place.html?city=${city.slug}&area=${h.area}">All of ${esc(h.areaName)}</a></div>
+        <div class="scroller">${near.map(l => card(l).replace('</a>', '') + `<div class="card-body" style="padding-top:0"><span class="muted" style="font-size:12.5px">🚶 ${walkMin(h, l)} min walk</span></div></a>`).join('')}</div></section>
+      <section><div class="sec-head"><div><h2 class="display">Other stays nearby</h2></div><a class="link-arrow" href="hotels.html">All hotels</a></div>
+        <div class="hotel-list">${stays.map(hotelRow).join('')}</div></section>
+    </div>
+    <aside class="book-side ho-box"><div class="muted" style="font-size:13px">from</div><div class="pr num">฿${h.price.toLocaleString()} <span class="approx" style="font-size:14px">${approx(h.price)}</span></div><div class="muted" style="font-size:13px">per night · compare prices</div>${books}
+      <p class="muted" style="font-size:12px;margin:10px 0 0">Prices and availability on the booking site may differ.</p></aside></div>
+    <div class="bookbar"><div class="pr">from <b style="color:var(--text);font-size:16px">฿${h.price.toLocaleString()}</b> ${approx(h.price)}</div><div class="row2">${books}</div></div>`;
+  $('.ho-top .ho-meta').insertAdjacentHTML('beforeend', note('Hotel page kept clean (hotel photos, ratings, walking times) — no venue/staff imagery — so it passes affiliate review. Booking buttons go through /go/hotel/:slug?to=agoda|trip which counts the click and redirects; today to a plain Agoda/Trip.com search, later to affiliate links by changing one template. Hotel names in this mockup are samples.'));
+</script>
+</body>
+</html>

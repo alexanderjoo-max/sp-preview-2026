@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<title>Redirecting… | SwanPass</title>
+<style>body{margin:0;min-height:100svh;display:grid;place-items:center;background:#0a0a0a;color:#aaa;font:15px Inter,system-ui,sans-serif}</style>
+</head>
+<body>
+<p id="msg">Taking you to the hotel…</p>
+<script src="assets/data.js"></script>
+<script>
+  /* Stand-in for the server route GET /go/hotel/:slug?to=agoda|trip
+     Production (Rails): log a HotelClick(hotel_id, site, city, referrer page, session) then 302.
+     URL templates live in one place; swap them for affiliate deep links once approved. */
+  const TEMPLATES = {
+    agoda: h => `https://www.agoda.com/search?textToSearch=${encodeURIComponent(h.name + ' ' + (cityOf(h.city) || {}).name)}`,
+    trip: h => `https://www.trip.com/hotels/list?keyword=${encodeURIComponent(h.name + ' ' + (cityOf(h.city) || {}).name)}`,
+  };
+  const cityOf = slug => CITIES.find(c => c.slug === slug);
+  const P = new URLSearchParams(location.search), h = HOTELS.find(x => x.slug === P.get('hotel')), to = P.get('to');
+  if (h && TEMPLATES[to]) {
+    try { const k = 'sp_clicks', c = JSON.parse(localStorage.getItem(k) || '{}'); c[`${h.slug}:${to}`] = (c[`${h.slug}:${to}`] || 0) + 1; localStorage.setItem(k, JSON.stringify(c)); } catch (e) { }
+    location.replace(TEMPLATES[to](h));
+  } else document.getElementById('msg').textContent = 'Link not found.';
+</script>
+</body>
+</html>
