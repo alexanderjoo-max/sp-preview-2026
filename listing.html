@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
+<meta name="robots" content="noindex, nofollow, noarchive">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Don Quixote — Sukhumvit, Bangkok | SwanPass</title>
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -145,7 +146,7 @@
   $('#pdp').innerHTML = `
     <nav class="crumbs" style="margin-top:18px"><a href="index.html">Home</a><a href="place.html?country=${L0.country}">${D.country}</a><a href="place.html?city=${L0.city}">${D.city}</a>${L0.area ? `<a href="place.html?city=${L0.city}&area=${L0.area}">${D.area}</a>` : ""}<span>${esc(D.name)}</span></nav>
     <div class="gal-wrap">
-      <div class="gallery" id="gallery">${MOSAIC.map(([set, i], n) => `<button aria-label="${set === 'staff' ? 'Staff' : 'Venue'} photo ${i + 1}" class="${set === 'staff' ? 'g-staff' : ''}" data-set="${set}" data-i="${i}"><img src="${SETS[set][i]}" alt="" ${n ? 'loading="lazy"' : ''}>${set === 'staff' ? `<span class="g-reveal">${icon('eye')}</span>` : ''}</button>`).join('')}
+      <div class="gallery" id="gallery">${MOSAIC.map(([set, i], n) => `<button aria-label="${set === 'staff' ? 'Staff' : 'Venue'} photo ${i + 1}" class="${set === 'staff' ? 'g-staff' : ''}" data-set="${set}" data-i="${i}"><img src="${rs(SETS[set][i], n ? 700 : 1200)}" alt="" ${n ? 'loading="lazy"' : ''}>${set === 'staff' ? `<span class="g-reveal">${icon('eye')}</span>` : ''}</button>`).join('')}
       </div>
       <div class="gal-tabs"><button class="chip on" data-open-gal="venue">Venue · ${SETS.venue.length}</button>${SETS.staff.length ? `<button class="chip" data-open-gal="staff">Staff · ${SETS.staff.length}</button>` : ''}</div>
       <button class="btn btn-ghost btn-sm all" data-open-gal="venue">${icon('grid')} All ${SETS.venue.length + SETS.staff.length} photos</button>
@@ -158,7 +159,7 @@
           <div class="row" style="flex-wrap:wrap;gap:6px">${D.cats.map(c => `<span class="badge b-ver" style="color:var(--text-2);border-color:var(--line-2);background:var(--surface-2)">${c}</span>`).join('')}<span class="badge b-feat">★ Featured</span><span class="badge b-ver">✓ Verified ${note('Verified = SwanPass has checked the venue in person or by video in the last 6 months. The date is stored (content_verified_at) and shown on hover.')}</span></div>
           <h1 class="notranslate">${esc(D.name)}${tick}</h1>
           <div class="facts">
-            ${D.rating ? `<span><span class="rating">${starIcon}${D.rating.toFixed(1)}</span><a href="#reviews" class="muted">(${D.reviewsCount} review${D.reviewsCount === 1 ? '' : 's'})</a></span>` : '<span class="muted">No reviews yet</span>'}
+            ${D.rating ? `<span><span class="rating">${starIcon}${D.rating.toFixed(1)}</span><a href="#reviews" class="muted">(${D.reviewsCount} review${D.reviewsCount === 1 ? '' : 's'})</a></span>` : '<span class="muted">No reviews yet</span>'}${L0.views ? `<span class="muted">👁 ${L0.views} views</span>` : ''}
             <span>${icon('pin')}${D.area}, ${D.city}</span>
             ${dayHours ? (L0.openNow === false ? `<span><span class="open-dot closed"></span><b>Closed</b>&nbsp;· opens ${fmt(dayHours[1])}</span>` : `<span><span class="open-dot"></span><b style="color:var(--deal)">Open now</b>&nbsp;· until ${fmt(dayHours[2])}</span>`) : ''}
             ${fromPrice ? `<span>${icon('tag')}From ${money(fromPrice)}</span>` : ''}
@@ -178,7 +179,7 @@
         ${D.deal ? `<section class="blk" id="deal"><h2>${tl('SwanPass deal')}</h2><div class="deal-box"><div class="eyebrow" style="color:var(--deal)">Exclusive · ${D.deal.expires}</div><div class="t" style="margin-top:6px">${esc(D.deal.title)}</div><p class="muted" style="margin:8px 0 14px">${D.deal.detail}</p><div class="row" style="flex-wrap:wrap"><button class="btn btn-red btn-sm">${icon('ticket')} Show at counter</button><a class="btn btn-ghost btn-sm" href="account/index.html#pass">Add to my pass</a></div></div></section>` : ''}
         ${D.menu.length ? `<section class="blk" id="prices"><h2>${tl('Prices')}</h2><div class="menu-cards">${D.menu.map((g, gi) => `<div class="menu-card ${gi ? 'alt' : ''}"><div class="mc-head"><span>${gi ? '🛁' : '💆'} ${g.group}</span><small>${g.items.length} options</small></div>${g.items.map((it, ii) => `<div class="mc-row"><span class="dur">${it.label ? esc(it.label) : '⏱ ' + it.dur + ' min'}</span><span class="pp">฿${it.price.toLocaleString()} <span class="approx" style="font-size:12px">${approx(it.price)}</span></span></div>`).join('')}</div>`).join('')}</div>
           <p class="muted" style="font-size:13px;margin-top:14px">${IS_DQ ? 'Full menu from the venue’s SwanPass listing.' : 'Example prices from the venue’s SwanPass listing.'} Tips not included. ${curSelect()}</p></section>` : ''}
-        ${L0.staffCount ? `<section class="blk" id="staff"><div class="row between" style="flex-wrap:wrap;gap:10px;margin-bottom:14px"><h2 style="margin:0">${tl('Staff')} <span class="muted" style="font-size:15px;font-weight:500">· ${L0.staffCount} photos</span></h2>${safeToggle()}</div><div class="staff-grid" style="grid-template-columns:repeat(auto-fill,minmax(130px,1fr))">${L0.staffImgs.map((p, i) => `<button class="staff" data-set="staff" data-i="${i}"><img src="${p}" alt="" loading="lazy"><span class="reveal">${icon('eye')}</span></button>`).join('')}</div></section>` : ''}
+        ${L0.staffCount ? `<section class="blk" id="staff"><div class="row between" style="flex-wrap:wrap;gap:10px;margin-bottom:14px"><h2 style="margin:0">${tl('Staff')} <span class="muted" style="font-size:15px;font-weight:500">· ${L0.staffCount} photos</span></h2>${safeToggle()}</div><div class="staff-grid" style="grid-template-columns:repeat(auto-fill,minmax(130px,1fr))">${L0.staffImgs.map((p, i) => `<button class="staff" data-set="staff" data-i="${i}"><img src="${rs(p, 400)}" alt="" loading="lazy"><span class="reveal">${icon('eye')}</span></button>`).join('')}</div></section>` : ''}
         <section class="blk" id="reviews"><h2>${tl('Reviews')}</h2>
           <div class="rev-sum"><div><div class="big">${D.rating || '–'}</div><div class="stars">★★★★☆</div><div class="muted" style="font-size:13px">${D.reviewsCount} reviews</div></div>
             <div style="display:grid;gap:6px">${!D.breakdown ? '' : [5, 4, 3, 2, 1].map(n => `<div class="bar"><span>${n}</span><i><b style="width:${(D.breakdown[n] / total * 100).toFixed(0)}%"></b></i><span class="num">${D.breakdown[n]}</span></div>`).join('')}</div></div>
@@ -245,8 +246,8 @@
       const m = openModal('msg', `<div class="modal-head"><h3 style="flex:1">Message ${esc(D.name)}</h3><button class="icon-btn" data-close aria-label="Close">${icon('close')}</button></div>
         <div class="modal-body rv-form"><label style="margin-top:0">About</label><div class="chips" style="flex-wrap:wrap">${['Available today?', 'Prices', 'Book a time', 'The SwanPass deal', 'Something else'].map((t, i) => `<button class="chip ${i ? '' : 'on'}" data-topic>${t}</button>`).join('')}</div>
         <label>Message</label><textarea class="input" rows="4" style="width:100%;height:auto;padding:10px" placeholder="Hi! I saw ${esc(D.name)} on SwanPass…"></textarea>
-        <label>Where should the reply go?</label><div class="row" style="gap:8px;flex-wrap:wrap"><div class="seg"><button class="on">SwanPass inbox + email</button><button>LINE</button></div></div>
-        <p class="muted" style="font-size:12.5px;margin:12px 0 0">The venue gets your message on LINE right away. Your phone number isn’t shared.</p></div>
+        <p class="muted" style="font-size:13px;margin:10px 0 0">Replies arrive in your SwanPass inbox, and we email you when one comes in.</p>
+        <p class="muted" style="font-size:12.5px;margin:12px 0 0">The venue is notified by email and replies here. Your phone number isn’t shared.</p></div>
         <div class="sheet-foot"><button class="btn btn-ghost" data-close>Cancel</button><button class="btn btn-red" style="flex:1" data-sendmsg>Send message</button></div>`);
       m.onclick = ev => { const t = ev.target.closest('[data-topic]'); if (t) { $$('[data-topic]', m).forEach(x => x.classList.toggle('on', x === t)); } if (ev.target.closest('[data-sendmsg]')) { closeAll(); const tt = $('#toast'); tt.textContent = `Sent — ${D.name} has been notified. Replies appear in your SwanPass inbox.`; tt.classList.add('show'); setTimeout(() => tt.classList.remove('show'), 3000); } };
     }

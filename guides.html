@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
+<meta name="robots" content="noindex, nofollow, noarchive">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Guides & Articles — SwanPass</title>
 <meta name="description" content="Thailand nightlife without the guesswork: area guides, venue comparisons, safety, money and transport advice.">
@@ -52,7 +53,7 @@
     <nav class="crumbs" style="margin-bottom:10px"><a href="index.html">Home</a><span>Guides</span></nav>
     <h1 class="display">📝 Guides & articles</h1>
     <p>Thailand nightlife without the guesswork — area guides, venue comparisons, safety and money advice. <span class="muted">New guide every day.</span></p>
-    <div class="g-tools"><label class="g-search">🔎<input id="gq" placeholder="Search 75 guides…"></label><div class="chips" id="gtopics" style="flex:1"></div></div>
+    <div class="g-tools"><label class="g-search">🔎<input id="gq" placeholder="Search guides…"></label><div class="chips" id="gtopics" style="flex:1"></div></div>
   </div></section>
   <div class="wrap g-layout">
     <section>
@@ -62,8 +63,8 @@
       <div style="text-align:center;margin-top:18px"><button class="btn btn-ghost">Load more guides</button></div>
     </section>
     <aside class="g-aside">
-      <div class="g-box"><h3>🔥 Most read this week</h3><div id="gpop"></div></div>
-      <div class="g-box"><h3>📍 Guides by city</h3><div class="g-topics"><a class="chip" href="#">🇹🇭 Bangkok · 31</a><a class="chip" href="#">🏖️ Pattaya · 22</a><a class="chip" href="#">🏝️ Phuket · 12</a><a class="chip" href="#">🇻🇳 Vietnam · 4</a><a class="chip" href="#">🇮🇩 Bali · 3</a></div></div>
+      <div class="g-box"><h3>🧭 Start here</h3><div id="gpop"></div></div>
+      <div class="g-box"><h3>📍 Guides by city</h3><div class="g-topics" id="gbycity"></div></div>
     </aside>
   </div>
 </main>
@@ -81,17 +82,21 @@
     const showTop = topic === 'all' && !q && !city;
     const [lead, ...rest] = list;
     $('#gtop').style.display = showTop ? '' : 'none';
-    if (showTop) $('#gtop').innerHTML = `<a class="g-lead" href="article.html"><img src="${lead.img}" alt=""><div class="in"><span class="badge b-new">Latest</span><h2>${lead.title}</h2><p>${lead.dek}</p></div></a>
-      <div class="g-side-top">${rest.slice(0, 3).map(p => `<a class="g-mini" href="article.html"><img src="${p.img}" alt="" loading="lazy"><div>${meta(p)}<b>${p.title}</b></div></a>`).join('')}</div>`;
+    if (showTop) $('#gtop').innerHTML = `<a class="g-lead" href="${lead.url}"><img src="${lead.img}" alt=""><div class="in"><span class="badge b-new">Latest</span><h2>${lead.title}</h2><p>${lead.dek}</p></div></a>
+      <div class="g-side-top">${rest.slice(0, 3).map(p => `<a class="g-mini" href="${p.url}"><img src="${p.img}" alt="" loading="lazy"><div>${meta(p)}<b>${p.title}</b></div></a>`).join('')}</div>`;
     const body = showTop ? rest.slice(3) : list;
     $('#glist-title').textContent = showTop ? 'Latest' : `${list.length} guide${list.length === 1 ? '' : 's'}`;
     let last = '';
-    $('#glist').innerHTML = body.map(p => { const m = p.date.slice(3); const h = m !== last ? `<div class="g-month">${m}</div>` : ''; last = m; return h + `<a class="g-row" href="article.html"><img src="${p.img}" alt="" loading="lazy"><div>${meta(p)}<b>${p.title}</b><p>${p.dek}</p></div></a>`; }).join('') || '<div class="empty">No guides match.</div>';
-    $('#gpop').innerHTML = [13, 21, 1, 22, 8].map((i, n) => `<a class="g-pop" href="article.html"><span>${n + 1}</span>${POSTS[i].title}</a>`).join('');
+    $('#glist').innerHTML = body.map(p => { const m = p.date.slice(3); const h = m !== last ? `<div class="g-month">${m}</div>` : ''; last = m; return h + `<a class="g-row" href="${p.url}"><img src="${p.img}" alt="" loading="lazy"><div>${meta(p)}<b>${p.title}</b><p>${p.dek}</p></div></a>`; }).join('') || '<div class="empty">No guides match.</div>';
+    /* hand-picked essentials (no fake "most read" — we don't have that data here) */
+    $('#gpop').innerHTML = ['first-night-in-bangkok-checklist', 'thailand-nightlife-safety-guide', 'common-nightlife-scams-thailand', 'thailand-nightlife-terms-explained', 'how-to-choose-a-venue-on-swanpass'].map(postBy).filter(Boolean).map((p, n) => `<a class="g-pop" href="${p.url}"><span>${n + 1}</span>${p.title}</a>`).join('');
+    $('#gbycity').innerHTML = [['bangkok', '🇹🇭 Bangkok'], ['pattaya', '🏖️ Pattaya'], ['phuket', '🏝️ Phuket'], ['all', '🌏 All of Thailand']].map(([k, t]) => `<button class="chip ${city === k ? 'on' : ''}" data-gc="${k}">${t} · ${POSTS.filter(p => p.city === k).length}</button>`).join('');
+    $('#gq').placeholder = `Search ${POSTS.length} guides…`;
   }
   document.addEventListener('click', e => { const t = e.target.closest('[data-t]'); if (t) { topic = t.dataset.t; render(); } });
   $('#gq').addEventListener('input', e => { q = e.target.value.toLowerCase(); render(); });
   $('#gcity').addEventListener('change', e => { city = e.target.value; render(); });
+  document.addEventListener('click', e => { const g = e.target.closest('[data-gc]'); if (g) { city = city === g.dataset.gc ? '' : g.dataset.gc; $('#gcity').value = ['bangkok', 'pattaya', 'phuket'].includes(city) ? city : ''; render(); } });
   render();
   $('.g-head p').insertAdjacentHTML('beforeend', ' ' + note('Live /blogs is one long grid of big cards with 3 pages. New: topic tabs, search, city filter, one lead story + 3 secondary, then a compact list grouped by month (2-line excerpts). Sidebar: most read, guides by city.'));
 </script>

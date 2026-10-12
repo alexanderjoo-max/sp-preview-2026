@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
+<meta name="robots" content="noindex, nofollow, noarchive">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Messages — SwanPass Venue</title>
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -37,7 +38,7 @@
 <script src="../assets/sp.js"></script>
 <script src="../assets/app.js"></script>
 <script>
-appShell({ area: 'shop', active: 'msgs', title: 'Messages', actions: `<span class="muted" style="font-size:13px">Notifications: <b style="color:var(--deal)">LINE ✓</b></span>` });
+appShell({ area: 'shop', active: 'msgs', title: 'Messages', actions: `<span class="muted" style="font-size:13px">Notifications: <b style="color:var(--deal)">Email ✓</b></span>` });
 /* SAMPLE customer messages to the demo owner (Don Quixote). Venue facts used in replies are Don Quixote's real data. */
 const THREADS = [
   { who: 'Tom', from: '🇬🇧', topic: 'Available today?', time: '2 min', unread: 1, msgs: [['in', 'Hi! I saw Don Quixote on SwanPass. Are you open this afternoon? Thinking of coming around 4pm.', '14:02']] },
@@ -50,8 +51,8 @@ const QUICK = ['Yes, we’re open 12:00–02:00 today', 'Yes — say “SwanPass
 function draw() {
   const t = THREADS[cur];
   $('#body').innerHTML = `
-    <div class="kpis"><div class="kpi"><span>Messages this month</span><b>48</b><small>↑ from SwanPass visitors</small></div><div class="kpi"><span>Your reply time</span><b>12 min</b><small>Shown on your listing</small></div><div class="kpi"><span>Unanswered</span><b>${THREADS.filter(x => x.unread).length}</b><small class="down">Reply within 1 h to keep your badge</small></div><div class="kpi"><span>Questions</span><b>1</b><small>On your public page</small></div></div>
-    <div class="alert" style="margin-bottom:16px">${icon('chat')}<div><b>Every new message is sent to your LINE instantly.</b> Tap “Reply” in LINE to answer here — you don’t need to keep this page open. Customers never see your phone number.</div></div>
+    <div class="kpis" style="grid-template-columns:repeat(3,1fr)"><div class="kpi"><span>Messages this month</span><b>48</b><small>↑ from SwanPass visitors</small></div><div class="kpi"><span>Unanswered</span><b>${THREADS.filter(x => x.unread).length}</b><small class="down">Customers are waiting</small></div><div class="kpi"><span>Questions</span><b>1</b><small>On your public page</small></div></div>
+    <div class="alert" style="margin-bottom:16px">${icon('chat')}<div><b>Check this inbox every day.</b> We email you when a new message arrives. Customers never see your phone number, and you never see theirs.</div></div>
     <div class="inbox"><div class="threads">${THREADS.map((x, i) => `<div class="th ${i === cur ? 'on' : ''}" data-th="${i}"><span class="av">${x.from}</span><div style="min-width:0"><b>${x.who}</b> <span class="muted" style="font-size:12px">· ${x.topic}</span><p>${esc(x.msgs[x.msgs.length - 1][1])}</p></div><div class="t">${x.time}${x.unread ? '<br><span class="dot"></span>' : ''}</div></div>`).join('')}</div>
       <div class="conv"><div class="conv-head"><div><b>${t.from} ${t.who}</b> <span class="muted" style="font-size:12.5px">· ${t.topic} · via SwanPass</span></div><button class="btn btn-ghost btn-sm">Mark done</button></div>
         <div class="msgs" id="msgs">${t.msgs.map(([d, m, at]) => `<div class="bub ${d}">${esc(m)}<small>${at}</small></div>`).join('')}</div>
@@ -65,7 +66,7 @@ document.addEventListener('click', e => {
   if (e.target.closest('[data-send]')) { const v = $('#reply').value.trim(); if (!v) return; THREADS[cur].msgs.push(['out', v, 'now']); THREADS[cur].unread = 0; draw(); toast('Sent — the customer gets it in their SwanPass inbox and by email'); }
 });
 draw();
-$('.alert').insertAdjacentHTML('beforeend', note('Customers message through SwanPass; the venue is pinged on LINE/WhatsApp with a deep link to reply (no daily log-in needed). Reply time is measured and shown on the listing; fast responders rank slightly higher. SAMPLE conversations; replies use Don Quixote’s real hours/prices.'));
+$('.alert').insertAdjacentHTML('beforeend', note('Customers message through SwanPass; the venue gets an email and an unread count in the portal (no LINE/WhatsApp integration). Venues need to log in to reply — which brings them back to the portal daily. SAMPLE conversations; replies use Don Quixote’s real hours/prices.'));
 </script>
 </body>
 </html>

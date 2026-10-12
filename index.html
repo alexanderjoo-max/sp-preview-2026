@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
+<meta name="robots" content="noindex, nofollow, noarchive">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>SwanPass — Asia After Dark</title>
 <meta name="description" content="The after-dark guide to Asia: massage, soapy, go-go, KTV and clubs across Thailand, Vietnam, Indonesia and more — with exclusive SwanPass deals.">
@@ -109,6 +110,7 @@
 
 <script src="assets/data.js"></script>
 <script src="assets/sp.js"></script>
+<script src="assets/blog.js"></script>
 <script>
   shell('home');
   $('.hero-search .btn').innerHTML = icon('search') + 'Search';
@@ -117,12 +119,6 @@
   $('#quick').innerHTML = [['Nuru', 'search.html?q=nuru'], ['Soapy', 'search.html?cat=soapy'], ['KTV / Karaoke', 'search.html?cat=ktv'], ['Open now', 'search.html'], ['Deals tonight', 'deals.html'], ['Near me', 'map.html']].map(([t, h]) => `<a class="chip" href="${h}">${t}</a>`).join('');
 
   const EMOJI = { massage: '💆', soapy: '🛁', 'go-go': '💃', 'gentlemens-clubs': '🥂', 'red-light': '🏮', freelancers: '❤️', ktv: '🎤', lgbtq: '🏳️‍🌈' };
-  const ARTICLES = [
-    ['Wow or Vivi Nuru on Sukhumvit Soi 23?', 'vivi-nuru-bangkok', '05 Oct 2026'],
-    ['Honey Massage in Pattaya: 1, 2 or Grand Honey 3?', 'nuru-spa-pattaya-pattaya', '04 Oct 2026'],
-    ['Patpong Soi 1 or Soi 2? Find the bar by its address', 'chick-gogo-club-pattaya', '03 Oct 2026'],
-    ['Soi 6 Pattaya: go-go bars or gentlemen’s clubs?', 'boofies-pattaya', '02 Oct 2026'],
-  ];
   let countryTab = getLoc().country || 'th';
 
   function render() {
@@ -145,8 +141,9 @@
     $('#deals').innerHTML = pool.filter(l => l.deal).sort(SORTS.recommended[1]).slice(0, 10).map(card).join('') || '<p class="muted">No deals in this city yet.</p>';
     const best = pool.filter(l => l.rating).sort((a, b) => score(b) - score(a)).slice(0, 6);
     $('#best-top').textContent = 'Top 3: ' + best.slice(0, 3).map(l => l.name).join(' · ');
-    $('#staff').innerHTML = [...pool].filter(l => l.staffCount).sort(SORTS.recommended[1]).slice(0, 6).map(l => `<a class="staff" href="listing.html?v=${l.slug}#staff"><img src="${l.staffImgs[0]}" alt="" loading="lazy"><span class="reveal">${icon('eye')}</span><div class="cap"><b>${esc(l.name)}</b>${l.areaName || l.cityName}</div></a>`).join('');
-    $('#articles').innerHTML = ARTICLES.map(([t, s, d]) => `<a class="article" href="article.html"><div class="im"><img src="${LISTINGS.find(l => l.slug === s).img}" alt="" loading="lazy"></div><span class="muted" style="font-size:12.5px">${d}</span><b>${t}</b></a>`).join('');
+    $('#staff').innerHTML = [...pool].filter(l => l.staffCount).sort(SORTS.recommended[1]).slice(0, 6).map(l => `<a class="staff" href="listing.html?v=${l.slug}#staff"><img src="${rs(l.staffImgs[0], 500)}" alt="" loading="lazy"><span class="reveal">${icon('eye')}</span><div class="cap"><b>${esc(l.name)}</b>${l.areaName || l.cityName}</div></a>`).join('');
+    /* latest real guides from swanpass.com/blogs, preferring the chosen city */
+    $('#articles').innerHTML = [...POSTS.filter(p => city && p.city === city.slug), ...POSTS].filter((p, i, arr) => arr.indexOf(p) === i).slice(0, 4).map(p => `<a class="article" href="${p.url}"><div class="im"><img src="${p.img}" alt="" loading="lazy"></div><span class="muted" style="font-size:12.5px">${p.date}</span><b>${esc(p.title)}</b></a>`).join('');
     $('#newest').innerHTML = [...new Set(pool.filter(l => l.isNew).concat(LISTINGS.filter(l => l.isNew)))].sort(SORTS.newest[1]).slice(0, 10).map(card).join('');
   }
   $('#safe-home').innerHTML = safeToggle();

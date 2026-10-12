@@ -154,7 +154,7 @@ function footer() {
       <div><h4>${t('business')}</h4><ul><li><a href="${ROOT}list-business.html"><b>➕ List your business</b></a></li><li><a href="${ROOT}shop/index.html">Claim your venue</a></li><li><a href="${ROOT}list-business.html">Plans & pricing</a></li><li><a href="#">Report a listing</a></li></ul>
         <h4 style="margin-top:18px">Contact</h4><ul><li><a href="mailto:hello@swanpass.com">✉️ hello@swanpass.com</a></li><li><a href="https://line.me/R/ti/p/@swanpass" target="_blank" rel="noopener">💬 LINE: @swanpass</a></li></ul></div>
     </div>
-    <div class="legal"><span>© ${new Date().getFullYear()} SwanPass. Adults 18+ only. Listings are provided by venues and verified where marked.</span><span><a href="#">Privacy</a> · <a href="#">Terms</a></span></div>
+    <div class="legal"><span>© ${new Date().getFullYear()} SwanPass. Adults 18+ only. Listings are provided by venues and verified where marked.</span><span><a href="${ROOT}privacy.html">Privacy</a> · <a href="${ROOT}terms.html">Terms</a> · <a href="${ROOT}guidelines.html">Community guidelines</a> · <a href="${ROOT}privacy.html#cookies">Cookies</a> · <a href="#" data-cookie-settings>Cookie settings</a></span></div>
   </div></footer>`;
 }
 function renderLocPill() { $$('.loc-pill').forEach(p => { p.querySelector('.flag').textContent = locFlag(); p.querySelector('.t').textContent = locLabel(); }); }
@@ -172,7 +172,7 @@ function card(l, opts = {}) {
     </div>
     <div class="card-body">
       <div class="card-title"><span class="notranslate">${esc(l.name)}</span>${l.verified ? tick : ''}</div>
-      <div class="card-meta">${l.rating ? `<span class="rating">${starIcon}${l.rating.toFixed(1)}</span><span class="num">(${l.reviewCount})</span><span class="dot"></span>` : `<span>${t('noReviews')}</span><span class="dot"></span>`}<span>${(l.cats || [l.catSlug]).slice(0, 2).map(c => `${CAT_EMOJI[c] || ''} ${esc((CATEGORIES.find(x => x.slug === c) || { name: l.cat }).name.replace(' & Strip', '').replace(' & Hostess Bars', ' bar'))}`).join(' · ')}</span></div>
+      <div class="card-meta">${l.rating ? `<span class="rating">${starIcon}${l.rating.toFixed(1)}</span><span class="num">(${l.reviewCount})</span><span class="dot"></span>${l.views ? `<span class="num" title="Views">👁 ${l.views}</span><span class="dot"></span>` : ''}` : `<span>${t('noReviews')}</span><span class="dot"></span>`}<span>${(l.cats || [l.catSlug]).slice(0, 2).map(c => `${CAT_EMOJI[c] || ''} ${esc((CATEGORIES.find(x => x.slug === c) || { name: l.cat }).name.replace(' & Strip', '').replace(' & Hostess Bars', ' bar'))}`).join(' · ')}</span></div>
       <div class="card-meta">${l.openNow === null ? '' : `<span class="open-dot ${l.openNow ? '' : 'closed'}"></span><span>${l.openNow ? t('open') : t('opens') + ' ' + l.hoursToday.opens}</span><span class="dot"></span>`}<span>📍 ${esc(l.areaName || l.cityName)}</span></div>
       ${l.deal ? `<div class="card-deal">🏷️ ${esc(l.deal)}</div>` : ''}
     </div></a>`;
@@ -375,6 +375,7 @@ function shell(active, { gate = true } = {}) {
   if (gate) ageGate();
   mockBar();
   applySafe();
+  cookieBanner();
 }
 
 /* ==========================================================================
@@ -577,8 +578,8 @@ function openGallery(sets, tab = 'venue', index = null) {
   const safe = () => document.body.classList.contains('safe');
   const head = () => `<div class="gal-head"><div class="chips">${tabs.map(k => `<button class="chip ${k === tab ? 'on' : ''}" data-gtab="${k}">${k === 'venue' ? 'Venue' : 'Staff'} · ${sets[k].length}</button>`).join('')}</div>
     ${tab === 'staff' ? safeToggle() : ''}${index != null ? `<button class="btn btn-ghost btn-sm" data-ggrid>${icon('grid')} All photos</button>` : ''}<button class="icon-btn" data-close aria-label="Close gallery">${icon('close')}</button></div>`;
-  const grid = () => `<div class="gal-grid">${sets[tab].map((u, i) => `<button class="gal-th ${tab === 'staff' && safe() ? 'blur' : ''}" data-gi="${i}" aria-label="Photo ${i + 1}"><img src="${u}" alt="" loading="lazy">${tab === 'staff' && safe() ? `<span class="g-reveal">${icon('eye')}</span>` : ''}</button>`).join('')}</div>`;
-  const viewer = () => `<div class="gal-view"><div class="gal-track" id="gal-track">${sets[tab].map(u => `<div class="gal-slide"><img src="${u}" alt="" loading="lazy"></div>`).join('')}</div>
+  const grid = () => `<div class="gal-grid">${sets[tab].map((u, i) => `<button class="gal-th ${tab === 'staff' && safe() ? 'blur' : ''}" data-gi="${i}" aria-label="Photo ${i + 1}"><img src="${rs(u, 400)}" alt="" loading="lazy">${tab === 'staff' && safe() ? `<span class="g-reveal">${icon('eye')}</span>` : ''}</button>`).join('')}</div>`;
+  const viewer = () => `<div class="gal-view"><div class="gal-track" id="gal-track">${sets[tab].map(u => `<div class="gal-slide"><img src="${rs(u, 1600)}" alt="" loading="lazy"></div>`).join('')}</div>
     <button class="gal-nav prev" data-gstep="-1" aria-label="Previous photo">‹</button><button class="gal-nav next" data-gstep="1" aria-label="Next photo">›</button>
     <span class="gal-n num" id="gal-n"></span></div>`;
   const draw = () => {
@@ -679,31 +680,38 @@ const LBL = {"Overview": {"de": "Überblick", "fr": "Aperçu", "es": "Resumen", 
 const tl = en => `<span class="notranslate">${(LBL[en] || {})[getLang()] || en}</span>`;
 
 
-/* ---------- Plans (public pricing page + owner portal share one renderer) ---------- */
+/* ---------- Plans (public pricing page + owner portal share one renderer) ----------
+   Plans are activated MANUALLY: every button opens a chat on LINE @swanpass or an email — no online purchase. */
+const contactBtns = (subject, primary = false) => `<div class="pkg-cta"><a class="btn ${primary ? 'btn-line-app' : 'btn-ghost'} btn-block" href="${CONTACT.lineUrl}" target="_blank" rel="noopener">💬 LINE ${CONTACT.line}</a><a class="btn btn-ghost btn-block" href="mailto:${CONTACT.email}?subject=${encodeURIComponent(subject)}">✉️ Email us</a></div>`;
 function planCards(citySlug, { current = null, compact = false } = {}) {
   const c = cityOf(citySlug), p = planFor(citySlug), pr = thb => localPrice(thb, c.country), ap = thb => approx(thb) ? ` <span class="approx">${approx(thb)}</span>` : '';
-  const plusTaken = Math.min(p.plusSlots, LISTINGS.filter(l => l.city === citySlug && l.featured).length ? 2 : 0); /* sample: 2 Featured+ sold in Bangkok */
   const plans = [
-    ...(compact ? [] : [{ k: 'free', name: '📋 Free', price: pr(0), per: 'forever', idx: 0 }]),
-    { k: 'verified', name: '✅ Verified', price: pr(p.verified), per: '/ month' + ap(p.verified), idx: 1 },
-    { k: 'featured', name: '⭐ Featured', price: p.promo ? `<s>${pr(p.featured)}</s>${pr(p.promo)}` : pr(p.featured), per: '/ month' + ap(p.promo || p.featured), idx: 2, lbl: p.promo ? p.promoLabel : 'Most popular', cls: 'pop' },
-    { k: 'plus', name: '👑 Featured+', price: pr(p.plus), per: '/ month' + ap(p.plus), idx: 3, cls: 'prem', lbl: `Only ${p.plusSlots} per city` },
+    ...(compact ? [] : [{ k: 'free', name: '📋 Free', price: pr(0), per: 'forever', g: 'Basics' }]),
+    { k: 'verified', name: '✅ Verified', price: pr(p.verified), per: '/ month' + ap(p.verified), g: 'Verified', head: 'Plus everything in Free' },
+    { k: 'featured', name: '⭐ Featured', price: p.promo ? `<s>${pr(p.featured)}</s>${pr(p.promo)}` : pr(p.featured), per: '/ month' + ap(p.promo || p.featured), g: 'Featured', head: 'Plus everything in Verified', lbl: p.promo ? p.promoLabel : 'Most popular', cls: 'pop' },
   ];
-  const head = f => f[0] === 'Featured+' ? 'Plus everything in Featured' : f[0] === 'Featured' ? 'Plus everything in Verified' : f[0] === 'Verified' ? 'Plus everything in Free' : '';
-  const own = pl => PLAN_FEATURES.find(g => g[0] === { free: 'Basics', verified: 'Verified', featured: 'Featured', plus: 'Featured+' }[pl.k]);
-  return `<div class="pkg-grid ${compact ? 'c3' : 'c4'}">${plans.map(pl => {
-    const g = own(pl), left = p.plusSlots - plusTaken;
-    return `<div class="pkg ${pl.cls || ''} ${current === pl.k ? 'cur' : ''}">${current === pl.k ? '<span class="lbl curlbl">Your plan</span>' : pl.lbl ? `<span class="lbl">${pl.lbl}</span>` : ''}
+  return `<div class="pkg-grid c${plans.length}">${plans.map(pl => `<div class="pkg ${pl.cls || ''} ${current === pl.k ? 'cur' : ''}">${current === pl.k ? '<span class="lbl curlbl">Your plan</span>' : pl.lbl ? `<span class="lbl">${pl.lbl}</span>` : ''}
       <div class="nm">${pl.name}</div><div class="pr num">${pl.price}</div><div class="per">${pl.per}</div>
-      ${pl.k === 'plus' ? `<div class="slots"><b>${left} of ${p.plusSlots} Featured+ spots open in ${esc(c.name)}</b><i><b style="width:${plusTaken / p.plusSlots * 100}%"></b></i></div>` : ''}
-      ${pl.idx > 0 ? `<div class="incl">${head(g)}</div>` : ''}
-      <ul>${g[1].map(f => `<li>${esc(f[0].replace('{city}', c.name))}</li>`).join('')}</ul>
-      ${current === pl.k ? '<span class="btn btn-ghost btn-block" style="pointer-events:none">Current plan</span>' : `<a class="btn ${pl.k === 'featured' || pl.k === 'plus' ? 'btn-red' : 'btn-ghost'} btn-block" href="mailto:hello@swanpass.com?subject=${encodeURIComponent(pl.name.replace(/^\S+ /, '') + ' — ' + c.name)}">${pl.k === 'free' ? 'Add my venue' : current ? 'Upgrade' : 'Get ' + pl.name.replace(/^\S+ /, '')}</a>`}</div>`;
-  }).join('')}</div>
-  <div class="boost"><div><div class="nm">🚀 Deal Boost <span class="muted" style="font-weight:600;font-size:13px">· add-on for any paid plan</span></div><ul>${BOOST_FEATURES.map(f => `<li>${esc(f)}</li>`).join('')}</ul></div>
-    <div class="bp"><div class="pr num">${pr(p.boost)}</div><div class="per">/ 30 days${ap(p.boost)}</div><a class="btn btn-ghost btn-sm" href="mailto:hello@swanpass.com?subject=${encodeURIComponent('Deal Boost — ' + c.name)}">Boost my deal</a></div></div>`;
+      ${pl.head ? `<div class="incl">${pl.head}</div>` : ''}
+      <ul>${PLAN_FEATURES.find(g => g[0] === pl.g)[1].map(f => `<li>${esc(f[0].replace('{city}', c.name))}</li>`).join('')}</ul>
+      ${current === pl.k ? '<span class="btn btn-ghost btn-block" style="pointer-events:none">Current plan</span>' : contactBtns(`${pl.name.replace(/^\S+ /, '')} — ${c.name}`, pl.k === 'featured')}</div>`).join('')}</div>
+    <p class="muted" style="font-size:12.5px;margin:12px 0 0">Plans are set up personally — message us on LINE <a href="${CONTACT.lineUrl}" target="_blank" rel="noopener" style="color:var(--gold);font-weight:700">${CONTACT.line}</a> or email <a href="mailto:${CONTACT.email}" style="color:var(--gold);font-weight:700">${CONTACT.email}</a> with your venue name and city. Payment by bank transfer or PromptPay.</p>`;
 }
 function planTable(citySlug) {
   const c = cityOf(citySlug);
-  return `<div class="cmp"><table><thead><tr><th></th><th>Free</th><th>Verified</th><th>Featured</th><th>Featured+</th></tr></thead><tbody>${PLAN_FEATURES.map(([g, rows]) => `<tr class="g"><td colspan="5">${g}</td></tr>` + rows.map(r => `<tr><td>${esc(r[0].replace('{city}', c.name))}</td>${r.slice(1).map(v => `<td>${v ? '<span class="yes">✓</span>' : '<span class="no">—</span>'}</td>`).join('')}</tr>`).join('')).join('')}</tbody></table></div>`;
+  return `<div class="cmp"><table><thead><tr><th></th><th>Free</th><th>Verified</th><th>Featured</th></tr></thead><tbody>${PLAN_FEATURES.map(([g, rows]) => `<tr class="g"><td colspan="4">${g}</td></tr>` + rows.map(r => `<tr><td>${esc(r[0].replace('{city}', c.name))}</td>${r.slice(1).map(v => `<td>${v ? '<span class="yes">✓</span>' : '<span class="no">—</span>'}</td>`).join('')}</tr>`).join('')).join('')}</tbody></table></div>`;
 }
+
+
+/* ---------- Cookie consent (PDPA): essential always on; analytics only after "Accept all". Choice stored; reopen via "Cookie settings". ---------- */
+function cookieBanner(force) {
+  if (!force && store.get('consent', null)) return;
+  const old = document.getElementById('cookie-bar'); if (old) old.remove();
+  document.body.insertAdjacentHTML('beforeend', `<div class="cookie-bar" id="cookie-bar" role="dialog" aria-label="Cookies">
+    <p>We use essential cookies to make SwanPass work (age check, login, your settings). With your OK we also use analytics cookies to see which pages help people. No advertising cookies. <a href="${ROOT}privacy.html#cookies">Details</a></p>
+    <div class="cb-btns"><button class="btn btn-ghost btn-sm" data-consent="essential">Essential only</button><button class="btn btn-red btn-sm" data-consent="all">Accept all</button></div></div>`);
+}
+document.addEventListener('click', e => {
+  const c = e.target.closest('[data-consent]'); if (c) { store.set('consent', { choice: c.dataset.consent, at: new Date().toISOString() }); document.getElementById('cookie-bar')?.remove(); /* production: load analytics only when choice === 'all' */ }
+  if (e.target.closest('[data-cookie-settings]')) { e.preventDefault(); cookieBanner(true); }
+});

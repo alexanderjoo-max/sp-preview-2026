@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
+<meta name="robots" content="noindex, nofollow, noarchive">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>My SwanPass</title>
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -125,7 +126,8 @@ $('#p-prefs').innerHTML = `<div class="sec-head"><div><h2 class="display">Prefer
   <div class="pref"><div><b>Safe view</b><p>Blur explicit staff photos until tapped. Same switch as on the Staff page, venue pages and the photo gallery.</p></div><input type="checkbox" class="switch" data-safe-toggle ${getSafe() ? 'checked' : ''}></div>
   <div class="pref"><div><b>Show only LGBTQ+ friendly venues</b><p>Applies to search, map and deals.</p></div><input type="checkbox" class="switch"></div>
   <div class="pref"><div><b>Private profile</b><p>Your reviews show as “AJ***”.</p></div><input type="checkbox" class="switch" checked></div>
-  <div class="pref"><div><b>Delete my account</b><p>Removes your lists, history and reviews.</p></div><button class="btn btn-ghost btn-sm" style="color:#ff7d8d">Delete</button></div>`;
+  <div class="pref"><div><b>Download my data</b><p>Your account, lists, notes, check-ins, reviews and messages as a file (JSON).</p></div><button class="btn btn-ghost btn-sm" data-export>Download</button></div>
+  <div class="pref"><div><b>Delete my account</b><p>Deletes your account, lists, check-ins, alerts and messages within 30 days. <a href="../privacy.html#delete" style="text-decoration:underline">How deletion works</a></p></div><button class="btn btn-ghost btn-sm" style="color:#ff7d8d" data-delacct>Delete</button></div>`;
 
 /* preferences are real settings: home city = where fresh visits start; language + currency apply site-wide */
 const summary = () => { const c = cityOf(getHome()); $('#me-sum').textContent = `Home city: ${c.name} · ${LANGS.find(l => l[0] === getLang())[2]} · ${getCur() === 'NONE' ? '฿ THB' : getCur()}`; };
@@ -133,6 +135,23 @@ summary();
 document.addEventListener('change', e => {
   if (e.target.id === 'pref-home') { const c = cityOf(e.target.value); store.set('home', c.slug); setLoc({ country: c.country, city: c.slug }); summary(); { const t = document.getElementById('toast') || document.body.appendChild(Object.assign(document.createElement('div'), { id: 'toast', className: 'toast' })); t.textContent = `Home city set to ${c.name}`; t.classList.add('show'); setTimeout(() => t.classList.remove('show'), 2200); } }
   if (e.target.id === 'pref-lang') { store.set('lang', e.target.value); location.reload(); }
+});
+/* PDPA: data download + account deletion */
+document.addEventListener('click', e => {
+  if (e.target.closest('[data-export]')) {
+    const data = { exported: new Date().toISOString(), account: { name: 'Alexander J.', home_city: getHome(), language: getLang(), currency: getCur(), safe_view: getSafe() }, lists: memberLists(), checkins: checkins() };
+    const a = Object.assign(document.createElement('a'), { href: URL.createObjectURL(new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' })), download: 'swanpass-my-data.json' }); a.click();
+  }
+  if (e.target.closest('[data-delacct]')) {
+    const m = openModal('del', `<div class="modal-head"><h3 style="flex:1">Delete your account?</h3><button class="icon-btn" data-close aria-label="Close">${icon('close')}</button></div>
+      <div class="modal-body"><p style="margin-top:0">This deletes your account, lists and notes, check-ins and badges, alerts and messages. It can’t be undone after 30 days.</p>
+      <label class="fcheck" style="padding:8px 0"><input type="checkbox" id="del-keep"> Keep my reviews, shown as “Deleted user”</label>
+      <p class="muted" style="font-size:13px">Want a copy first? <a href="#" data-export style="text-decoration:underline">Download my data</a></p>
+      <label style="display:block;font-size:13px;font-weight:600;margin:12px 0 6px">Type DELETE to confirm</label><input class="input" id="del-confirm" style="width:100%" autocomplete="off"></div>
+      <div class="sheet-foot"><button class="btn btn-ghost" data-close>Cancel</button><button class="btn btn-red" style="flex:1" id="del-go" disabled>Delete my account</button></div>`);
+    $('#del-confirm', m).oninput = ev => { $('#del-go', m).disabled = ev.target.value.trim() !== 'DELETE'; };
+    $('#del-go', m).onclick = () => { m.innerHTML = `<div class="modal-body" style="text-align:center;padding:30px"><div style="font-size:40px">✓</div><h3>Account scheduled for deletion</h3><p class="muted">You’ve been logged out. We’ll email you when it’s done. Changed your mind? Log in within 30 days to cancel.</p><button class="btn btn-ghost" data-close>Close</button></div>`; };
+  }
 });
 function show() { const k = (location.hash || '#overview').slice(1); $$('.pane').forEach(p => p.classList.toggle('on', p.id === 'p-' + k)); $$('[data-tab]').forEach(a => a.classList.toggle('on', a.dataset.tab === k)); }
 window.addEventListener('hashchange', show); show();
