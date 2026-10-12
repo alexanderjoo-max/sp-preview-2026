@@ -69,7 +69,7 @@
 
   <section class="section"><div class="wrap">
     <div class="sec-head"><div><h2 class="display">⭐ Featured in <em class="cityname">Bangkok</em></h2></div><a class="link-arrow" href="search.html">See all</a></div>
-    <div class="scroller" id="featured"></div>
+    <div class="grid-cards" id="featured"></div>
   </div></section>
 
   <section class="section"><div class="wrap">
@@ -140,7 +140,8 @@
     $('#pa-all').href = `place.html?city=${areaCity}`;
     $('#areas').innerHTML = areaGrid(areaCity);
     $('#cats').innerHTML = CATEGORIES.map(c => `<a class="cat-tile" href="search.html?cat=${c.slug}"><span class="em">${CAT_EMOJI[c.slug]}</span><b>${c.name}</b><span class="num">${Math.max(scope.filter(l => l.cats.includes(c.slug)).length * 4, 3)} venues</span>${c.isNew ? '<span class="chip-new">NEW</span>' : ''}</a>`).join('');
-    $('#featured').innerHTML = pool.filter(l => l.featured || l.verified).sort(SORTS.recommended[1]).slice(0, 14).map(card).join('');
+    /* paid placement: every Featured venue in the chosen city, no cap (falls back to Verified where a city has no Featured yet) */
+    const featAll = pool.filter(l => l.featured); $('#featured').innerHTML = (featAll.length ? featAll : pool.filter(l => l.verified)).sort(SORTS.recommended[1]).map(card).join('');
     $('#deals').innerHTML = pool.filter(l => l.deal).sort(SORTS.recommended[1]).slice(0, 10).map(card).join('') || '<p class="muted">No deals in this city yet.</p>';
     const best = pool.filter(l => l.rating).sort((a, b) => score(b) - score(a)).slice(0, 6);
     $('#best-top').textContent = 'Top 3: ' + best.slice(0, 3).map(l => l.name).join(' · ');
