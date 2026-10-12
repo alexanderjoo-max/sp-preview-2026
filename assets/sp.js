@@ -100,7 +100,9 @@ function header(active) {
     <button class="icon-btn hamb" data-drawer aria-label="Open menu">${icon('list')}</button>
     <a class="logo notranslate" href="${ROOT}index.html" aria-label="SwanPass home">${LOGO}</a>
       <button class="loc-pill find-pill" data-open="search" aria-label="Change city or search"><span class="flag">${locFlag()}</span><span class="t">${esc(locLabel())}</span><span class="sep"></span>${icon('search')}</button>
-    <nav class="nav">${NAV.map(([k, e, _, h]) => `<a href="${ROOT}${h}" class="${k === active ? 'on' : ''}"><span class="em">${e}</span>${t(k)}</a>`).join('')}</nav>
+    <nav class="nav">${NAV.slice(0, 4).map(([k, e, _, h]) => `<a href="${ROOT}${h}" class="${k === active ? 'on' : ''}"><span class="em">${e}</span>${t(k)}</a>`).join('')}
+      <details class="nav-more"><summary class="${NAV.slice(4).some(n => n[0] === active) ? 'on' : ''}">More ${icon('chevron')}</summary>
+        <div class="nav-menu">${NAV.slice(4).map(([k, e, _, h]) => `<a href="${ROOT}${h}" class="${k === active ? 'on' : ''}"><span class="em">${e}</span>${t(k)}</a>`).join('')}</div></details></nav>
     <div class="hdr-actions">
       <a class="btn btn-ghost btn-sm desktop-only" href="${ROOT}list-business.html">➕ List your business</a>
       <a class="avatar" href="${ROOT}account/index.html" aria-label="Your account">AJ</a>
@@ -138,6 +140,9 @@ document.addEventListener('click', e => {
   if (e.target.closest('[data-drawer-close]') || (e.target.closest('.drawer [data-open]'))) document.body.classList.remove('drawer-open');
 });
 document.addEventListener('keydown', e => { if (e.key === 'Escape') document.body.classList.remove('drawer-open'); });
+/* close the header "More" menu on outside click / Escape */
+document.addEventListener('click', e => { document.querySelectorAll('.nav-more[open]').forEach(d => { if (!d.contains(e.target)) d.removeAttribute('open'); }); });
+document.addEventListener('keydown', e => { if (e.key === 'Escape') document.querySelectorAll('.nav-more[open]').forEach(d => d.removeAttribute('open')); });
 function tabbar(active) {
   const tabs = [['search', '🔎', 'Explore', 'search.html'], ['map', '🗺️', 'Map', 'map.html'], ['deals', '🏷️', 'Deals', 'deals.html'], ['best', '🏆', 'Best', 'best.html'], ['account', '👤', 'Account', 'account/index.html']];
   return `<nav class="tabbar" aria-label="Main">${tabs.map(([k, e, l, h]) => `<a href="${ROOT}${h}" class="${k === active ? 'on' : ''}"><span class="em">${e}</span>${t(k)}</a>`).join('')}</nav>`;
