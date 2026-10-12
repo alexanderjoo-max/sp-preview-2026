@@ -24,18 +24,30 @@
   .pane { display: none; } .pane.on { display: block; }
   .pref { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 14px 0; border-bottom: 1px solid var(--line); }
   .pref p { margin: 2px 0 0; font-size: 13px; color: var(--muted); }
+  .lvl { display: flex; align-items: center; gap: 12px; margin-top: 14px; }
+  .lvl .ic { font-size: 34px; line-height: 1; }
+  .lvl b { font-size: 18px; }
+  .meter2 { height: 8px; border-radius: 8px; background: rgba(255, 255, 255, .1); overflow: hidden; margin-top: 10px; }
+  .meter2 i { display: block; height: 100%; background: linear-gradient(90deg, var(--gold), var(--red)); }
+  .badges { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 10px; }
+  .badge2 { padding: 14px; border-radius: 14px; background: var(--surface); border: 1px solid var(--line); text-align: center; }
+  .badge2 .ic { font-size: 34px; }
+  .badge2 b { display: block; margin-top: 6px; }
+  .badge2 small { color: var(--muted); font-size: 12px; }
+  .badge2.locked { opacity: .4; filter: grayscale(1); }
+  .badge2.got { border-color: rgba(212, 168, 71, .5); background: linear-gradient(160deg, rgba(212, 168, 71, .12), var(--surface) 60%); }
+  .ci-row { display: grid; grid-template-columns: 56px 1fr auto; gap: 12px; align-items: center; padding: 10px 0; border-bottom: 1px solid var(--line); }
+  .ci-row img { width: 56px; height: 56px; border-radius: 10px; object-fit: cover; }
+  .ldetail .note { color: var(--text); width: 100%; margin-top: 6px; height: 34px; border-radius: 8px; border: 1px solid var(--line); background: var(--bg-2); padding: 0 10px; font-size: 13px; }
+  .ldetail .lrow { display: grid; grid-template-columns: 72px 1fr auto; gap: 12px; align-items: center; padding: 12px 0; border-bottom: 1px solid var(--line); }
+  .ldetail .lrow img { width: 72px; height: 72px; border-radius: 10px; object-fit: cover; }
   @media (max-width: 900px) { .acct { grid-template-columns: 1fr; } }
 </style>
 </head>
 <body>
 <main class="wrap acct">
   <aside>
-    <div class="pass">
-      <div class="row between"><span class="tier">SwanPass member · Gold</span><img src="https://swanpass.com/swanpass_logo_rev.png" alt="" style="height:18px"></div>
-      <div style="font-size:22px;font-weight:800;margin:14px 0 2px">Alexander J.</div>
-      <div class="muted" style="font-size:12.5px">Member since 2023 · ID 4821-7702</div>
-      <div style="margin-top:16px;font-size:12.5px;color:var(--text-2)">Say “SwanPass” at the counter.<br><b style="color:var(--text)">12 deals</b> unlocked in Bangkok.<br><span style="color:var(--deal)">฿4,300 saved</span> so far.</div>
-    </div>
+    <div class="pass" id="pass"></div>
     <div class="side-card"><div class="row"><span class="avatar">AJ</span><div><b>Alexander Joo</b><div class="muted" style="font-size:12.5px">Home city: Bangkok · English · ฿ THB</div></div></div></div>
     <nav class="side-card" style="padding:8px" id="acct-nav">
       ${''}
@@ -43,8 +55,8 @@
   </aside>
   <section>
     <div class="pane on" id="p-overview"></div>
-    <div class="pane" id="p-saved"></div>
-    <div class="pane" id="p-pass"></div>
+    <div class="pane" id="p-lists"></div>
+    <div class="pane" id="p-checkins"></div>
     <div class="pane" id="p-reviews"></div>
     <div class="pane" id="p-alerts"></div>
     <div class="pane" id="p-prefs"></div>
@@ -55,32 +67,53 @@
 <script src="../assets/app.js"></script>
 <script>
 shell('account', { gate: false });
-const TABS = [['overview', 'Overview', 'home'], ['saved', 'Saved & lists', 'heart'], ['pass', 'My pass & deals', 'ticket'], ['reviews', 'My reviews', 'star'], ['alerts', 'Alerts', 'bell'], ['prefs', 'Preferences', 'settings']];
+/* Demo member "Alex" — sample account data (lists, check-ins). Venue details on the cards are real. */
+const TABS = [['overview', 'Overview', 'home'], ['lists', 'My lists', 'heart'], ['checkins', 'Check-ins & badges', 'star'], ['reviews', 'My reviews', 'edit'], ['alerts', 'Alerts', 'bell'], ['prefs', 'Preferences', 'settings']];
 $('#acct-nav').innerHTML = TABS.map(([k, t, i]) => `<a class="side-link" href="#${k}" data-tab="${k}">${icon(i)}${t}</a>`).join('') + `<a class="side-link" href="#">${icon('close')}Log out</a>`;
+const V = slug => LISTINGS.find(l => l.slug === slug);
+const CHECKINS = checkins();
+const n = CHECKINS.length, lv = levelFor(n), next = LEVELS.find(x => x[0] > n);
+const LISTS = memberLists();
 
-const SAVED = saved().map(s => LISTINGS.find(l => l.slug === s)).filter(Boolean);
-const lists = [['Bangkok — October trip', LISTINGS.filter(l => l.featured).slice(0, 6)], ['Want to try', LISTINGS.filter(l => l.isNew).slice(0, 4)], ['Pattaya', LISTINGS.filter(l => l.city === 'pattaya').slice(0, 5)]];
+$('#pass').innerHTML = `<div class="row between"><span class="tier">SwanPass member</span><img src="https://swanpass.com/swanpass_logo_rev.png" alt="" style="height:18px"></div>
+  <div style="font-size:22px;font-weight:800;margin:14px 0 2px">Alexander J.</div><div class="muted" style="font-size:12.5px">Member since 2023</div>
+  <div class="lvl"><span class="ic">${lv[1]}</span><div><b>${lv[2]}</b><div class="muted" style="font-size:12.5px">${n} check-in${n === 1 ? '' : 's'}${next ? ` · ${next[0] - n} more to ${next[2]} ${next[1]}` : ' · top level!'}</div></div></div>
+  ${next ? `<div class="meter2"><i style="width:${Math.round((n - lv[0]) / (next[0] - lv[0]) * 100)}%"></i></div>` : ''}`;
+
 $('#p-overview').innerHTML = `
-  <h1 class="display" style="font-size:34px;margin-bottom:6px">Welcome back, Alex</h1><p class="muted" style="margin:0 0 22px">Here’s what’s new in Bangkok since your last visit.</p>
-  <div class="kpis"><div class="kpi"><span>Saved venues</span><b>${SAVED.length + 15}</b></div><div class="kpi"><span>Deals used</span><b>9</b></div><div class="kpi"><span>Reviews written</span><b>4</b><small>2 marked helpful</small></div><div class="kpi"><span>Saved with SwanPass</span><b>฿4,300</b></div></div>
-  <div class="sec-head"><div><h2 class="display">New deals at places you saved</h2></div></div>
-  <div class="grid-cards">${SAVED.concat(LISTINGS.filter(l => l.deal)).slice(0, 3).map(l => card(l)).join('')}</div>
-  <div class="sec-head" style="margin-top:34px"><div><h2 class="display">Recently viewed</h2></div></div>
-  <div class="scroller">${LISTINGS.slice(5, 13).map(l => card(l)).join('')}</div>`;
-$('#p-saved').innerHTML = `<div class="sec-head"><div><h2 class="display">Your lists</h2><p>Plan a night out, share a list with a friend, or keep a “want to try” shortlist.</p></div><button class="btn btn-red btn-sm">${icon('plus')} New list</button></div>
-  <div class="lists">${lists.map(([n, ls]) => `<a class="listcard" href="#"><div class="mosaic">${ls.slice(0, 3).map(l => `<img src="${l.img}" alt="">`).join('')}</div><div class="b"><b>${n}</b><div class="muted" style="font-size:12.5px">${ls.length} venues · private</div></div></a>`).join('')}</div>
-  <div class="sec-head"><div><h2 class="display">All saved</h2></div><select class="select"><option>Recently saved</option><option>Nearest</option></select></div>
-  <div class="grid-cards">${SAVED.concat(lists[0][1]).slice(0, 9).map(l => card(l)).join('')}</div>`;
-$('#p-pass').innerHTML = `<div class="sec-head"><div><h2 class="display">Deals you can use</h2><p>Say “SwanPass” or show the venue page. Gold members get an extra 5% at venues marked Gold.</p></div></div>
-  <div class="grid-cards">${LISTINGS.filter(l => l.deal && l.city === 'bangkok').sort(SORTS.recommended[1]).slice(0, 6).map(l => card(l)).join('')}</div>
-  <div class="sec-head" style="margin-top:30px"><div><h2 class="display">History</h2></div></div>
-  <table class="table"><thead><tr><th>Date</th><th>Venue</th><th>Deal</th><th style="text-align:right">Saved</th></tr></thead><tbody>
-  ${[['2 Oct', 'Jelly Pop', 'Free jacuzzi', '฿500'], ['18 Sep', 'Nomo22', '฿500 off 2-girl course', '฿500'], ['4 Sep', 'Don Quixote', 'Free jacuzzi', '฿400'], ['21 Aug', 'DRAKE Luxury Lounge', '฿300 off karaoke', '฿300']].map(r => `<tr>${r.map((c, i) => `<td ${i === 3 ? 'style="text-align:right;color:var(--deal)"' : ''}>${c}</td>`).join('')}</tr>`).join('')}</tbody></table>`;
-$('#p-reviews').innerHTML = `<div class="sec-head"><div><h2 class="display">My reviews</h2><p>Visited somewhere recently? We’ll remind you to review it.</p></div></div>
-  <div class="alert">${icon('star')}<div><b>You redeemed a deal at Jelly Pop on 2 Oct.</b> How was it? <a href="#" style="text-decoration:underline">Write a review</a> — verified-visit reviews get a ✓ badge.</div></div>
-  ${DETAIL.reviews.slice(0, 3).map((r, i) => { const l = LISTINGS[i * 3]; return `<div class="fcard" style="display:flex;gap:14px;padding:16px"><img src="${l.img}" alt="" style="width:64px;height:64px;border-radius:10px;object-fit:cover"><div style="flex:1"><div class="row between"><b>${esc(l.name)}</b><span style="color:var(--gold)">${'★'.repeat(r.stars)}</span></div><p class="muted" style="margin:6px 0">${esc(r.translated || r.text)}</p><div class="muted" style="font-size:12px">${r.when} · ${r.helpful} people found this helpful · <a href="#" style="text-decoration:underline">Edit</a></div></div></div>`; }).join('')}`;
-$('#p-alerts').innerHTML = `<div class="sec-head"><div><h2 class="display">Alerts</h2><p>We’ll message you — by email or LINE — when something you care about changes.</p></div></div>
-  ${[['New deals in Bangkok', 'Weekly digest · email', 1], ['A saved venue posts a new deal', 'Instantly · LINE', 1], ['New venues in Phrom Phong & Asok', 'Weekly · email', 1], ['Price changes at saved venues', 'Instantly · email', 0], ['SwanPass launches in Japan', 'Once · email', 1]].map(([t, s, on]) => `<div class="pref"><div><b>${t}</b><p>${s}</p></div><input type="checkbox" class="switch" ${on ? 'checked' : ''}></div>`).join('')}`;
+  <h1 class="display" style="font-size:34px;margin-bottom:6px">Welcome back, Alex</h1><p class="muted" style="margin:0 0 22px">What changed at places you follow.</p>
+  <div class="kpis"><div class="kpi"><span>Lists</span><b>${LISTS.length}</b><small>${LISTS.reduce((a, l) => a + l.items.length, 0)} venues saved</small></div><div class="kpi"><span>Check-ins</span><b>${n}</b><small>${lv[1]} ${lv[2]}</small></div><div class="kpi"><span>Reviews written</span><b>4</b></div><div class="kpi"><span>Badges</span><b>${BADGES.filter(b => b.test(CHECKINS)).length}</b><small>of ${BADGES.length}</small></div></div>
+  <div class="sec-head" style="margin-top:28px"><div><h2 class="display">Deals at places you saved</h2></div></div>
+  <div class="grid-cards">${LISTS.flatMap(l => l.items.map(i => V(i.slug))).filter(l => l && l.deal).filter((l, i, a) => a.indexOf(l) === i).slice(0, 3).map(l => card(l)).join('')}</div>
+  <div class="alert" style="margin-top:22px">${icon('star')}<div><b>You checked in at ${esc(V(CHECKINS[0].slug).name)} on ${CHECKINS[0].date}.</b> How was it? <a href="../listing.html?v=${CHECKINS[0].slug}#reviews" style="text-decoration:underline">Write a review</a></div></div>`;
+
+function drawLists(open) {
+  const L = LISTS.find(l => l.id === open);
+  $('#p-lists').innerHTML = !L ? `<div class="sec-head"><div><h2 class="display">My lists</h2><p>Plan a night out, keep a shortlist, share a list with a friend.</p></div><button class="btn btn-red btn-sm">${icon('plus')} New list</button></div>
+    <div class="lists">${LISTS.map(l => { const vs = l.items.map(i => V(i.slug)).filter(Boolean); return `<a class="listcard" href="#lists" data-list="${l.id}"><div class="mosaic">${vs.slice(0, 3).map(v => `<img src="${v.img}" alt="">`).join('')}</div><div class="b"><b>${esc(l.name)}</b><div class="muted" style="font-size:12.5px">${vs.length} venues · ${l.shared ? '🔗 Shared' : '🔒 Private'}</div></div></a>`; }).join('')}</div>`
+  : `<div class="ldetail"><a href="#lists" data-list="" class="muted" style="font-size:13px">← All lists</a>
+    <div class="sec-head" style="margin-top:8px"><div><h2 class="display">${esc(L.name)}</h2><p>${L.items.length} venues · ${L.shared ? '🔗 Anyone with the link can view' : '🔒 Only you'}</p></div><div class="row" style="gap:8px"><a class="btn btn-ghost btn-sm" href="../map.html">${icon('map')} Map</a><button class="btn btn-ghost btn-sm" data-share="${L.id}">${icon('share')} ${L.shared ? 'Copy link' : 'Share'}</button></div></div>
+    ${L.items.map(i => { const v = V(i.slug); return v ? `<div class="lrow"><img src="${v.img}" alt=""><div style="min-width:0"><a href="../listing.html?v=${v.slug}"><b>${esc(v.name)}</b></a><div class="muted" style="font-size:12.5px">${esc(v.cat)} · ${esc(v.areaName || v.cityName)}${CHECKINS.some(c => c.slug === v.slug) ? ' · <span style="color:var(--deal)">✓ been here</span>' : ''}</div><input class="note" value="${esc(i.note || '')}" placeholder="Add a private note…"></div><button class="icon-btn" aria-label="Remove">${icon('close')}</button></div>` : ''; }).join('')}</div>`;
+}
+document.addEventListener('click', e => {
+  const l = e.target.closest('[data-list]'); if (l) { e.preventDefault(); drawLists(l.dataset.list); }
+  const sh = e.target.closest('[data-share]'); if (sh) { const t = document.getElementById('toast') || document.body.appendChild(Object.assign(document.createElement('div'), { id: 'toast', className: 'toast' })); t.textContent = 'Share link copied — swanpass.com/l/7Hq2x'; t.classList.add('show'); setTimeout(() => t.classList.remove('show'), 2200); }
+});
+drawLists();
+
+$('#p-checkins').innerHTML = `<div class="sec-head"><div><h2 class="display">Check-ins & badges</h2><p>Tap “I’ve been here” on a venue page. Your history is private.</p></div></div>
+  <div class="fcard" style="padding:18px;margin-bottom:22px"><div class="lvl" style="margin:0"><span class="ic">${lv[1]}</span><div style="flex:1"><b>${lv[2]}</b><div class="muted" style="font-size:13px">${n} check-ins${next ? ` — ${next[0] - n} more to become <b style="color:var(--text)">${next[1]} ${next[2]}</b>` : ''}</div>${next ? `<div class="meter2"><i style="width:${Math.round((n - lv[0]) / (next[0] - lv[0]) * 100)}%"></i></div>` : ''}</div></div>
+    <div class="row" style="gap:6px;flex-wrap:wrap;margin-top:14px">${LEVELS.map(x => `<span class="chip ${n >= x[0] ? 'on' : ''}" style="height:30px;font-size:12px">${x[1]} ${x[2]} · ${x[0]}</span>`).join('')}</div></div>
+  <h3 style="margin:0 0 10px">Badges</h3>
+  <div class="badges" style="margin-bottom:26px">${BADGES.map(b => `<div class="badge2 ${b.test(CHECKINS) ? 'got' : 'locked'}"><div class="ic">${b.icon}</div><b>${b.name}</b><small>${b.how}</small></div>`).join('')}</div>
+  <h3 style="margin:0 0 6px">History</h3>
+  ${CHECKINS.map(c => { const v = V(c.slug); return v ? `<div class="ci-row"><img src="${v.img}" alt=""><div><a href="../listing.html?v=${v.slug}"><b>${esc(v.name)}</b></a><div class="muted" style="font-size:12.5px">${esc(v.cat)} · ${esc(v.areaName || v.cityName)}${c.near ? ' · <span style="color:var(--deal)">📍 checked in on site</span>' : ''}</div></div><span class="muted" style="font-size:12.5px">${c.date}</span></div>` : ''; }).join('')}`;
+
+$('#p-reviews').innerHTML = `<div class="sec-head"><div><h2 class="display">My reviews</h2><p>After you check in, we’ll ask how it was.</p></div></div>
+  <div class="alert">${icon('star')}<div><b>You checked in at ${esc(V(CHECKINS[0].slug).name)} on ${CHECKINS[0].date}.</b> How was it? <a href="../listing.html?v=${CHECKINS[0].slug}#reviews" style="text-decoration:underline">Write a review</a></div></div>
+  <p class="muted">Your 4 published reviews appear here.</p>`;
+$('#p-alerts').innerHTML = `<div class="sec-head"><div><h2 class="display">Alerts</h2><p>We’ll message you — by email or LINE — when something you follow changes.</p></div></div>
+  ${[['A venue on your lists posts a new deal', 'Instantly · LINE', 1], ['New venues in Bangkok', 'Weekly digest · email', 1], ['New venues in Phrom Phong & Asok', 'Weekly · email', 1], ['A venue on your lists closes or moves', 'Instantly · email', 1], ['SwanPass launches in a new country', 'Once · email', 0]].map(([t, d, on]) => `<div class="pref"><div><b>${t}</b><p>${d}</p></div><input type="checkbox" class="switch" ${on ? 'checked' : ''}></div>`).join('')}`;
 $('#p-prefs').innerHTML = `<div class="sec-head"><div><h2 class="display">Preferences</h2></div></div>
   <div class="pref"><div><b>Home city</b><p>Pages open on this city first.</p></div><button class="btn btn-ghost btn-sm" data-open="loc">🇹🇭 Bangkok</button></div>
   <div class="pref"><div><b>Language</b><p>Venue text is machine-translated where needed.</p></div><select class="select"><option>English</option><option>中文</option><option>한국어</option><option>日本語</option><option>ไทย</option></select></div>
@@ -92,7 +125,7 @@ $('#p-prefs').innerHTML = `<div class="sec-head"><div><h2 class="display">Prefer
 
 function show() { const k = (location.hash || '#overview').slice(1); $$('.pane').forEach(p => p.classList.toggle('on', p.id === 'p-' + k)); $$('[data-tab]').forEach(a => a.classList.toggle('on', a.dataset.tab === k)); }
 window.addEventListener('hashchange', show); show();
-$('#p-overview').insertAdjacentHTML('afterbegin', `<div style="float:right">${note('Members area: member card with deals unlocked and money saved. Lists replace the single “favorites” page. Alerts are the reason to sign up.')}</div>`);
+$('#p-overview').insertAdjacentHTML('afterbegin', `<div style="float:right">${note('Members area: Airbnb-style lists (private notes, share link), self-reported check-ins with levels and badges (no fake “money saved” — we can’t know visits), alerts by email/LINE. Demo member data; venue details are real.')}</div>`);
 </script>
 </body>
 </html>

@@ -612,3 +612,38 @@ function applySafe() {
 }
 const safeToggle = () => `<label class="safe-toggle"><input type="checkbox" class="switch" data-safe-toggle ${getSafe() ? 'checked' : ''}> Safe view</label>`;
 document.addEventListener('change', e => { if (e.target.matches('[data-safe-toggle]')) { store.set('safe', e.target.checked); applySafe(); } });
+
+/* ---------- Members: check-ins, levels, badges, lists ----------
+   Check-ins are SELF-REPORTED ("I've been here"). Max one per venue per day. If the phone shares location within ~300 m
+   the check-in gets a "📍 on site" mark (and only those count toward the top levels) — keeps it honest without verifying visits. */
+const LEVELS = [[0, '🌱', 'Newbie'], [1, '🍺', 'First Night'], [3, '🌙', 'Night Owl'], [5, '🔥', 'Regular'], [10, '🧭', 'Explorer'], [25, '💎', 'Legend'], [50, '👑', 'King of the Night']];
+const levelFor = n => [...LEVELS].reverse().find(x => n >= x[0]);
+const venueBySlug = s => (LISTINGS.find(l => l.slug === s) || {});
+const BADGES = [
+  { icon: '🍺', name: 'First Night', how: 'Your first check-in', test: c => c.length >= 1 },
+  { icon: '🌙', name: 'Night Owl', how: '3 check-ins', test: c => c.length >= 3 },
+  { icon: '🔥', name: 'Regular', how: '5 check-ins', test: c => c.length >= 5 },
+  { icon: '🧭', name: 'Explorer', how: '10 check-ins', test: c => c.length >= 10 },
+  { icon: '🗺️', name: 'Area Hopper', how: '3 different areas', test: c => new Set(c.map(x => venueBySlug(x.slug).area).filter(Boolean)).size >= 3 },
+  { icon: '🎭', name: 'Variety Show', how: '3 different categories', test: c => new Set(c.map(x => venueBySlug(x.slug).catSlug)).size >= 3 },
+  { icon: '✈️', name: 'Jet Setter', how: 'Check in in 2 cities', test: c => new Set(c.map(x => venueBySlug(x.slug).city)).size >= 2 },
+  { icon: '📍', name: 'On the Spot', how: '3 on-site check-ins', test: c => c.filter(x => x.near).length >= 3 },
+  { icon: '✍️', name: 'Critic', how: 'Review 3 places you checked into', test: () => false },
+];
+/* demo member's history (real venues) + anything checked in this session */
+const DEMO_CHECKINS = [['jelly-pop-bangkok', '2 Oct', 1], ['nomo22-bangkok', '18 Sep', 1], ['don-quixote', '4 Sep', 0], ['amor888', '21 Aug', 1], ['sento-bangkok-bangkok', '9 Aug', 0], ['canary-massage-pattaya-pattaya', '30 Jul', 1], ['pattaya-vice-massage-pattaya', '29 Jul', 0]].map(([slug, date, near]) => ({ slug, date, near: !!near }));
+const checkins = () => [...store.get('checkins', []), ...DEMO_CHECKINS];
+const memberLists = () => [
+  { id: 'oct', name: 'Bangkok — October trip', shared: true, items: [{ slug: 'g2g-massage-bangkok', note: 'Go before 6pm, quieter' }, { slug: 'chairman-nuru-massage-bangkok' }, { slug: 'jspot-bangkok' }, { slug: 'jelly-pop-bangkok', note: 'Free jacuzzi with deal' }, { slug: 'cube-massage-bangkok' }] },
+  { id: 'try', name: 'Want to try', shared: false, items: [{ slug: 'the333-bangkok' }, { slug: 'body-bliss' }, { slug: 'exotic-massage-bangkok-bangkok' }] },
+  { id: 'pty', name: 'Pattaya', shared: false, items: [{ slug: 'canary-massage-pattaya-pattaya' }, { slug: 'yihongyuan-spa-pattaya' }, { slug: 'pattaya-vice-massage-pattaya' }] },
+];
+function checkIn(slug) {
+  const today = new Date().toLocaleDateString('en-GB', { day: 'numeric', month: 'short' });
+  const mine = store.get('checkins', []);
+  if (mine.some(c => c.slug === slug && c.date === today)) return null;
+  const before = levelFor(checkins().length);
+  mine.unshift({ slug, date: today, near: false }); store.set('checkins', mine);
+  const after = levelFor(checkins().length);
+  return { n: checkins().length, levelUp: after !== before ? after : null };
+}

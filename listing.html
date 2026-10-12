@@ -161,6 +161,7 @@
             ${dayHours ? (L0.openNow === false ? `<span><span class="open-dot closed"></span><b>Closed</b>&nbsp;· opens ${fmt(dayHours[1])}</span>` : `<span><span class="open-dot"></span><b style="color:var(--deal)">Open now</b>&nbsp;· until ${fmt(dayHours[2])}</span>`) : ''}
             ${fromPrice ? `<span>${icon('tag')}From ${money(fromPrice)}</span>` : ''}
           </div>
+          <div class="row me-row" style="gap:8px;margin-top:12px;flex-wrap:wrap"><button class="btn btn-ghost btn-sm" data-checkin>✓ I’ve been here</button><button class="btn btn-ghost btn-sm" data-addlist>${icon('plus')} Add to list</button></div>
         </div>
       </div>
       <div></div>
@@ -233,6 +234,30 @@
   $$('[data-contact]').forEach(a => { if (!a.dataset.value) a.remove(); });
   $$('.stack a.btn').forEach(a => { if (a.textContent.trim() === '' || /globe/.test(a.innerHTML) && !D.website) a.remove(); });
   if (!IS_DQ && !L0.geoReal) { const m = $('#pdp-map'); if (m) m.outerHTML = '<p class="muted">Exact location not listed.</p>'; }
+
+  /* member actions: self-reported check-in (levels/badges) + add to a list */
+  document.addEventListener('click', e => {
+    if (e.target.closest('[data-checkin]')) {
+      const r = checkIn(slug), b = e.target.closest('[data-checkin]');
+      if (!r) { b.textContent = '✓ Checked in today'; return; }
+      b.textContent = '✓ Checked in'; b.classList.add('on');
+      const lv = levelFor(r.n), nx = LEVELS.find(x => x[0] > r.n);
+      openModal('ci', `<div class="modal-head"><h3 style="flex:1">${r.levelUp ? 'Level up!' : 'Checked in'}</h3><button class="icon-btn" data-close aria-label="Close">${icon('close')}</button></div>
+        <div class="modal-body" style="text-align:center"><div style="font-size:64px;line-height:1">${lv[1]}</div>
+        <h2 style="margin:10px 0 4px">${r.levelUp ? `You’re now a ${lv[2]}!` : `${r.n} check-ins`}</h2>
+        <p class="muted" style="margin:0">${nx ? `${nx[0] - r.n} more to become ${nx[1]} ${nx[2]}` : 'You’re at the top. Respect.'}</p>
+        <p style="margin:18px 0 0"><a class="btn btn-red" href="#reviews" data-close>How was ${esc(D.name)}? Write a review</a></p>
+        <p class="muted" style="font-size:12px;margin:12px 0 0">Only you can see your check-ins. Share your location next time for a 📍 on-site check-in.</p></div>`);
+    }
+    if (e.target.closest('[data-addlist]')) {
+      const L = memberLists();
+      openModal('al', `<div class="modal-head"><h3 style="flex:1">Add to a list</h3><button class="icon-btn" data-close aria-label="Close">${icon('close')}</button></div>
+        <div class="modal-body">${L.map(l => `<label class="fcheck" style="padding:10px 0"><input type="checkbox" ${l.items.some(i => i.slug === slug) ? 'checked' : ''}><b>${esc(l.name)}</b><span class="n">${l.items.length}</span></label>`).join('')}
+        <div class="row" style="gap:8px;margin-top:12px"><input class="input" placeholder="New list name…" style="flex:1"><button class="btn btn-ghost btn-sm">Create</button></div>
+        <label style="display:block;margin-top:14px;font-size:13px;font-weight:600">Private note</label><input class="input" placeholder="e.g. ask for Mint, go before 6pm" style="width:100%;margin-top:6px"></div>
+        <div class="sheet-foot"><button class="btn btn-red" style="flex:1" data-close>Done</button></div>`);
+    }
+  });
 
   /* scroll-spy for the anchor chips */
   const links = $$('#anchors a');
