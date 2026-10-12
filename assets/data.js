@@ -192,3 +192,15 @@ const HOTELS = [
   ['pattaya', 'walking-street', 'Pattaya Bay Grand', 5, 9.0, 5400, 'fee', 1000, 'Joiner fee ฿1,000, ID required'],
 ].map(([city, area, name, stars, score, price, guest, fee, note]) => ({ city, area, name, stars, score, price, guest, fee, note, areaName: (AREAS[city] || []).find(a => a.slug === area)?.name }));
 const GUEST = { yes: ['✓ Guest-friendly', 'var(--deal)'], fee: ['Joiner fee', 'var(--gold)'], no: ['✕ No guests', 'var(--red)'] };
+
+/* Advertising plans per city — monthly, in THB (shown in the city's own currency).
+   Bangkok = live swanpass.com/add-listing prices (Featured ฿10,000, low-season ฿8,000). Every other city is a PLACEHOLDER tier until Alex sets real prices.
+   promo = optional time-limited price shown with the regular one struck through. */
+const PLAN_TIERS = {
+  A: { verified: 5000, featured: 10000, promo: 8000, promoLabel: 'Low season special' },
+  B: { verified: 4000, featured: 7000 },
+  C: { verified: 3000, featured: 5000 },
+  D: { verified: 2000, featured: 3500 },
+};
+const CITY_TIER = { bangkok: 'A', pattaya: 'B', phuket: 'B', 'ho-chi-minh-city': 'B', 'chiang-mai': 'C', hanoi: 'C', bali: 'C', jakarta: 'C', singapore: 'B' };
+const planFor = citySlug => ({ tier: CITY_TIER[citySlug] || 'D', ...PLAN_TIERS[CITY_TIER[citySlug] || 'D'] });

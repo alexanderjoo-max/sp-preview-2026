@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="robots" content="noindex, nofollow, noarchive">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>List Your Business — Plans & Pricing | SwanPass</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/sp.css">
+<style>
+  .lb-hero { padding: 30px 0 22px; border-bottom: 1px solid var(--line); background: radial-gradient(700px 260px at 10% 0%, rgba(232, 20, 42, .16), transparent), radial-gradient(600px 260px at 95% 0%, rgba(212, 168, 71, .12), transparent); }
+  .lb-hero h1 { font-size: clamp(30px, 4.5vw, 48px); }
+  .perks { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 14px; }
+  .perks span { padding: 7px 12px; border-radius: 999px; border: 1px solid var(--line); background: rgba(255, 255, 255, .04); font-size: 13px; font-weight: 600; }
+  .city-pick { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin-bottom: 18px; }
+  .city-pick label { font-weight: 700; margin-right: 4px; }
+  .city-pick select { height: 40px; min-width: 200px; }
+  .city-stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-bottom: 18px; }
+  .city-stats div { padding: 12px 14px; border-radius: 12px; background: var(--surface); border: 1px solid var(--line); }
+  .city-stats b { display: block; font-size: 22px; font-weight: 900; }
+  .city-stats span { font-size: 11px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); }
+  .pkg-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; align-items: stretch; }
+  .pkg { position: relative; padding: 20px; border-radius: 14px; background: var(--surface); border: 1px solid var(--line); display: flex; flex-direction: column; }
+  .pkg.pop { border-color: rgba(212, 168, 71, .55); background: linear-gradient(160deg, rgba(212, 168, 71, .1), var(--surface) 55%); }
+  .pkg .lbl { position: absolute; top: -11px; left: 20px; background: var(--gold); color: #1b1203; font-size: 10.5px; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; padding: 3px 9px; border-radius: 6px; }
+  .pkg .nm { font-size: 18px; font-weight: 800; display: flex; gap: 8px; align-items: center; }
+  .pkg .pr { font-size: 32px; font-weight: 900; margin: 10px 0 0; line-height: 1.1; }
+  .pkg .pr s { color: var(--red); font-size: 55%; font-weight: 700; margin-right: 6px; }
+  .pkg .per { color: var(--muted); font-size: 13px; }
+  .pkg ul { margin: 14px 0 16px; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 7px; font-size: 14px; color: var(--text-2); flex: 1; }
+  .pkg li::before { content: '✓'; color: var(--deal); font-weight: 800; margin-right: 8px; }
+  .pkg li.no { opacity: .45; text-decoration: line-through; }
+  .pkg li.no::before { content: '–'; color: var(--muted); }
+  .compare { margin-top: 26px; }
+  .compare table { width: 100%; border-collapse: collapse; font-size: 14px; }
+  .compare th, .compare td { padding: 10px 12px; border-bottom: 1px solid var(--line); text-align: right; white-space: nowrap; }
+  .compare th:first-child, .compare td:first-child { text-align: left; }
+  .compare tr.on td { background: rgba(232, 20, 42, .08); font-weight: 700; }
+  .compare .scroll { overflow-x: auto; border: 1px solid var(--line); border-radius: 12px; }
+  @media (max-width: 900px) { .pkg-grid { grid-template-columns: 1fr; } .city-stats { grid-template-columns: 1fr 1fr; } }
+</style>
+</head>
+<body>
+<main>
+  <section class="lb-hero"><div class="wrap">
+    <h1 class="display">List your <em>business</em></h1>
+    <p class="lede" style="margin-top:8px">Put your venue in front of thousands of visitors actively searching for places like yours across Southeast Asia.</p>
+    <div class="perks"><span>📈 60K+ monthly visits</span><span>🌏 11 cities</span><span>✅ Verified credibility</span><span>⭐ Featured placement</span></div>
+  </div></section>
+
+  <section class="section" style="padding-top:26px"><div class="wrap">
+    <div class="sec-head"><div><h2 class="display">📦 Plans & pricing in <em id="lb-city">Bangkok</em></h2><p>Prices depend on the city — busier cities cost more because Featured gets more views there.</p></div></div>
+    <div class="city-pick"><label for="lb-sel">Your venue is in</label><select class="select" id="lb-sel"></select><span id="lb-cur"></span></div>
+    <div class="city-stats" id="lb-stats"></div>
+    <div class="pkg-grid" id="lb-plans"></div>
+    <p class="muted" style="font-size:12.5px;margin-top:12px">All paid plans are activated manually. Email <a href="mailto:hello@swanpass.com" style="color:var(--gold);font-weight:700">hello@swanpass.com</a> or LINE <a href="https://line.me/R/ti/p/@swanpass" style="color:var(--gold);font-weight:700">@swanpass</a> with your venue name and city.</p>
+
+    <div class="compare"><h3 style="margin:0 0 10px">Compare cities</h3><div class="scroll"><table id="lb-table"></table></div></div>
+  </div></section>
+</main>
+<script src="assets/data.js"></script>
+<script src="assets/sp.js"></script>
+<script>
+  shell('');
+  const cities = CITIES.filter(c => c.count >= 5);
+  const sel = $('#lb-sel');
+  const P = new URLSearchParams(location.search);
+  let city = P.get('city') || (getLoc().city && cities.some(c => c.slug === getLoc().city) ? getLoc().city : 'bangkok');
+  sel.innerHTML = COUNTRIES.filter(co => cities.some(c => c.country === co.code)).map(co => `<optgroup label="${co.flag} ${co.name}">${cities.filter(c => c.country === co.code).map(c => `<option value="${c.slug}" ${c.slug === city ? 'selected' : ''}>${c.name}</option>`).join('')}</optgroup>`).join('');
+  const price = (thb, country) => `${localPrice(thb, country)}`;
+  function render() {
+    const c = cityOf(city), p = planFor(city), feat = LISTINGS.filter(l => l.city === city && l.featured).length;
+    $('#lb-city').textContent = c.name;
+    history.replaceState(null, '', `?city=${city}`);
+    $('#lb-stats').innerHTML = `<div><b class="num">${c.count}</b><span>Venues listed</span></div><div><b class="num">${c.deals || 0}</b><span>Live deals</span></div><div><b class="num">${feat}</b><span>Featured now</span></div><div><b>Tier ${p.tier}</b><span>City price tier</span></div>`;
+    const ap = thb => approx(thb) ? `<span class="approx">${approx(thb)}</span>` : '';
+    $('#lb-plans').innerHTML = `
+      <div class="pkg"><div class="nm">📋 Free</div><div class="pr num">${price(0, c.country)}</div><div class="per">forever</div>
+        <ul><li>Listed in the directory</li><li>Profile page with photos & info</li><li>On the map & ${c.name} page</li><li>Customer reviews</li><li class="no">Verified badge</li><li class="no">Featured placement</li><li class="no">Deal posting</li></ul>
+        <a class="btn btn-ghost btn-block" href="mailto:hello@swanpass.com?subject=${encodeURIComponent('Free listing — ' + c.name)}">Add my venue</a></div>
+      <div class="pkg"><div class="nm">✅ Verified</div><div class="pr num">${price(p.verified, c.country)}</div><div class="per">/ month ${ap(p.verified)}</div>
+        <ul><li>Everything in Free</li><li>Verified badge & blue map pin</li><li>Claim & manage your listing</li><li>Shown above free listings</li><li>Post deals & offers</li></ul>
+        <a class="btn btn-ghost btn-block" href="mailto:hello@swanpass.com?subject=${encodeURIComponent('Verified plan — ' + c.name)}">Get Verified</a></div>
+      <div class="pkg pop">${p.promo ? `<span class="lbl">${p.promoLabel}</span>` : ''}<div class="nm">⭐ Featured</div><div class="pr num">${p.promo ? `<s>${price(p.featured, c.country)}</s>${price(p.promo, c.country)}` : price(p.featured, c.country)}</div><div class="per">/ month ${ap(p.promo || p.featured)}</div>
+        <ul><li>Everything in Verified</li><li>Featured badge & photo map pin</li><li>Top of every ${c.name} list — homepage, city & area pages, search, map</li><li>Promoted deal placement</li><li>Newsletter to 13,000+ members</li><li>Account manager</li></ul>
+        <a class="btn btn-red btn-block" href="mailto:hello@swanpass.com?subject=${encodeURIComponent('Featured plan — ' + c.name)}">Get Featured in ${esc(c.name)}</a></div>`;
+    $('#lb-table').innerHTML = `<thead><tr><th>City</th><th>Tier</th><th>Verified / mo</th><th>Featured / mo</th></tr></thead><tbody>${cities.map(ci => { const q = planFor(ci.slug); return `<tr class="${ci.slug === city ? 'on' : ''}" data-c="${ci.slug}" style="cursor:pointer"><td>${countryOf(ci.country).flag} ${ci.name}</td><td>${q.tier}</td><td class="num">${price(q.verified, ci.country)}</td><td class="num">${q.promo ? `<s class="muted">${price(q.featured, ci.country)}</s> ` : ''}${price(q.promo || q.featured, ci.country)}</td></tr>`; }).join('')}</tbody>`;
+  }
+  sel.onchange = () => { city = sel.value; render(); };
+  document.addEventListener('click', e => { const r = e.target.closest('[data-c]'); if (r) { city = r.dataset.c; sel.value = city; render(); } });
+  $('#lb-cur').innerHTML = curSelect();
+  render();
+  $('.sec-head p').insertAdjacentHTML('beforeend', ' ' + note('Prices live in one table (city → tier → plan prices), editable in admin. Bangkok = today’s live prices. Pattaya/Phuket/HCMC/Singapore = tier B, Chiang Mai/Hanoi/Bali/Jakarta = tier C, everything else = tier D — those numbers are PLACEHOLDERS until you set them. Owner portal shows the plans for the owner’s own city.'));
+</script>
+</body>
+</html>

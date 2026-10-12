@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
+<meta name="robots" content="noindex, nofollow, noarchive">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Venue dashboard — SwanPass</title>
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -40,6 +41,7 @@
 <script src="../assets/app.js"></script>
 <script>
 const CLAIM = new URLSearchParams(location.search).has('claim');
+const PB = planFor('bangkok'); /* owner's city → that city's plan prices */
 appShell({ area: 'shop', active: 'dash', title: CLAIM ? 'Claim your venue' : 'Dashboard', actions: CLAIM ? '' : `<a class="btn btn-ghost btn-sm hide-sm" href="../listing.html?v=don-quixote" target="_blank">${icon('eye')} View my page</a><a class="btn btn-red btn-sm" href="../admin/listing-edit.html?owner=1">${icon('edit')} Edit listing</a>` });
 const days = Array.from({ length: 30 }, (_, i) => ({ v: 140 + Math.round(Math.abs(Math.sin(i * .6)) * 160 + i * 3), c: 6 + Math.round(Math.abs(Math.cos(i * .8)) * 14) }));
 
@@ -82,10 +84,10 @@ $('#body').innerHTML = CLAIM ? `
         ${[['Add 10+ venue photos', 1], ['Confirm prices', 1], ['Confirm opening hours', 1], ['Add a SwanPass deal', 1], ['Add LINE and phone', 1], ['Upload staff photos (19 / 10)', 0], ['Reply to 2 new reviews', 0]].map(([t, d]) => `<a class="todo ${d ? 'done' : ''}" href="../admin/listing-edit.html?owner=1"><span class="st">${d ? icon('check') : ''}</span><b style="font-weight:600;font-size:14px">${t}</b></a>`).join('')}</div>
       <div class="upgrade" id="upgrade"><div class="eyebrow">You’re Featured until 31 Dec 2026</div><h2 style="margin:6px 0 4px;font-size:20px">Stay on top of every list</h2><p class="muted" style="margin:0;font-size:13.5px">Featured venues always show first — in search, on the map, on area pages, whatever the visitor sorts by.</p>
         <div class="plans">
-          <div class="plan"><b>Verified</b><div class="p">฿0</div><ul><li>Blue tick after our visit</li><li>Second tier in every list</li><li>Blue map pin</li></ul></div>
-          <div class="plan rec"><b>Featured</b><div class="p">฿9,900<small class="muted" style="font-size:12px;font-weight:500">/mo</small></div><ul><li>Top tier in every list</li><li>Photo pin on the map</li><li>Homepage + city rows</li></ul></div>
-          <div class="plan"><b>Featured+</b><div class="p">฿19,900<small class="muted" style="font-size:12px;font-weight:500">/mo</small></div><ul><li>Everything in Featured</li><li>Area page hero slot</li><li>Newsletter push</li></ul></div>
-        </div>${note('Prices are placeholders. The point: the ranking rule (Featured → Verified → rest) is the product you sell, so it’s shown to owners plainly.')}</div>
+          <div class="plan"><b>Verified</b><div class="p">฿${PB.verified.toLocaleString()}<small class="muted" style="font-size:12px;font-weight:500">/mo</small></div><ul><li>Blue tick after our visit</li><li>Second tier in every list</li><li>Blue map pin</li></ul></div>
+          <div class="plan rec"><b>Featured</b><div class="p">${PB.promo ? `<s style="color:var(--red);font-size:60%">฿${PB.featured.toLocaleString()}</s> ` : ''}฿${(PB.promo || PB.featured).toLocaleString()}<small class="muted" style="font-size:12px;font-weight:500">/mo</small></div><ul><li>Top tier in every list</li><li>Photo pin on the map</li><li>Homepage + city rows</li></ul></div>
+          <div class="plan"><b>Featured+</b><div class="p">฿${(PB.featured * 2).toLocaleString()}<small class="muted" style="font-size:12px;font-weight:500">/mo</small></div><ul><li>Everything in Featured</li><li>Area page hero slot</li><li>Newsletter push</li></ul></div>
+        </div>${note('Bangkok prices (owner’s city) from the same per-city table as the public Plans & pricing page. The point: the ranking rule (Featured → Verified → rest) is the product you sell, so it’s shown to owners plainly.')}</div>
     </div>
   </div>`;
 </script>
