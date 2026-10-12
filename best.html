@@ -11,7 +11,15 @@
   .best-hero { padding: 28px 0 18px; text-align: center; background: radial-gradient(600px 220px at 50% 0%, rgba(240, 195, 106, .16), transparent); border-bottom: 1px solid var(--line); }
   .best-hero h1 { font-size: clamp(30px, 4vw, 44px); }
   .best-hero .lede { font-size: 14px; }
-  .best-hero .chips { justify-content: center; flex-wrap: wrap; margin-top: 14px; }
+  .city-btn { display: inline-flex; align-items: baseline; gap: 6px; color: var(--red); font: inherit; }
+  .city-btn .car { font-size: .45em; color: var(--muted); transform: translateY(-.35em); }
+  .city-btn:hover .car { color: var(--text); }
+  .cat-tabs { display: inline-flex; gap: 4px; padding: 4px; margin-top: 16px; border-radius: 14px; background: rgba(255, 255, 255, .04); border: 1px solid var(--line); max-width: 100%; overflow-x: auto; scrollbar-width: none; }
+  .cat-tabs::-webkit-scrollbar { display: none; }
+  .cat-tabs button { flex: none; display: inline-flex; align-items: center; gap: 6px; height: 38px; padding: 0 14px; border-radius: 10px; font-size: 14px; font-weight: 600; color: var(--text-2); white-space: nowrap; }
+  .cat-tabs button:hover { color: var(--text); background: var(--surface); }
+  .cat-tabs button.on { background: var(--text); color: var(--bg); }
+  @media (max-width: 720px) { .cat-tabs { display: flex; margin-left: calc(var(--gutter) * -1); margin-right: calc(var(--gutter) * -1); border-radius: 0; border-left: 0; border-right: 0; padding: 4px var(--gutter); } .cat-tabs button { height: 36px; padding: 0 12px; font-size: 13.5px; } }
   .ranked { display: flex; flex-direction: column; gap: 8px; max-width: 860px; margin: 0 auto; }
   .r-item { display: grid; grid-template-columns: 36px 96px 1fr; gap: 14px; align-items: center; padding: 10px 12px; border-radius: var(--r); background: var(--surface); border: 1px solid var(--line); }
   .r-item:hover { border-color: var(--line-2); }
@@ -34,10 +42,9 @@
 <main>
   <section class="best-hero"><div class="wrap">
     <div class="eyebrow">SwanPass editors' picks</div>
-    <h1 class="display" style="margin-top:12px">Best of <em id="b-city">Bangkok</em></h1>
+    <h1 class="display" style="margin-top:12px">Best of <button class="city-btn" data-open="loc" aria-label="Change city"><em id="b-city">Bangkok</em><span class="car">▼</span></button></h1>
     <p class="lede" style="margin:12px auto 0">Hand-picked on service, value and verified reviews. Updated every quarter.</p>
-    <div class="chips" id="b-cities"></div>
-    <div class="chips" id="b-cats" style="margin-top:10px"></div>
+    <div class="cat-tabs" id="b-cats" role="tablist" aria-label="Category"></div>
   </div></section>
   <section class="section" style="padding-top:20px"><div class="wrap">
     <div class="awards" id="awards"></div>
@@ -53,8 +60,7 @@
   function render() {
     const loc = getLoc();
     $('#b-city').textContent = locLabel();
-    $('#b-cities').innerHTML = CITIES.filter(c => c.count >= 20).map(c => `<button class="chip ${loc.city === c.slug ? 'on' : ''}" data-bc="${c.slug}">${countryOf(c.country).flag} ${c.name}</button>`).join('') + `<button class="chip" data-open="loc">More cities…</button>`;
-    $('#b-cats').innerHTML = `<button class="chip ${!cat ? 'on' : ''}" data-bk="">Best overall</button>` + ['massage', 'soapy', 'go-go', 'gentlemens-clubs', 'ktv'].map(s => `<button class="chip ${cat === s ? 'on' : ''}" data-bk="${s}">Best ${CATEGORIES.find(c => c.slug === s).name.toLowerCase()}</button>`).join('');
+    $('#b-cats').innerHTML = [['', '🏆', 'Overall'], ['massage', CAT_EMOJI.massage, 'Massage'], ['soapy', CAT_EMOJI.soapy, 'Soapy'], ['go-go', CAT_EMOJI['go-go'], 'Go-Go'], ['gentlemens-clubs', CAT_EMOJI['gentlemens-clubs'], 'Clubs'], ['beer-bars', CAT_EMOJI['beer-bars'], 'Bars'], ['ktv', CAT_EMOJI.ktv, 'KTV']].map(([k, e, t]) => `<button role="tab" aria-selected="${cat === k}" class="${cat === k ? 'on' : ''}" data-bk="${k}">${e} ${t}</button>`).join('');
     let pool = LISTINGS.filter(l => (!loc.country || l.country === loc.country) && (!loc.city || l.city === loc.city) && (!cat || l.cats.includes(cat)) && l.rating);
     if (pool.length < 3) pool = LISTINGS.filter(l => l.rating && (!cat || l.cats.includes(cat)));
     pool.sort((a, b) => score(b) - score(a));
@@ -73,7 +79,7 @@
   });
   document.addEventListener('sp:loc', render);
   render();
-  $('.best-hero .lede').insertAdjacentHTML('beforeend', ' ' + note('City chips now cover every city with 20+ venues (currently Bangkok, Pattaya, Chiang Mai, Phuket only). Category tabs give each “Best soapy in Bangkok” its own URL for SEO.'));
+  $('.best-hero .lede').insertAdjacentHTML('beforeend', ' ' + note('City is part of the title (tap to change, same chooser as the header) instead of a wall of city chips. One row of category tabs; each “Best soapy in Bangkok” gets its own URL for SEO.'));
 </script>
 </body>
 </html>
