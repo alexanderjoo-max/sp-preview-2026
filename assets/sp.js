@@ -677,3 +677,33 @@ function checkIn(slug) {
    Rendered with class "notranslate" so the page translator leaves them alone. */
 const LBL = {"Overview": {"de": "Überblick", "fr": "Aperçu", "es": "Resumen", "ru": "Обзор", "zh": "概览", "ja": "概要", "ko": "개요", "th": "ภาพรวม"}, "About": {"de": "Über", "fr": "À propos", "es": "Acerca de", "ru": "О заведении", "zh": "简介", "ja": "紹介", "ko": "소개", "th": "เกี่ยวกับ"}, "Deal": {"de": "Angebot", "fr": "Offre", "es": "Oferta", "ru": "Скидка", "zh": "优惠", "ja": "特典", "ko": "할인", "th": "ดีล"}, "SwanPass deal": {"de": "SwanPass-Angebot", "fr": "Offre SwanPass", "es": "Oferta SwanPass", "ru": "Скидка SwanPass", "zh": "SwanPass 优惠", "ja": "SwanPass 特典", "ko": "SwanPass 할인", "th": "ดีล SwanPass"}, "Prices": {"de": "Preise", "fr": "Tarifs", "es": "Precios", "ru": "Цены", "zh": "价格", "ja": "料金", "ko": "가격", "th": "ราคา"}, "Staff": {"de": "Personal", "fr": "Équipe", "es": "Chicas", "ru": "Девушки", "zh": "小姐", "ja": "スタッフ", "ko": "스태프", "th": "พนักงาน"}, "Reviews": {"de": "Bewertungen", "fr": "Avis", "es": "Reseñas", "ru": "Отзывы", "zh": "评价", "ja": "レビュー", "ko": "리뷰", "th": "รีวิว"}, "Hours & contact": {"de": "Öffnungszeiten & Kontakt", "fr": "Horaires & contact", "es": "Horario y contacto", "ru": "Часы и контакты", "zh": "营业时间与联系方式", "ja": "営業時間・連絡先", "ko": "영업시간 및 연락처", "th": "เวลาเปิดและติดต่อ"}, "Location": {"de": "Lage", "fr": "Adresse", "es": "Ubicación", "ru": "Расположение", "zh": "位置", "ja": "場所", "ko": "위치", "th": "ที่ตั้ง"}, "Stay nearby": {"de": "Hotels in der Nähe", "fr": "Hôtels à proximité", "es": "Hoteles cerca", "ru": "Отели рядом", "zh": "附近住宿", "ja": "近くのホテル", "ko": "근처 숙소", "th": "ที่พักใกล้เคียง"}, "Q&A": {"de": "Fragen", "fr": "Questions", "es": "Preguntas", "ru": "Вопросы", "zh": "问答", "ja": "Q&A", "ko": "Q&A", "th": "ถาม-ตอบ"}, "Questions & answers": {"de": "Fragen & Antworten", "fr": "Questions & réponses", "es": "Preguntas y respuestas", "ru": "Вопросы и ответы", "zh": "问答", "ja": "質問と回答", "ko": "질문과 답변", "th": "คำถามและคำตอบ"}, "FAQ": {"de": "FAQ", "fr": "FAQ", "es": "FAQ", "ru": "FAQ", "zh": "常见问题", "ja": "よくある質問", "ko": "자주 묻는 질문", "th": "คำถามที่พบบ่อย"}, "Questions people ask": {"de": "Häufige Fragen", "fr": "Questions fréquentes", "es": "Preguntas frecuentes", "ru": "Частые вопросы", "zh": "常见问题", "ja": "よくある質問", "ko": "자주 묻는 질문", "th": "คำถามที่พบบ่อย"}, "Nearby": {"de": "In der Nähe", "fr": "À proximité", "es": "Cerca", "ru": "Рядом", "zh": "附近", "ja": "近く", "ko": "근처", "th": "ใกล้เคียง"}};
 const tl = en => `<span class="notranslate">${(LBL[en] || {})[getLang()] || en}</span>`;
+
+
+/* ---------- Plans (public pricing page + owner portal share one renderer) ---------- */
+function planCards(citySlug, { current = null, compact = false } = {}) {
+  const c = cityOf(citySlug), p = planFor(citySlug), pr = thb => localPrice(thb, c.country), ap = thb => approx(thb) ? ` <span class="approx">${approx(thb)}</span>` : '';
+  const plusTaken = Math.min(p.plusSlots, LISTINGS.filter(l => l.city === citySlug && l.featured).length ? 2 : 0); /* sample: 2 Featured+ sold in Bangkok */
+  const plans = [
+    ...(compact ? [] : [{ k: 'free', name: '📋 Free', price: pr(0), per: 'forever', idx: 0 }]),
+    { k: 'verified', name: '✅ Verified', price: pr(p.verified), per: '/ month' + ap(p.verified), idx: 1 },
+    { k: 'featured', name: '⭐ Featured', price: p.promo ? `<s>${pr(p.featured)}</s>${pr(p.promo)}` : pr(p.featured), per: '/ month' + ap(p.promo || p.featured), idx: 2, lbl: p.promo ? p.promoLabel : 'Most popular', cls: 'pop' },
+    { k: 'plus', name: '👑 Featured+', price: pr(p.plus), per: '/ month' + ap(p.plus), idx: 3, cls: 'prem', lbl: `Only ${p.plusSlots} per city` },
+  ];
+  const head = f => f[0] === 'Featured+' ? 'Plus everything in Featured' : f[0] === 'Featured' ? 'Plus everything in Verified' : f[0] === 'Verified' ? 'Plus everything in Free' : '';
+  const own = pl => PLAN_FEATURES.find(g => g[0] === { free: 'Basics', verified: 'Verified', featured: 'Featured', plus: 'Featured+' }[pl.k]);
+  return `<div class="pkg-grid ${compact ? 'c3' : 'c4'}">${plans.map(pl => {
+    const g = own(pl), left = p.plusSlots - plusTaken;
+    return `<div class="pkg ${pl.cls || ''} ${current === pl.k ? 'cur' : ''}">${current === pl.k ? '<span class="lbl curlbl">Your plan</span>' : pl.lbl ? `<span class="lbl">${pl.lbl}</span>` : ''}
+      <div class="nm">${pl.name}</div><div class="pr num">${pl.price}</div><div class="per">${pl.per}</div>
+      ${pl.k === 'plus' ? `<div class="slots"><b>${left} of ${p.plusSlots} Featured+ spots open in ${esc(c.name)}</b><i><b style="width:${plusTaken / p.plusSlots * 100}%"></b></i></div>` : ''}
+      ${pl.idx > 0 ? `<div class="incl">${head(g)}</div>` : ''}
+      <ul>${g[1].map(f => `<li>${esc(f[0].replace('{city}', c.name))}</li>`).join('')}</ul>
+      ${current === pl.k ? '<span class="btn btn-ghost btn-block" style="pointer-events:none">Current plan</span>' : `<a class="btn ${pl.k === 'featured' || pl.k === 'plus' ? 'btn-red' : 'btn-ghost'} btn-block" href="mailto:hello@swanpass.com?subject=${encodeURIComponent(pl.name.replace(/^\S+ /, '') + ' — ' + c.name)}">${pl.k === 'free' ? 'Add my venue' : current ? 'Upgrade' : 'Get ' + pl.name.replace(/^\S+ /, '')}</a>`}</div>`;
+  }).join('')}</div>
+  <div class="boost"><div><div class="nm">🚀 Deal Boost <span class="muted" style="font-weight:600;font-size:13px">· add-on for any paid plan</span></div><ul>${BOOST_FEATURES.map(f => `<li>${esc(f)}</li>`).join('')}</ul></div>
+    <div class="bp"><div class="pr num">${pr(p.boost)}</div><div class="per">/ 30 days${ap(p.boost)}</div><a class="btn btn-ghost btn-sm" href="mailto:hello@swanpass.com?subject=${encodeURIComponent('Deal Boost — ' + c.name)}">Boost my deal</a></div></div>`;
+}
+function planTable(citySlug) {
+  const c = cityOf(citySlug);
+  return `<div class="cmp"><table><thead><tr><th></th><th>Free</th><th>Verified</th><th>Featured</th><th>Featured+</th></tr></thead><tbody>${PLAN_FEATURES.map(([g, rows]) => `<tr class="g"><td colspan="5">${g}</td></tr>` + rows.map(r => `<tr><td>${esc(r[0].replace('{city}', c.name))}</td>${r.slice(1).map(v => `<td>${v ? '<span class="yes">✓</span>' : '<span class="no">—</span>'}</td>`).join('')}</tr>`).join('')).join('')}</tbody></table></div>`;
+}

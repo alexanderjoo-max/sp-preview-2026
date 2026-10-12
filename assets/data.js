@@ -226,11 +226,45 @@ const GUEST = { yes: ['✓ Guest-friendly', 'var(--deal)'], fee: ['Joiner fee', 
    Bangkok = live swanpass.com/add-listing prices (Featured ฿10,000, low-season ฿8,000). Every other city is a PLACEHOLDER tier until Alex sets real prices.
    promo = optional time-limited price shown with the regular one struck through. */
 const PLAN_TIERS = {
-  A: { verified: 5000, featured: 10000, promo: 8000, promoLabel: 'Low season special' },
-  B: { verified: 4000, featured: 7000 },
-  C: { verified: 3000, featured: 5000 },
-  D: { verified: 2000, featured: 3500 },
+  /* verified / featured(+promo) for tier A = live prices. plus = Featured+ (2× Featured), boost = Deal Boost add-on, plusSlots = max Featured+ per city — PLACEHOLDERS */
+  A: { verified: 5000, featured: 10000, promo: 8000, promoLabel: 'Low season special', plus: 20000, boost: 3000, plusSlots: 5 },
+  B: { verified: 4000, featured: 7000, plus: 14000, boost: 2000, plusSlots: 4 },
+  C: { verified: 3000, featured: 5000, plus: 10000, boost: 1500, plusSlots: 3 },
+  D: { verified: 2000, featured: 3500, plus: 7000, boost: 1000, plusSlots: 2 },
 };
+/* what each plan includes — every line is something the site actually does. [free, verified, featured, featured+] */
+const PLAN_FEATURES = [
+  ['Basics', [
+    ['Listing page with photos, prices, hours & map pin', 1, 1, 1, 1],
+    ['Customer reviews and ratings', 1, 1, 1, 1],
+  ]],
+  ['Verified', [
+    ['✓ Verified badge and blue map pin', 0, 1, 1, 1],
+    ['Claim your listing — edit photos, prices, hours yourself', 0, 1, 1, 1],
+    ['Shown above all free listings', 0, 1, 1, 1],
+    ['Post a SwanPass deal', 0, 1, 1, 1],
+    ['Messages inbox — customer messages sent to your LINE', 0, 1, 1, 1],
+    ['Answer public questions on your page', 0, 1, 1, 1],
+  ]],
+  ['Featured', [
+    ['★ Featured badge and photo map pin', 0, 0, 1, 1],
+    ['Top group in every list — homepage, city, area, category, search, map', 0, 0, 1, 1],
+    ['Always shown in the “Featured in {city}” grid on the homepage and city page', 0, 0, 1, 1],
+    ['Your deal shown first on the Deals page', 0, 0, 1, 1],
+    ['Included in the newsletter to 13,000+ members', 0, 0, 1, 1],
+    ['Monthly report: views, messages, clicks', 0, 0, 1, 1],
+    ['Account manager', 0, 0, 1, 1],
+  ]],
+  ['Featured+', [
+    ['First row guaranteed — the top 3 spots on your city, area and category pages rotate only between Featured+ venues', 0, 0, 0, 1],
+    ['Map: your pin is labelled and always visible, even zoomed out', 0, 0, 0, 1],
+    ['Deal alert sent to members who follow your city or area (LINE / email)', 0, 0, 0, 1],
+    ['Lead spot in the newsletter once a month', 0, 0, 0, 1],
+    ['Photo & menu refresh visit every 3 months', 0, 0, 0, 1],
+    ['Limited per city — never more than a handful', 0, 0, 0, 1],
+  ]],
+];
+const BOOST_FEATURES = ['Your deal pinned in the homepage “Deals tonight” row for 30 days', 'Top of the Deals page for your city', 'In the weekly deals email', 'Max 3 boosted deals per city at a time'];
 const CITY_TIER = { bangkok: 'A', pattaya: 'B', phuket: 'B', 'ho-chi-minh-city': 'B', 'chiang-mai': 'C', hanoi: 'C', bali: 'C', jakarta: 'C', singapore: 'B' };
 /* Featured is UNLIMITED by default. Optional cap per city + category (a massage shop competes with massage shops, not go-go bars).
    Set a cap once a city/category gets crowded (~25–30 Featured) — or raise the price there instead. PLACEHOLDER: Bangkok massage = 22. */

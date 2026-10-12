@@ -15,27 +15,11 @@
   .city-pick { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin-bottom: 18px; }
   .city-pick label { font-weight: 700; margin-right: 4px; }
   .city-pick select { height: 40px; min-width: 200px; }
-  .slots { margin: 4px 0 10px; font-size: 13px; color: var(--gold); }
-  .slots.full { color: var(--red); }
-  .slots i { display: block; height: 6px; border-radius: 6px; background: rgba(255,255,255,.08); margin-top: 6px; overflow: hidden; }
-  .slots i b { display: block; height: 100%; background: linear-gradient(90deg, var(--gold), var(--red)); }
   .city-stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-bottom: 18px; }
   .city-stats div { padding: 12px 14px; border-radius: 12px; background: var(--surface); border: 1px solid var(--line); }
   .city-stats b { display: block; font-size: 22px; font-weight: 900; }
   .city-stats span { font-size: 11px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); }
-  .pkg-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; align-items: stretch; }
-  .pkg { position: relative; padding: 20px; border-radius: 14px; background: var(--surface); border: 1px solid var(--line); display: flex; flex-direction: column; }
-  .pkg.pop { border-color: rgba(212, 168, 71, .55); background: linear-gradient(160deg, rgba(212, 168, 71, .1), var(--surface) 55%); }
-  .pkg .lbl { position: absolute; top: -11px; left: 20px; background: var(--gold); color: #1b1203; font-size: 10.5px; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; padding: 3px 9px; border-radius: 6px; }
-  .pkg .nm { font-size: 18px; font-weight: 800; display: flex; gap: 8px; align-items: center; }
-  .pkg .pr { font-size: 32px; font-weight: 900; margin: 10px 0 0; line-height: 1.1; }
-  .pkg .pr s { color: var(--red); font-size: 55%; font-weight: 700; margin-right: 6px; }
-  .pkg .per { color: var(--muted); font-size: 13px; }
-  .pkg ul { margin: 14px 0 16px; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 7px; font-size: 14px; color: var(--text-2); flex: 1; }
-  .pkg li::before { content: '✓'; color: var(--deal); font-weight: 800; margin-right: 8px; }
-  .pkg li.no { opacity: .45; text-decoration: line-through; }
-  .pkg li.no::before { content: '–'; color: var(--muted); }
-  @media (max-width: 900px) { .pkg-grid { grid-template-columns: 1fr; } .city-stats { grid-template-columns: 1fr 1fr; } }
+  @media (max-width: 900px) { .city-stats { grid-template-columns: 1fr 1fr; } }
 </style>
 </head>
 <body>
@@ -75,16 +59,7 @@
     history.replaceState(null, '', `?city=${city}`);
     $('#lb-stats').innerHTML = `<div><b class="num">${c.count}</b><span>Venues listed</span></div><div><b class="num">${c.deals || 0}</b><span>Live deals</span></div>${feat ? `<div><b class="num">${feat}</b><span>Featured venues now</span></div>` : `<div><b style="color:var(--gold)">Be the first</b><span>Featured in ${esc(c.name)}</span></div>`}`;
     const ap = thb => approx(thb) ? `<span class="approx">${approx(thb)}</span>` : '';
-    $('#lb-plans').innerHTML = `
-      <div class="pkg"><div class="nm">📋 Free</div><div class="pr num">${price(0, c.country)}</div><div class="per">forever</div>
-        <ul><li>Listed in the directory</li><li>Profile page with photos & info</li><li>On the map & ${c.name} page</li><li>Customer reviews</li><li class="no">Verified badge</li><li class="no">Featured placement</li><li class="no">Deal posting</li></ul>
-        <a class="btn btn-ghost btn-block" href="mailto:hello@swanpass.com?subject=${encodeURIComponent('Free listing — ' + c.name)}">Add my venue</a></div>
-      <div class="pkg"><div class="nm">✅ Verified</div><div class="pr num">${price(p.verified, c.country)}</div><div class="per">/ month ${ap(p.verified)}</div>
-        <ul><li>Everything in Free</li><li>Verified badge & blue map pin</li><li>Claim & manage your listing</li><li>Shown above free listings</li><li>Post deals & offers</li></ul>
-        <a class="btn btn-ghost btn-block" href="mailto:hello@swanpass.com?subject=${encodeURIComponent('Verified plan — ' + c.name)}">Get Verified</a></div>
-      <div class="pkg pop">${p.promo ? `<span class="lbl">${p.promoLabel}</span>` : ''}${showSlots ? `<div class="slots ${left ? '' : 'full'}"><b>${left ? `🔥 Only ${left} of ${cap} ${catName} spots left in ${esc(c.name)}` : `All ${cap} ${catName} spots taken in ${esc(c.name)}`}</b><i><b style="width:${Math.min(100, featCat / cap * 100)}%"></b></i></div>` : ''}<div class="nm">⭐ Featured</div><div class="pr num">${p.promo ? `<s>${price(p.featured, c.country)}</s>${price(p.promo, c.country)}` : price(p.featured, c.country)}</div><div class="per">/ month ${ap(p.promo || p.featured)}</div>
-        <ul><li>Everything in Verified</li><li>Featured badge & photo map pin</li><li>Top of every ${c.name} list — homepage, city & area pages, search, map</li><li>Promoted deal placement</li><li>Newsletter to 13,000+ members</li><li>Account manager</li></ul>
-        <a class="btn ${left !== 0 ? 'btn-red' : 'btn-ghost'} btn-block" href="mailto:hello@swanpass.com?subject=${encodeURIComponent((left !== 0 ? 'Featured plan — ' : 'Featured waitlist — ')  + c.name)}">${left !== 0 ? `Get Featured in ${esc(c.name)}` : 'Join the waitlist'}</a></div>`;
+    $('#lb-plans').innerHTML = planCards(city) + `<details style="margin-top:16px"><summary class="btn btn-ghost btn-sm" style="display:inline-flex">Compare all features</summary>${planTable(city)}</details>`;
   }
   let cat = null; /* category caps are enforced by staff at sign-up; no category picker on the public page */
   sel.onchange = () => { city = sel.value; render(); };
