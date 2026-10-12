@@ -482,8 +482,8 @@ body.no-notes .note { display: none; }
    COMPACT PASS — denser grids and type, emoji nav, always-available menu
    ========================================================================== */
 body { font-size: 13.5px; }
-.section { padding: 32px 0; }
-.sec-head { margin-bottom: 14px; }
+.section { padding: 52px 0; }
+.sec-head { margin-bottom: 18px; }
 .sec-head p { font-size: 13px; margin-top: 2px; }
 h1.display { font-size: clamp(30px, 4.2vw, 48px); }
 h2.display { font-size: clamp(18px, 1.8vw, 22px); gap: 8px; }
@@ -565,7 +565,7 @@ body.drawer-open .drawer-ov { opacity: 1; pointer-events: auto; }
   .card-body { padding: 8px 8px 9px; }
   .card-title { font-size: 13px; }
   .staff-grid { grid-template-columns: repeat(3, 1fr); gap: 5px; }
-  .section { padding: 24px 0; }
+  .section { padding: 36px 0; }
   .logo img.logo-img { height: 22px; }
   .tile-body .display { font-size: 17px; }
 }
