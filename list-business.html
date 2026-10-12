@@ -90,6 +90,7 @@
   $('#lb-cat').innerHTML = CATEGORIES.map(x => `<option value="${x.slug}" ${x.slug === cat ? 'selected' : ''}>${CAT_EMOJI[x.slug]} ${x.name}</option>`).join('');
   $('#lb-cat').onchange = e => { cat = e.target.value; render(); };
   sel.onchange = () => { city = sel.value; render(); };
+  document.addEventListener('sp:loc', e => { if (e.detail.city && cities.some(c => c.slug === e.detail.city)) { city = e.detail.city; sel.value = city; render(); } });
   $('#lb-cur').innerHTML = curSelect();
   render();
   $('.sec-head p').insertAdjacentHTML('beforeend', ' ' + note('Exact prices are public per city (no cross-city comparison table, so a Bangkok shop doesn’t anchor on Chiang Mai prices). Featured is unlimited by default. Optional cap per city + category (FEATURED_CAPS); the “spots left” counter only appears when a cap exists and ≤30% is left, and when full the button becomes a waitlist. Prices + caps editable in admin. Bangkok = today’s live prices. Pattaya/Phuket/HCMC/Singapore = tier B, Chiang Mai/Hanoi/Bali/Jakarta = tier C, everything else = tier D — prices are PLACEHOLDERS until you set them; the only cap set is Bangkok massage = 22 (placeholder, to show the counter). Owner portal shows the plans for the owner’s own city.'));

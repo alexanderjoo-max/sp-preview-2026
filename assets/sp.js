@@ -251,6 +251,14 @@ document.addEventListener('click', e => {
 });
 document.addEventListener('click', e => { if (e.target.closest('[data-close]')) closeAll(); });
 
+/* After picking a city/country: list pages (Best, Deals, Explore, Map, Staff, Hotels, Pricing) stay put and re-render for the new city;
+   everywhere else (home, city pages, venue pages, guides) goes to that city's page. */
+const STAY_PAGES = ['best.html', 'deals.html', 'search.html', 'map.html', 'staff.html', 'hotels.html', 'list-business.html'];
+function goPlace(qs) {
+  const page = location.pathname.split('/').pop() || 'index.html';
+  if (STAY_PAGES.includes(page)) { closeAll(); return; }
+  location.href = `${ROOT}place.html?${qs}`;
+}
 /* Location chooser — one global choice that scopes Explore, Map, Deals, Best and Staff */
 function openLocation() {
   const loc = getLoc();
@@ -273,7 +281,7 @@ function openLocation() {
   drawCountries(); drawCities();
   m.addEventListener('click', e => {
     const c = e.target.closest('[data-c]'); if (c) { active = c.dataset.c; drawCountries(); drawCities(); return; }
-    const city = e.target.closest('[data-city]'); if (city) { const ci = cityOf(city.dataset.city); setLoc({ country: ci.country, city: ci.slug }); location.href = `${ROOT}place.html?city=${ci.slug}`; return; }
+    const city = e.target.closest('[data-city]'); if (city) { const ci = cityOf(city.dataset.city); setLoc({ country: ci.country, city: ci.slug }); goPlace(`city=${ci.slug}`); return; }
     const all = e.target.closest('[data-country-all]'); if (all) { setLoc({ country: all.dataset.countryAll, city: null }); closeAll(); return; }
     if (e.target.closest('[data-all]')) { setLoc({ country: null, city: null }); closeAll(); return; }
     if (e.target.closest('[data-near]')) { setLoc({ country: 'th', city: 'bangkok', near: true }); closeAll(); }
@@ -307,8 +315,8 @@ function openSearch(prefill = '', focusLoc = false) {
   drawWhere();
   m.addEventListener('click', e => {
     const t = e.target.closest('[data-ctab]'); if (t) { ctab = t.dataset.ctab; drawWhere(); return; }
-    const c = e.target.closest('[data-city]'); if (c) { const ci = cityOf(c.dataset.city); setLoc({ country: ci.country, city: ci.slug }); location.href = `${ROOT}place.html?city=${ci.slug}`; return; }
-    const a = e.target.closest('[data-allc]'); if (a) { setLoc({ country: a.dataset.allc, city: null }); location.href = `${ROOT}place.html?country=${a.dataset.allc}`; return; }
+    const c = e.target.closest('[data-city]'); if (c) { const ci = cityOf(c.dataset.city); setLoc({ country: ci.country, city: ci.slug }); goPlace(`city=${ci.slug}`); return; }
+    const a = e.target.closest('[data-allc]'); if (a) { setLoc({ country: a.dataset.allc, city: null }); goPlace(`country=${a.dataset.allc}`); return; }
     if (e.target.closest('[data-allasia]')) { setLoc({ country: null, city: null }); refresh(); return; }
     if (e.target.closest('[data-near]')) { setLoc({ country: 'th', city: 'bangkok', near: true }); refresh(); }
   });
@@ -456,7 +464,7 @@ function directory({ el, title, preset = {}, render = card, gridClass = 'grid-ca
     if (S.price) act.push(['price', '฿'.repeat(S.price)]);
     if (S.q) act.push(['q', '“' + S.q + '”']);
     $('#d-active', el).innerHTML = act.map(([k, t]) => `<button class="chip" data-rm="${k}">${esc(t)} <span class="x">✕</span></button>`).join('') + (act.length > 1 ? '<button class="chip" data-reset>Clear all</button>' : '');
-    $('#d-fcount', el).textContent = act.length ? `(${act.length})` : '';
+    $("#d-fcount", el).textContent = act.length ? act.length : "";
     if ($('#d-sheet-count')) $('#d-sheet-count').textContent = `Show ${r.length} venues`;
     after && after(r, S);
   };

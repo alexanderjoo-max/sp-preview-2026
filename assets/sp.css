@@ -737,3 +737,11 @@ body.drawer-open .drawer-ov { opacity: 1; pointer-events: auto; }
 .gal-nav.prev { left: max(14px, var(--sal)); } .gal-nav.next { right: max(14px, var(--sar)); }
 .gal-n { position: absolute; left: 50%; bottom: max(14px, var(--sab)); transform: translateX(-50%); font-size: 13px; font-weight: 700; background: rgba(0, 0, 0, .6); padding: 4px 10px; border-radius: 8px; }
 @media (max-width: 720px) { .gal-grid { grid-template-columns: repeat(3, 1fr); gap: 3px; padding: 4px 4px calc(10px + var(--sab)); } .gal-th { border-radius: 4px; } .gal-nav { display: none; } .gal-slide { padding: 0; } .gal-slide img { border-radius: 0; } .gal-head { padding: 8px 10px; } }
+
+/* Category chips vs Filters button: chips scroll and fade out at the edge; a divider + solid button keep Filters clearly separate */
+.cat-subbar .wrap { gap: 0; }
+.cat-subbar #d-cats { flex-wrap: nowrap; overflow-x: auto; scrollbar-width: none; padding-right: 24px; -webkit-mask-image: linear-gradient(90deg, #000 calc(100% - 28px), transparent); mask-image: linear-gradient(90deg, #000 calc(100% - 28px), transparent); }
+.cat-subbar #d-cats::-webkit-scrollbar { display: none; }
+.cat-subbar #d-open-filters { flex: none; position: relative; margin-left: 10px; padding-left: 14px; border-radius: 10px; background: var(--surface-2); border: 1px solid var(--line-2); font-weight: 700; }
+.cat-subbar #d-open-filters::before { content: ''; position: absolute; left: -11px; top: 6px; bottom: 6px; width: 1px; background: var(--line-2); }
+.cat-subbar #d-fcount:not(:empty) { display: inline-grid; place-items: center; min-width: 18px; height: 18px; padding: 0 5px; border-radius: 9px; background: var(--red); color: #fff; font-size: 11px; }
