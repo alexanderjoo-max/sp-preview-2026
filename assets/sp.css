@@ -237,7 +237,7 @@ h3 { font-size: 17px; margin: 0; font-weight: 650; letter-spacing: -.01em; }
 .fcheck.sub { padding-left: 34px; font-size: 13.5px; }
 .fsearch { width: 100%; height: 40px; border-radius: 10px; background: var(--surface); border: 1px solid var(--line); padding: 0 12px; margin-bottom: 6px; }
 .seg { display: grid; grid-auto-flow: column; grid-auto-columns: 1fr; background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 3px; gap: 3px; }
-.seg button { height: 34px; border-radius: 7px; font-size: 13px; font-weight: 600; color: var(--text-2); }
+.seg button { height: 34px; padding: 0 12px; border-radius: 7px; font-size: 13px; font-weight: 600; color: var(--text-2); white-space: nowrap; }
 .seg button.on { background: var(--surface-3); color: var(--text); }
 .toggle-row { display: flex; align-items: center; justify-content: space-between; padding: 8px; font-size: 14px; color: var(--text-2); border-radius: 8px; cursor: pointer; }
 .toggle-row:hover { background: var(--surface); }
