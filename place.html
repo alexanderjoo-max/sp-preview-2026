@@ -2,7 +2,6 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta name="robots" content="noindex, nofollow, noarchive">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Bangkok Nightlife — Massage, Soapy, Go-Go & KTV | SwanPass</title>
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -111,8 +110,11 @@
       <section class="section"><div class="wrap"><h2 class="display" style="margin-bottom:16px">Other countries</h2><div class="chips">${COUNTRIES.filter(c => c.code !== country.code).map(c => `<a class="chip" href="place.html?country=${c.code}">${c.flag} ${c.name}${c.soon ? ' · soon' : ''}</a>`).join('')}</div></div></section>`;
   }
   if (level === 'city') {
+    /* Paid placement: EVERY Featured venue in the city is shown here, first section on the page, in a full grid (no carousel, no cap).
+       Order rotates daily (SORTS.recommended) so each paying venue gets turns at the top. */
+    const feat = pool.filter(l => l.featured).sort(SORTS.recommended[1]);
+    html += feat.length ? `<section class="section" style="padding-top:28px"><div class="wrap"><div class="sec-head"><div><h2 class="display">⭐ Featured in ${name} <span class="muted num" style="font-size:.6em;font-weight:600">${feat.length}</span></h2></div><a class="link-arrow" href="search.html">All ${count} venues</a></div><div class="grid-cards">${feat.map(card).join('')}</div></div></section>` : '';
     html += `<section class="section"><div class="wrap"><div class="sec-head"><div><h2 class="display">Popular areas</h2><p>Each area has its own guide and venue list.</p></div></div>${areaGrid(city.slug) || '<p class="muted">Area guides for this city are coming soon.</p>'}</div></section>
-      <section class="section"><div class="wrap"><div class="sec-head"><div><h2 class="display">Featured in ${name}</h2></div><a class="link-arrow" href="search.html">All ${count} venues</a></div><div class="scroller">${pool.sort(SORTS.recommended[1]).slice(0, 10).map(card).join('')}</div></div></section>
       <section class="section"><div class="wrap"><div class="sec-head"><div><h2 class="display">Newest in ${name}</h2></div></div><div class="scroller">${[...new Set(pool.filter(l => l.isNew).concat(pool))].sort(SORTS.newest[1]).slice(0, 8).map(card).join('')}</div></div></section>
 ` + knowBlock(name) + hotelsBlock(city.slug) + `
       <section class="section"><div class="wrap two"><div><h2 class="display" style="margin-bottom:18px">About ${name}</h2><div class="prose">${prose.map(p => `<p>${p}</p>`).join('')}</div>
