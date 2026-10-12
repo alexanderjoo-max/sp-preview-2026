@@ -856,3 +856,7 @@ body { top: 0 !important; }
   .cbig { grid-template-columns: 1fr 1fr; }
   .csmall { grid-template-columns: 1fr 1fr; }
 }
+
+.btn-agoda, .btn-trip { gap: 7px; }
+.bk-ic { width: 18px; height: 18px; border-radius: 4px; flex: none; }
+.btn-sm .bk-ic { width: 15px; height: 15px; }

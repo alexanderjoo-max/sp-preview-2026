@@ -554,7 +554,7 @@ const goHotel = (h, to) => `${ROOT}go.html?hotel=${h.slug}&to=${to}`;
 const hotelOf = slug => HOTELS.find(h => h.slug === slug);
 /* walking minutes ≈ straight-line km × 1.3 (streets) ÷ 5 km/h */
 const walkMin = (a, b) => { const km = Math.hypot((a.lat - b.lat) * 111, (a.lng - b.lng) * 111 * Math.cos(a.lat * Math.PI / 180)); return Math.max(1, Math.round(km * 1.3 / 5 * 60)); };
-const bookBtns = (h, cls = 'btn-sm') => `<a class="btn btn-agoda ${cls}" href="${goHotel(h, 'agoda')}" target="_blank" rel="nofollow noopener">View on Agoda</a><a class="btn btn-trip ${cls}" href="${goHotel(h, 'trip')}" target="_blank" rel="nofollow noopener">View on Trip.com</a>`;
+const bookBtns = (h, cls = 'btn-sm') => `<a class="btn btn-agoda ${cls}" href="${goHotel(h, 'agoda')}" target="_blank" rel="nofollow noopener"><img class="bk-ic" src="${ROOT}assets/brand/agoda.png" alt="">Agoda</a><a class="btn btn-trip ${cls}" href="${goHotel(h, 'trip')}" target="_blank" rel="nofollow noopener"><img class="bk-ic" src="${ROOT}assets/brand/trip.png" alt="">Trip.com</a>`;
 function hotelRow(h) {
   const [label, col] = GUEST[h.guest];
   return `<div class="hotel"><a class="h-ic" href="${ROOT}hotel.html?h=${h.slug}" aria-hidden="true" tabindex="-1">🏨</a><a class="h-main" href="${ROOT}hotel.html?h=${h.slug}"><b>${esc(h.name)}</b><span class="muted">${'★'.repeat(h.stars)} · ${esc(h.areaName || '')} · ${h.score.toFixed(1)}/10</span><span class="h-note">${esc(h.note)}</span></a>
