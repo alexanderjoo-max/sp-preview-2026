@@ -1,0 +1,25 @@
+.deal-hero { padding: 26px 0 22px; background: radial-gradient(700px 260px at 10% 0%, rgba(34, 197, 94, .16), transparent), radial-gradient(600px 260px at 95% 0%, rgba(232, 20, 42, .16), transparent); border-bottom: 1px solid var(--line); }
+.dh-top { display: flex; align-items: flex-end; justify-content: space-between; gap: 20px; flex-wrap: wrap; }
+.dh-stats { display: flex; gap: 8px; }
+.dh-stat { padding: 10px 14px; border-radius: 12px; background: rgba(255, 255, 255, .04); border: 1px solid var(--line); min-width: 104px; }
+.dh-stat b { display: block; font-size: 20px; font-weight: 900; color: var(--deal); line-height: 1.1; white-space: nowrap; }
+.dh-stat span { font-size: 11px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); }
+.redeem { margin-top: 18px; display: flex; align-items: center; gap: 12px; flex-wrap: wrap; padding: 12px 16px; border-radius: 14px; border: 1px dashed rgba(34, 197, 94, .5); background: linear-gradient(90deg, rgba(34, 197, 94, .14), rgba(34, 197, 94, .03)); }
+.redeem .lbl { font-size: 12px; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; color: var(--deal); }
+.redeem .opt { display: inline-flex; align-items: center; gap: 8px; padding: 7px 14px; border-radius: 999px; background: var(--deal); color: #06210f; font-weight: 800; font-size: 14.5px; }
+.redeem .opt.alt { background: rgba(255, 255, 255, .08); color: var(--text); border: 1px solid var(--line-2); }
+.redeem .or { color: var(--muted); font-size: 13px; }
+.redeem .fine { margin-left: auto; color: var(--text-2); font-size: 13px; }
+@media (max-width: 720px) {
+  .deal-hero { padding: 18px 0 16px; }
+  .dh-top { gap: 12px; }
+  .dh-stats { width: 100%; gap: 6px; }
+  .dh-stat { flex: 1; min-width: 0; padding: 8px 10px; }
+  .dh-stat b { font-size: 15px; }
+  .dh-stat span { font-size: 9.5px; }
+  .redeem { margin-top: 12px; padding: 10px 12px; gap: 6px 8px; }
+  .redeem .lbl { width: 100%; font-size: 11px; }
+  .redeem .opt { font-size: 13px; padding: 6px 11px; }
+  .redeem .fine { margin-left: 0; width: 100%; font-size: 12px; }
+}
+.dealcard .card-deal { font-size: 14.5px; padding: 10px 12px; margin: 8px -3px 0; border-radius: 10px; background: var(--deal-bg); border: 1px dashed rgba(95, 240, 181, .35); }

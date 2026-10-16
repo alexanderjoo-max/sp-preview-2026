@@ -1,0 +1,155 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>SwanPass — Asia After Dark</title>
+<meta name="description" content="The after-dark guide to Asia: massage, soapy, go-go, KTV and clubs across Thailand, Vietnam, Indonesia and more — with exclusive SwanPass deals.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/sp.css">
+<style>
+  .cat-tiles { display: grid; grid-template-columns: repeat(8, 1fr); gap: 8px; }
+  .cat-tile { display: flex; flex-direction: column; gap: 6px; padding: 12px; border-radius: var(--r); background: var(--surface); border: 1px solid var(--line); transition: .15s; position: relative; }
+  .cat-tile:hover { border-color: var(--red); transform: translateY(-2px); }
+  .cat-tile .em { font-size: 26px; line-height: 1; }
+  .cat-tile b { font-size: 14px; font-weight: 600; line-height: 1.25; }
+  .cat-tile span { font-size: 12px; color: var(--muted); }
+  .cat-tile .chip-new { position: absolute; top: 10px; right: 10px; }
+  .best-banner { display: flex; align-items: center; gap: 18px; padding: 20px 24px; border-radius: var(--r-lg); border: 1px solid rgba(212, 168, 71, .45); background: radial-gradient(420px 160px at 0% 50%, rgba(212, 168, 71, .22), transparent), linear-gradient(100deg, var(--surface), var(--surface-2)); transition: border-color .2s, transform .2s; }
+  .best-banner:hover { border-color: var(--gold); transform: translateY(-1px); }
+  .best-banner .tro { font-size: 40px; line-height: 1; }
+  .best-banner b.display { display: block; font-size: 22px; margin: 2px 0; }
+  .article { display: flex; flex-direction: column; gap: 10px; }
+  .article .im { aspect-ratio: 16/10; border-radius: var(--r); overflow: hidden; background: var(--surface-2); }
+  .article .im img { width: 100%; height: 100%; object-fit: cover; }
+  .article b { font-size: 16px; line-height: 1.35; font-weight: 600; }
+  .band { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+  .band > a { position: relative; padding: 28px; border-radius: var(--r-lg); border: 1px solid var(--line); overflow: hidden; min-height: 200px; display: flex; flex-direction: column; justify-content: flex-end; }
+  .band .lg { background: linear-gradient(120deg, rgba(255, 59, 82, .25), rgba(240, 195, 106, .15), rgba(95, 240, 181, .15), rgba(124, 180, 255, .2), rgba(160, 90, 255, .25)); }
+  .band .biz { background: radial-gradient(500px 240px at 100% 0%, rgba(255, 59, 82, .3), transparent), var(--surface); }
+  @media (max-width: 1100px) { .cat-tiles { grid-template-columns: repeat(4, 1fr); } }
+  @media (max-width: 720px) { .cat-tiles { grid-template-columns: repeat(4, 1fr); gap: 6px; } .cat-tile { padding: 12px 8px; align-items: center; text-align: center; gap: 6px; } .cat-tile b { font-size: 11.5px; } .cat-tile span { display: none; } .band { grid-template-columns: 1fr; } .best-banner { flex-wrap: wrap; padding: 16px; gap: 12px; } .best-banner .btn { width: 100%; justify-content: center; } }
+</style>
+</head>
+<body>
+<main id="app">
+  <section class="hero">
+    <div class="hero-bg"></div>
+    <div class="hero-mosaic" id="mosaic"></div>
+    <div class="wrap">
+      <div class="eyebrow">937 venues · 6 countries · 36 live deals</div>
+      <h1 class="display" style="margin-top:14px">More <em>Bang</em> for Your <span id="h-cur">Baht</span></h1>
+      <p class="lede">Massage, soapy, go-go, KTV and clubs — real prices, verified venues and deals you only get by saying “SwanPass”.</p>
+      <div class="hero-search">
+        <button data-open="loc"><small>Where</small><b id="h-where">Bangkok</b></button>
+        <span class="sep"></span>
+        <button data-open="search" class="grow"><small>What</small><b class="muted" style="font-weight:500">Venue, area or service…</b></button>
+        <a class="btn btn-red" href="search.html">Search</a>
+      </div>
+      <div class="hero-quick" id="quick"></div>
+    </div>
+  </section>
+
+  <section class="section"><div class="wrap">
+    <div class="sec-head"><div><h2 class="display">🌏 Pick a city</h2></div><a class="link-arrow" href="place.html?country=th">All destinations</a></div>
+    <div class="chips" id="country-chips" style="margin-bottom:16px"></div>
+    <div class="scroller" id="cities"></div>
+  </div></section>
+
+  <section class="section"><div class="wrap">
+    <div class="sec-head"><div><h2 class="display">📍 Popular areas in <em id="pa-city">Bangkok</em></h2><p>Every area has its own page — browse by neighbourhood, not just by city.</p></div><a class="link-arrow" id="pa-all" href="#">All areas</a></div>
+    <div id="areas"></div>
+  </div></section>
+
+  <section class="section"><div class="wrap">
+    <div class="sec-head"><div><h2 class="display">🔥 What are you in the mood for?</h2></div></div>
+    <div class="cat-tiles" id="cats"></div>
+  </div></section>
+
+  <section class="section"><div class="wrap">
+    <div class="sec-head"><div><h2 class="display">⭐ Featured in <em class="cityname">Bangkok</em></h2></div><a class="link-arrow" href="search.html">See all</a></div>
+    <div class="grid-cards" id="featured"></div>
+  </div></section>
+
+  <section class="section"><div class="wrap">
+    <div class="deal-strip" style="margin-bottom:22px">
+      <div style="flex:1"><b style="font-size:15px">🏷️ Deals tonight in <span class="cityname">Bangkok</span></b><div class="muted" style="font-size:14px">No codes, no sign-up — just say “SwanPass” at the counter or show the venue page.</div></div>
+      <a class="btn btn-ghost btn-sm" href="deals.html">All deals</a>
+    </div>
+    <div class="scroller" id="deals"></div>
+  </div></section>
+
+  <section class="section"><div class="wrap">
+    <a class="best-banner" href="best.html"><span class="tro">🏆</span><div style="flex:1;min-width:0"><div class="eyebrow" style="color:var(--gold)">Editors' picks · 2026</div><b class="display">Best of <span class="cityname">Bangkok</span></b><div class="muted" id="best-top"></div></div><span class="btn btn-red btn-sm">See the ranking →</span></a>
+  </div></section>
+
+  <section class="section"><div class="wrap">
+    <div class="sec-head"><div><h2 class="display">👩 Meet the staff</h2><p>Photos are blurred by default — tap one to reveal it.</p></div><div class="row" style="gap:16px"><span id="safe-home"></span><a class="link-arrow" href="staff.html">Browse staff</a></div></div>
+    <div class="staff-grid" id="staff"></div>
+  </div></section>
+
+  <section class="section"><div class="wrap">
+    <div class="band">
+      <a class="lg" href="search.html?cat=lgbtq"><div class="eyebrow" style="color:var(--text)">New on SwanPass</div><h2 class="display" style="margin:8px 0">LGBTQ+ nightlife</h2><p class="muted" style="margin:0">Gay, trans and queer-friendly bars, saunas and massage — one hub, every city.</p></a>
+      <a class="biz" href="shop/index.html"><div class="eyebrow">For venues</div><h2 class="display" style="margin:8px 0">Own a venue? Claim it.</h2><p class="muted" style="margin:0">Update your own photos, prices, hours and deals — and see how many people call you from SwanPass.</p></a>
+    </div>
+  </div></section>
+
+  <section class="section"><div class="wrap">
+    <div class="sec-head"><div><h2 class="display">📝 Guides & articles</h2></div><a class="link-arrow" href="guides.html">All guides</a></div>
+    <div class="grid-cards" id="articles"></div>
+  </div></section>
+
+  <section class="section"><div class="wrap">
+    <div class="sec-head"><div><h2 class="display">🆕 Just added</h2></div><a class="link-arrow" href="search.html?sort=newest">See all</a></div>
+    <div class="scroller" id="newest"></div>
+  </div></section>
+</main>
+
+<script src="assets/data.js"></script>
+<script src="assets/sp.js"></script>
+<script src="assets/blog.js"></script>
+<script>
+  shell('home');
+  $('.hero-search .btn').innerHTML = icon('search') + 'Search';
+  $('.deal-strip').insertAdjacentHTML('afterbegin', icon('tag'));
+  $('#mosaic').innerHTML = LISTINGS.filter(l => l.featured).slice(0, 9).map(l => `<img src="${l.img}" alt="">`).join('');
+  $('#quick').innerHTML = [['Nuru', 'search.html?q=nuru'], ['Soapy', 'search.html?cat=soapy'], ['KTV / Karaoke', 'search.html?cat=ktv'], ['Open now', 'search.html'], ['Deals tonight', 'deals.html'], ['Near me', 'map.html']].map(([t, h]) => `<a class="chip" href="${h}">${t}</a>`).join('');
+
+  const EMOJI = { massage: '💆', soapy: '🛁', 'go-go': '💃', 'gentlemens-clubs': '🥂', 'red-light': '🏮', freelancers: '❤️', ktv: '🎤', lgbtq: '🏳️‍🌈' };
+  let countryTab = getLoc().country || 'th';
+
+  function render() {
+    const loc = getLoc();
+    const city = loc.city ? cityOf(loc.city) : null;
+    const scope = LISTINGS.filter(l => (!loc.country || l.country === loc.country) && (!loc.city || l.city === loc.city));
+    const pool = scope.length >= 4 ? scope : LISTINGS;
+    $('#h-where').textContent = locLabel();
+    $('#h-cur').textContent = { th: 'Baht', vn: 'Dong', id: 'Rupiah', kh: 'Riel', my: 'Ringgit', sg: 'Dollar' }[loc.country] || 'Buck';
+    $$('.cityname').forEach(e => e.textContent = locLabel());
+    $('#country-chips').innerHTML = COUNTRIES.filter(c => !c.soon).map(c => `<button class="chip ${c.code === countryTab ? 'on' : ''}" data-ct="${c.code}">${c.flag} ${c.name}</button>`).join('') + '<span class="chip" style="opacity:.6">🇯🇵 🇵🇭 🇭🇰 Coming soon</span>';
+    $('#cities').innerHTML = CITIES.filter(c => c.country === countryTab && c.img).map(c => `<a class="tile" href="place.html?city=${c.slug}"><img src="${c.img}" alt="" loading="lazy" onerror="this.remove()"><div class="tile-body"><div class="display">${c.name}</div>${c.hook ? `<p>${c.hook}</p>` : ''}<div class="tile-stats"><span><b class="num">${c.count}</b> venues</span>${c.deals ? `<span><b class="num">${c.deals}</b> deals</span>` : ''}${AREAS[c.slug] ? `<span><b>${AREAS[c.slug].length}</b> areas</span>` : ''}</div></div></a>`).join('');
+    const areaCity = city && AREAS[city.slug] ? city.slug : 'bangkok';
+    $('#pa-city').textContent = cityOf(areaCity).name;
+    $('#pa-all').href = `place.html?city=${areaCity}`;
+    $('#areas').innerHTML = areaGrid(areaCity);
+    $('#cats').innerHTML = CATEGORIES.map(c => `<a class="cat-tile" href="search.html?cat=${c.slug}"><span class="em">${CAT_EMOJI[c.slug]}</span><b>${c.name}</b><span class="num">${Math.max(scope.filter(l => l.cats.includes(c.slug)).length * 4, 3)} venues</span>${c.isNew ? '<span class="chip-new">NEW</span>' : ''}</a>`).join('');
+    /* paid placement: every Featured venue in the chosen city, no cap (falls back to Verified where a city has no Featured yet) */
+    const featAll = pool.filter(l => l.featured); $('#featured').innerHTML = (featAll.length ? featAll : pool.filter(l => l.verified)).sort(SORTS.recommended[1]).map(card).join('');
+    $('#deals').innerHTML = pool.filter(l => l.deal).sort(SORTS.recommended[1]).slice(0, 10).map(card).join('') || '<p class="muted">No deals in this city yet.</p>';
+    const best = pool.filter(l => l.rating).sort((a, b) => score(b) - score(a)).slice(0, 6);
+    $('#best-top').textContent = 'Top 3: ' + best.slice(0, 3).map(l => l.name).join(' · ');
+    $('#staff').innerHTML = [...pool].filter(l => l.staffCount).sort(SORTS.recommended[1]).slice(0, 6).map(l => `<a class="staff" href="listing.html?v=${l.slug}#staff"><img src="${rs(l.staffImgs[0], 500)}" alt="" loading="lazy"><span class="reveal">${icon('eye')}</span><div class="cap"><b>${esc(l.name)}</b>${l.areaName || l.cityName}</div></a>`).join('');
+    /* latest real guides from swanpass.com/blogs, preferring the chosen city */
+    $('#articles').innerHTML = [...POSTS.filter(p => city && p.city === city.slug), ...POSTS].filter((p, i, arr) => arr.indexOf(p) === i).slice(0, 4).map(p => `<a class="article" href="${p.url}"><div class="im"><img src="${p.img}" alt="" loading="lazy"></div><span class="muted" style="font-size:12.5px">${p.date}</span><b>${esc(p.title)}</b></a>`).join('');
+    $('#newest').innerHTML = [...new Set(pool.filter(l => l.isNew).concat(LISTINGS.filter(l => l.isNew)))].sort(SORTS.newest[1]).slice(0, 10).map(card).join('');
+  }
+  $('#safe-home').innerHTML = safeToggle();
+  document.addEventListener('click', e => { const c = e.target.closest('[data-ct]'); if (c) { countryTab = c.dataset.ct; render(); } });
+  document.addEventListener('click', e => { const s = e.target.closest('.staff'); if (s && !s.classList.contains('revealed') && document.body.classList.contains('safe')) { e.preventDefault(); s.classList.add('revealed'); } });
+  document.addEventListener('sp:loc', e => { countryTab = e.detail.country || countryTab; render(); });
+  render();
+</script>
+</body>
+</html>

@@ -1,0 +1,535 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+<meta name="robots" content="noindex, nofollow, noarchive">
+    <meta name="author" content="Swanpass">
+    <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="referrer" content="same-origin">
+<script>
+  (function() {
+    const externalRel = ['nofollow', 'noreferrer', 'noopener'];
+
+    function protectExternalLink(link) {
+      const href = link.getAttribute('href');
+      if (!href) return;
+
+      let url;
+      try {
+        url = new URL(href, window.location.href);
+      } catch (_error) {
+        return;
+      }
+
+      if (!['http:', 'https:'].includes(url.protocol)) return;
+
+      const hostname = url.hostname.toLowerCase();
+      const isSwanpass = hostname === 'swanpass.com' || hostname.endsWith('.swanpass.com');
+      if (url.origin === window.location.origin || isSwanpass) return;
+
+      const rel = new Set((link.getAttribute('rel') || '').split(/\s+/).filter(Boolean));
+      externalRel.forEach(value => rel.add(value));
+      link.setAttribute('rel', Array.from(rel).join(' '));
+      link.setAttribute('referrerpolicy', 'no-referrer');
+    }
+
+    function protectLinks(root) {
+      if (root.nodeType !== Node.ELEMENT_NODE && root.nodeType !== Node.DOCUMENT_NODE) return;
+      if (root.matches && root.matches('a[href]')) protectExternalLink(root);
+      root.querySelectorAll('a[href]').forEach(protectExternalLink);
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+      protectLinks(document);
+
+      new MutationObserver(function(mutations) {
+        mutations.forEach(function(mutation) {
+          if (mutation.type === 'attributes') protectExternalLink(mutation.target);
+          mutation.addedNodes.forEach(protectLinks);
+        });
+      }).observe(document.documentElement, {
+        attributes: true,
+        attributeFilter: ['href'],
+        childList: true,
+        subtree: true
+      });
+    });
+  })();
+</script>
+
+    <title>Swanpass — More Bang For Your Baht</title>
+<meta name="description" content="More Bang For Your Baht. Thailand&#39;s largest selection of the best massage, soapy, go-go bars, gentlemen&#39;s clubs &amp; independent companions in Bangkok, Pattaya, Phuket &amp; more. Real reviews, hottest girls, amazing service. More Bang For Your Baht – Explore SwanPass now!">
+<link rel="canonical" href="https://alexanderjoo-max.github.io/sp-preview-2026/users/sign_in">
+<meta property="og:title" content="More Bang For Your Baht">
+<meta property="og:description" content="More Bang For Your Baht. Thailand&#39;s largest selection of the best massage, soapy, go-go bars, gentlemen&#39;s clubs &amp; independent companions in Bangkok, Pattaya, Phuket &amp; more. Real reviews, hottest girls, amazing service. More Bang For Your Baht – Explore SwanPass now!">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="SwanPass">
+<meta property="og:image" content="https://swanpass.com/swanpass_logo_rev.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="More Bang For Your Baht">
+<meta name="twitter:description" content="More Bang For Your Baht. Thailand&#39;s largest selection of the best massage, soapy, go-go bars, gentlemen&#39;s clubs &amp; independent companions in Bangkok, Pattaya, Phuket &amp; more. Real reviews, hottest girls, amazing service. More Bang For Your Baht – Explore SwanPass now!">
+<meta name="twitter:image" content="https://swanpass.com/swanpass_logo_rev.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Figtree:ital,wght@0,300;0,400;0,500;0,700;1,300;1,400;1,500;1,700&family=Nunito:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&family=Open+Sans:ital,wght@0,300;0,400;0,500;0,700;1,300;1,400;1,500;1,700&family=Roboto:ital,wght@0,100;0,400;0,700;1,100;1,400;1,700&display=swap" rel="stylesheet">
+    <meta name="csrf-param" content="authenticity_token" />
+<meta name="csrf-token" content="BXja-sCgXlVZL_9VJ83UqE3u-UD0AQJF-KCksURkG0i3q6F_OJYxbI7gZ0QJ4XAtbsnyWxs30mvskupq5AyHnw" />
+    
+    <link rel="stylesheet" href="/sp-preview-2026/css/site.css">    
+      <style>
+    :root{--black:#0a0a0a;--black2:#111111;--card-bg:#161616;--red:#e8142a;--red-dark:#b80f20;--white:#fff;--white70:rgba(255,255,255,.7);--white40:rgba(255,255,255,.4);--white10:rgba(255,255,255,.08);--gold:#d4a847;--green:#22c55e;--border:rgba(255,255,255,.08);--radius:10px;}
+    .page{flex:1;display:flex;align-items:center;justify-content:center;padding:24px 16px;min-height: 80vh;}
+    .auth-card{background:var(--card-bg);border:1px solid var(--border);border-radius:16px;width:100%;max-width:400px;overflow:hidden;}
+    .auth-logo{padding:28px 24px 0;text-align:center;}
+    .auth-logo img{height:36px;}
+    .auth-tabs{display:flex;border-bottom:1px solid var(--border);margin-top:20px;}
+    .atab{flex:1;padding:12px;text-align:center;font-size:13px;font-weight:600;color:var(--white40);cursor:pointer;border-bottom:2px solid transparent;transition:all .2s;}
+    .atab.active{color:var(--white);border-bottom-color:var(--red);}
+    .auth-form{padding:24px;}
+    .form-group{margin-bottom:16px;}
+    .form-label{display:block;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--white40);margin-bottom:6px;}
+    .form-input{width:100%;background:var(--white10);border:1px solid var(--border);border-radius:8px;padding:11px 14px;color:var(--white);font-family:'Inter',sans-serif;font-size:14px;outline:none;transition:border-color .2s;}
+    .form-input:focus{border-color:var(--red);}
+    .form-input::placeholder{color:var(--white40);}
+    .btn-submit{width:100%;background:var(--red);color:var(--white);border:none;border-radius:8px;padding:13px;font-size:14px;font-weight:700;font-family:'Inter',sans-serif;cursor:pointer;transition:background .2s;margin-top:4px;}
+    .btn-submit:hover{background:var(--red-dark);}
+    .auth-divider{display:flex;align-items:center;gap:12px;margin:16px 0;}
+    .auth-divider::before,.auth-divider::after{content:'';flex:1;height:1px;background:var(--border);}
+    .auth-divider span{font-size:11px;color:var(--white40);}
+    .btn-google{width:100%;background:var(--white10);color:var(--white);border:1px solid var(--border);border-radius:8px;padding:11px;font-size:13px;font-weight:600;font-family:'Inter',sans-serif;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;transition:background .2s;text-decoration: none;}
+    .btn-google:hover{background:rgba(255,255,255,.12);}
+    .google-icon{width:18px;height:18px;background:white;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;}
+    .auth-footer{padding:0 24px 24px;text-align:center;}
+    .auth-footer a{color:var(--red);text-decoration:none;font-size:12px;}
+    .auth-footer p{font-size:11px;color:var(--white40);margin-top:12px;line-height:1.5;}
+    .forgot-link{font-size:12px;color:var(--white40);text-align:right;display:block;margin-top:4px;cursor:pointer;text-decoration: none;}
+    .forgot-link:hover{color:var(--white);}
+    .form-panel{display:none;}.form-panel.active{display:block;}
+    /* Benefits */
+    .benefits{padding:20px 24px;background:rgba(232,20,42,.04);border-top:1px solid var(--border);}
+    .benefits-title{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--white40);margin-bottom:10px;}
+    .benefit-item{display:flex;align-items:center;gap:8px;font-size:12px;color:var(--white70);margin-bottom:6px;}
+    .benefit-icon{font-size:14px;}
+    .logo-img{height:28px;display:block;}
+  </style>
+
+    <link rel="stylesheet" href="/sp-preview-2026/assets/generic-41e48915413356c05c3a1f27d3954b2900a94ffb908c89133d42b667df9834d1.css" data-turbo-track="reload" />
+    <script>
+      !function(e,t){"object"==typeof exports&&"undefined"!=typeof module?module.exports=t():"function"==typeof define&&define.amd?define(t):(e="undefined"!=typeof globalThis?globalThis:e||self,function(){var n=e.Cookies,o=e.Cookies=t();o.noConflict=function(){return e.Cookies=n,o}}())}(this,(function(){"use strict";function e(e){for(var t=1;t<arguments.length;t++){var n=arguments[t];for(var o in n)e[o]=n[o]}return e}var t=function t(n,o){function r(t,r,i){if("undefined"!=typeof document){"number"==typeof(i=e({},o,i)).expires&&(i.expires=new Date(Date.now()+864e5*i.expires)),i.expires&&(i.expires=i.expires.toUTCString()),t=encodeURIComponent(t).replace(/%(2[346B]|5E|60|7C)/g,decodeURIComponent).replace(/[()]/g,escape);var c="";for(var u in i)i[u]&&(c+="; "+u,!0!==i[u]&&(c+="="+i[u].split(";")[0]));return document.cookie=t+"="+n.write(r,t)+c}}return Object.create({set:r,get:function(e){if("undefined"!=typeof document&&(!arguments.length||e)){for(var t=document.cookie?document.cookie.split("; "):[],o={},r=0;r<t.length;r++){var i=t[r].split("="),c=i.slice(1).join("=");try{var u=decodeURIComponent(i[0]);if(o[u]=n.read(c,u),e===u)break}catch(e){}}return e?o[e]:o}},remove:function(t,n){r(t,"",e({},n,{expires:-1}))},withAttributes:function(n){return t(this.converter,e({},this.attributes,n))},withConverter:function(n){return t(e({},this.converter,n),this.attributes)}},{attributes:{value:Object.freeze(o)},converter:{value:Object.freeze(n)}})}({read:function(e){return'"'===e[0]&&(e=e.slice(1,-1)),e.replace(/(%[\dA-F]{2})+/gi,decodeURIComponent)},write:function(e){return encodeURIComponent(e).replace(/%(2[346BF]|3[AC-F]|40|5[BDE]|60|7[BCD])/g,decodeURIComponent)}},{path:"/"});return t}));
+    </script>
+    <meta name="juicyads-site-verification" content="dd4ecf4537ff78686e5c467a64d526af">
+  </head>
+  <body class="bd-logged-out">
+    <!-- Google Tag Manager (noscript) -->
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-NXTT3MN"
+  height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+  <!-- End Google Tag Manager (noscript) -->
+    <div class="age-gate" id="ageGate">
+  <div class="age-box">
+    <img src="/sp-preview-2026/swanpass_logo_rev.png" alt="Swanpass">
+    <div class="age-icon">🔞</div>
+    <div class="age-title">Adults Only</div>
+    <div class="age-text">This website contains adult content suitable only for those 18 years and older. By entering you confirm you are of legal age.</div>
+    <div class="age-btns">
+      <a class="btn-yes over18">I'm 18 or older</a>
+      <a class="btn-no under18" href="https://google.com" rel="nofollow noreferrer noopener" referrerpolicy="no-referrer">Exit</a>
+    </div>
+  </div>
+</div>
+<script>
+  /* ─── AGE GATE ───────────────────────────────────────────────────────────── */
+    function closeAgeGate() {
+      document.getElementById('ageGate').style.display = 'none';
+      Cookies.set('ageOk', '1', { expires: 1 });
+    }
+   function injectAffLinks() {
+            var amzRef = +(Cookies.get('amzRef') || 0);
+            var thShpRef = +(Cookies.get('thShpRef') || 0);
+            var mocRef = +(Cookies.get('mocRef') || 0);
+            var currentUrl = location.href;
+            var geoEle = document.querySelector('.geodata');
+            var geoData = geoEle ? geoEle.dataset : {};
+            var affLink = null;
+            var affKey = null;
+            var temuKey = null;
+            if(amzRef == 0) {
+                affKey = 'amzRef';
+            }
+            var btnOver18 = document.querySelector('a.over18');
+            if(affLink && affKey) {
+                if(!currentUrl.includes('?')) {
+                    currentUrl = currentUrl + '?';
+                }
+                currentUrl = currentUrl + '&utm_campaign=' + affKey;
+                //if(btnOver18) {
+                    //btnOver18.setAttribute('href', currentUrl);
+                    //btnOver18.setAttribute('target', '_blank');
+                //}
+                var btnUnder18 = document.querySelector('a.under18');
+                if(btnOver18) {
+                    btnUnder18.setAttribute('href', affLink);
+                }
+                btnOver18.addEventListener('click', function(){
+                    Cookies.set(affKey, 1, {expires: 20});
+                    closeAgeGate();
+                  
+                })
+
+            } else {
+                btnOver18.addEventListener('click', function(){
+                    closeAgeGate();
+                })
+            }
+
+        }
+        if(!Cookies.get('ageOk')) {
+            injectAffLinks();
+        } else {
+          document.getElementById('ageGate').style.display = 'none';
+        }
+</script>
+
+    <!-- Preloader End -->
+    <header>
+  <div class="header-inner">
+    <button class="btn-hamburger" type="button" aria-label="Open menu" aria-expanded="false">☰</button>
+    <div class="header-logo-wrap"><a href="/sp-preview-2026/"><img src="/sp-preview-2026/swanpass_logo_rev.png" alt="Swanpass" class="logo-img"></a></div>
+    <div class="header-nav">
+      <a class="" href="/sp-preview-2026/map/">🗺️ Map</a>
+      <a class="" href="/sp-preview-2026/deals/">🏷️ Deals</a>
+      <a class="" href="/sp-preview-2026/cities">📍 Cities</a>
+      <a class="" href="/sp-preview-2026/best-places/">🏆 Best</a>
+      <a class="" href="/sp-preview-2026/talent/">👩 Staff</a>
+      <a class="" href="/sp-preview-2026/listing/">🔎 Search</a>
+      <a class="" href="/sp-preview-2026/add-listing/">➕ List Your Business</a>
+    </div>
+      <a class="btn-login" href="/sp-preview-2026/users/sign_in/">Login</a>
+  </div>
+</header>
+<nav class="nav-tabs">
+  <button class="nav-tabs-close" type="button" style="padding: 10px;" aria-label="Close menu">&times;</button>
+  <div class="nav-tabs-inner">
+    <a href="/sp-preview-2026/map/" class="nav-tab ">🗺️ Map</a>
+    <a href="/sp-preview-2026/deals/" class="nav-tab ">🏷️ Deals</a>
+    <a href="/sp-preview-2026/cities" class="nav-tab ">📍 Cities</a>
+    <a href="/sp-preview-2026/best-places/" class="nav-tab ">🏆 Best Places</a>
+    <a href="/sp-preview-2026/talent/" class="nav-tab ">👩 Staff</a>
+    <a href="/sp-preview-2026/listing/" class="nav-tab ">🔎 Search</a>
+      <a href="/sp-preview-2026/add-listing/" class="nav-tab ">➕ List Your Business</a>
+      <a href="/sp-preview-2026/users/sign_in/" class="nav-tab"> 👤 Login</a>
+  </div>
+</nav>
+<script>
+  (function(){
+    var page = location.pathname.split('/').pop() || '/';
+    var tabs = document.querySelectorAll('.nav-tab');
+    for (var i = 0; i < tabs.length; i++) {
+      var href = tabs[i].getAttribute('href');
+      if (href === page || (page === '' && href === '')) tabs[i].classList.add('active');
+      if (page.indexOf('city-') === 0 && href === 'cities') tabs[i].classList.add('active');
+      if (page.indexOf('listing-') === 0 && href === 'listing') tabs[i].classList.add('active');
+    }
+    var hLinks = document.querySelectorAll('.header-nav a');
+    for (var j = 0; j < hLinks.length; j++) {
+      var h = hLinks[j].getAttribute('href');
+      if (h === page || (page === '' && h === '')) hLinks[j].classList.add('active');
+      if (page.indexOf('city-') === 0 && h === 'cities') hLinks[j].classList.add('active');
+      if (page.indexOf('listing-') === 0 && h === 'listing') hLinks[j].classList.add('active');
+    }
+    var nav = document.querySelector('.nav-tabs');
+    var btn = document.querySelector('.btn-hamburger');
+
+    function closeMenu() {
+      nav.classList.remove('open');
+      btn.textContent = '\u2630';
+      btn.setAttribute('aria-expanded', 'false');
+    }
+
+    btn.addEventListener('click', function() {
+      var isOpen = nav.classList.toggle('open');
+      btn.textContent = isOpen ? '\u2715' : '\u2630';
+      btn.setAttribute('aria-expanded', isOpen.toString());
+    });
+
+    document.querySelector('.nav-tabs-close').addEventListener('click', closeMenu);
+
+    tabs.forEach(function(t){
+      t.addEventListener('click', closeMenu);
+    });
+  })();
+</script>
+
+    <div class="page">
+  <div class="auth-card">
+    <div class="auth-logo">
+      <img src="/sp-preview-2026/swanpass_logo_rev.png" alt="Swanpass" class="logo-img" style="margin: 0 auto;">
+    </div>
+    <div class="auth-tabs">
+      <a href="/sp-preview-2026/users/sign_in/" class="atab active" onclick="switchTab('login',this)">Log In</a>
+      <a href="/sp-preview-2026/users/sign_up" class="atab" onclick="switchTab('register',this)">Register</a>
+    </div>
+    <!-- LOGIN PANEL -->
+    <div class="form-panel active" id="panel-login">
+      <div class="auth-form">
+        <form class="new_user" id="new_user" action="/sp-preview-2026/users/sign_in/" accept-charset="UTF-8" method="post"><input type="hidden" name="authenticity_token" value="-r68H_3sIjVjMGKcdP9oGZHahQVg9fysTMRoifKsD5Zi7x9KjLsy9duOg9oQjY4MCD6m27SW3sep8cOQrhHQUg" autocomplete="off" />
+          <div class="form-group">
+            <label class="form-label" for="user_email">Email</label>
+            <input autofocus="autofocus" autocomplete="email" class="form-input" placeholder="your@email.com" type="email" value="" name="user[email]" id="user_email" />
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="user_password">Password</label>
+            <input autocomplete="current-password" class="form-input" placeholder="••••••••" type="password" name="user[password]" id="user_password" />
+              <a class="forgot-link" href="/sp-preview-2026/users/password/new">Forgot password?</a>
+          </div>
+            <div class="form-group" style="display: flex; align-items: center; gap: 8px; margin-top: -8px; margin-bottom: 20px;">
+              <input name="user[remember_me]" type="hidden" value="0" autocomplete="off" /><input style="width: auto; margin: 0;" type="checkbox" value="1" name="user[remember_me]" id="user_remember_me" />
+              <label class="form-label" style="margin: 0; text-transform: none; font-weight: normal; font-size: 12px; color: var(--white70);" for="user_remember_me">Remember me</label>
+            </div>
+          <input type="submit" name="commit" value="Log In" class="btn-submit" data-disable-with="Log In" />
+</form>        <div class="auth-divider"><span>OR</span></div>
+        <form data-turbo="false" class="button_to" method="post" action="/sp-preview-2026/users/auth/google_oauth2"><button class="btn-google" type="submit">
+          <div class="google-icon"><img width="14px" src="/sp-preview-2026/assets/google-logo-f6a6fc3307479cab4930790610e9927b2ba74e8b97ee2dc68761e18f396121c0.webp" /></div>
+          Continue with Google
+</button><input type="hidden" name="authenticity_token" value="ZW7i5b2raOmH7clsjpTawC5QsWiVcM3r2h3zOagWb6mD3ClGP6YOn-NKTQbAX2ujr3d8U3dN6eAxxguRYPfnpw" autocomplete="off" /></form>      </div>
+      <div class="auth-footer">
+        <p>By logging in you agree to our <a href="/sp-preview-2026/terms-of-use/">Terms of Use</a> and <a href="/sp-preview-2026/privacy-policy/">Privacy Policy</a></p>
+      </div>
+    </div>
+    <!-- REGISTER PANEL -->
+    <div class="form-panel" id="panel-register">
+      <div class="auth-form" style="text-align: center;">
+        <p style="color: var(--white70); font-size: 14px; margin-bottom: 20px;">Join Swanpass to unlock all features.</p>
+        <a class="btn-submit" style="display: block; text-decoration: none;" href="/sp-preview-2026/users/sign_up">Create Account</a>
+        <div class="auth-divider"><span>OR</span></div>
+        <form data-turbo="false" class="button_to" method="post" action="/sp-preview-2026/users/auth/google_oauth2"><button class="btn-google" type="submit">
+          <div class="google-icon"><img width="14px" src="/sp-preview-2026/assets/google-logo-f6a6fc3307479cab4930790610e9927b2ba74e8b97ee2dc68761e18f396121c0.webp" /></div>
+          Sign up with Google
+</button><input type="hidden" name="authenticity_token" value="sMinMtNxh4B1MAQ4JyPUQ88Pbt2mTefdzLR8WLaqTs9WemyRUXzh9hGXgFJp6GUgTiij5kRww9Ynb4TwfkvGwQ" autocomplete="off" /></form>      </div>
+      <div class="benefits">
+        <div class="benefits-title">Why join Swanpass?</div>
+        <div class="benefit-item"><span class="benefit-icon">♡</span> Save favourite listings</div>
+        <div class="benefit-item"><span class="benefit-icon">📝</span> Write reviews</div>
+        <div class="benefit-item"><span class="benefit-icon">🔔</span> Deal alerts for saved shops</div>
+        <div class="benefit-item"><span class="benefit-icon">📜</span> View visit history</div>
+      </div>
+      <div class="auth-footer">
+        <p>By registering you agree to our <a href="/sp-preview-2026/terms-of-use/">Terms of Use</a> and <a href="/sp-preview-2026/privacy-policy/">Privacy Policy</a>. Adult content — 18+ only.</p>
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+  function switchTab(tab, el){
+    document.querySelectorAll('.atab').forEach(t=>t.classList.remove('active'));
+    document.querySelectorAll('.form-panel').forEach(p=>p.classList.remove('active'));
+    el.classList.add('active');
+    document.getElementById('panel-'+tab).classList.add('active');
+  }
+</script>
+    <!-- ══ FOOTER ════════════════════════════════════════════════ -->
+<footer class="site-footer">
+  <div class="footer-inner">
+    <div class="footer-brand">
+      <img src="/sp-preview-2026/swanpass_logo_rev.png" alt="Swanpass" class="footer-logo">
+      <p class="footer-tagline">Your trusted guide to nightlife in Asia.</p>
+    </div>
+    <div class="footer-links">
+      <a href="/sp-preview-2026/map/">Map</a>
+      <a href="/sp-preview-2026/listing/">Search</a>
+      <a href="/sp-preview-2026/blogs/">Blog</a>
+      <a href="/sp-preview-2026/add-listing/">List Your Business</a>
+      <a href="/sp-preview-2026/privacy-policy/">Privacy Policy</a>
+      <a href="/sp-preview-2026/terms-of-use/">Terms</a>
+    </div>
+    <div class="footer-disc">
+      <p><a href="/sp-preview-2026/feedback"> Comments Feedback or Report a Business</a></p>
+      <p>Content is provided by listed businesses and is not verified by Swanpass.com. This site might contain adult content — must be 18+ to access.</p>
+    </div>
+    <div class="footer-copy">&copy; 2026 Swanpass. All rights reserved.</div>
+  </div>
+</footer>
+<nav class="bottom-nav">
+  <a href="/sp-preview-2026/map/" class="bnav-item "><span class="bi">🗺️</span><span class="bl">Map</span></a>
+  <a href="/sp-preview-2026/deals/" class="bnav-item "><span class="bi">🏷️</span><span class="bl">Deals</span></a>
+  <a href="/sp-preview-2026/best-places/" class="bnav-item "><span class="bi">🏆</span><span class="bl">Best</span></a>
+  <a href="/sp-preview-2026/listing/" class="bnav-item "><span class="bi">🔍</span><span class="bl">Search</span></a>
+  <a href="/sp-preview-2026/cities" class="bnav-item "><span class="bi">📍</span><span class="bl">Cities</span></a>
+</nav>
+
+    <button type="button" id="back-to-top-btn" class="back-to-top-btn" aria-label="Back to top" title="Back to top">
+  <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M12 19V5"></path>
+    <path d="M5 12l7-7 7 7"></path>
+  </svg>
+</button>
+
+<style>
+  .back-to-top-btn{
+    position:fixed;
+    right:20px;
+    bottom:24px;
+    z-index:95;
+    width:44px;
+    height:44px;
+    border:none;
+    border-radius:50%;
+    background:var(--red,#e8142a);
+    color:#fff;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    cursor:pointer;
+    box-shadow:0 4px 14px rgba(0,0,0,.35);
+    opacity:0;
+    visibility:hidden;
+    transform:translateY(12px);
+    transition:opacity .25s ease, transform .25s ease, visibility .25s ease, background .2s ease;
+  }
+  .back-to-top-btn.is-visible{
+    opacity:1;
+    visibility:visible;
+    transform:translateY(0);
+  }
+  .back-to-top-btn:hover{
+    background:var(--red-dark,#c41123);
+  }
+  @media(max-width:767px){
+    .back-to-top-btn{
+      right:16px;
+      bottom:86px;
+    }
+  }
+</style>
+
+<script>
+  (function(){
+    var btn = document.getElementById('back-to-top-btn');
+    if(!btn) return;
+    var SHOW_AT = 300;
+
+    function toggleVisibility(){
+      var scrolled = window.scrollY || document.documentElement.scrollTop || 0;
+      btn.classList.toggle('is-visible', scrolled > SHOW_AT);
+    }
+
+    window.addEventListener('scroll', toggleVisibility, {passive:true});
+    toggleVisibility();
+
+    btn.addEventListener('click', function(){
+      window.scrollTo({top:0, behavior:'smooth'});
+    });
+  })();
+</script>
+
+    <!-- global scripts Start -->
+    <!-- global scripts End -->
+    
+    <div class="translator">
+  <div class="translate-wrapper">
+    <div id="google_translate_element"></div>
+    <div id="translate-content">
+      <div id="flags" class="size18">
+        <ul id="sortable" class="ui-sortable">
+          <li id="Chinese (Simplified)"><a href="#" title="Chinese (Simplified)"
+              class="nturl notranslate zh-CN flag Chinese (Simplified)" data-code="zh-CN"
+              data-lang="Chinese (Simplified)"></a></li>
+          <li id="Chinese (Traditional)"><a href="#" title="Chinese (Traditional)"
+              class="nturl notranslate zh-TW flag Chinese (Traditional)" data-code="zh-TW"
+              data-lang="Chinese (Traditional)"></a></li>
+          <li id="English"><a href="#" title="English" class="nturl notranslate en flag united-states" data-code="en"
+              data-lang="English"></a></li>
+          <li id="Vietnamese"><a href="#" title="Vietnamese" class="nturl notranslate vi flag Vietnamese" data-code="vi"
+              data-lang="Vietnamese"></a></li>
+          <li id="Thai"><a href="#" title="Thai" class="nturl notranslate vi flag Thai" data-code="th"
+              data-lang="Thai"></a></li>
+          <li id="Korean"><a href="#" title="Korean" class="nturl notranslate vi flag Korean" data-code="ko"
+              data-lang="Korean"></a></li>
+          <li id="Japanese"><a href="#" title="Japanese" class="nturl notranslate vi flag Japanese" data-code="ja"
+              data-lang="Japanese"></a></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  <button id="btn-translate" title="Translate">
+    <img alt="translate" src="/sp-preview-2026/assets/translation-34acf8c81e0adcc5441682e31a719dbc9d2897229818af6c3deacefc0b620d89.webp" />
+  </button>
+</div>
+<script type="text/javascript">
+  function showOriginal() {
+    // Look for the Google Translate banner iframe
+    var iframe = document.querySelector('.skiptranslate iframe')
+    if (!iframe) return;
+
+    var innerDoc = iframe.contentDocument || iframe.contentWindow.document;
+    var buttons = innerDoc.querySelectorAll("button,a");
+
+    for (var i = 0; i < buttons.length; i++) {
+        // Find the button that handles the 'restore' action
+        if (buttons[i].id.indexOf("restore") >= 0 || buttons[i].innerText == "Restore" || buttons[i].title == "Close") {
+            buttons[i].click();
+            // Close the banner if you want it to disappear
+            var closeLink = innerDoc.getElementsByClassName("goog-close-link")[0];
+            if (closeLink) closeLink.click();
+            // return;
+        }
+
+    }
+  }
+  function googleTranslateElementInit() {
+    new google.translate.TranslateElement({
+      pageLanguage: 'en',
+      includedLanguages: 'th,zh-CN,zh-TW,ja,ko,vi',
+    }, 'google_translate_element');
+  }
+  document.addEventListener('DOMContentLoaded', function () {
+    document.querySelectorAll('#flags a').forEach(function (el) {
+      el.addEventListener('click', function (e) {
+        e.preventDefault();
+        var code = e.target.dataset.code;
+        if(code == 'en') {
+          showOriginal()
+        }
+        document.querySelector('.goog-te-combo').value = code;
+        document.querySelector('.goog-te-combo').dispatchEvent(new Event('change'));
+      })
+    })
+  });
+</script>
+<script type="text/javascript"
+  src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+    <div class="geodata" style="display: none;" 
+      data-city=""
+      data-country=""
+      data-region=""    
+    >
+      city: 
+      country: 
+      region: 
+    </div>
+    <script>
+      document.addEventListener('DOMContentLoaded', function() {
+        document.querySelectorAll('a').forEach(element => {
+          var link = element.getAttribute('href')
+          if(link === '#') return false;
+
+          element.addEventListener('click', function(e) {
+            var params = {
+              'current': location.pathname,
+              'url': element.href,
+              'domain': element.origin,
+              'pathname': element.pathname,
+              'link_path': element.pathname,
+              'text': element.textContent.trim()
+            }
+            // console.log('params', params)
+            if(window.gtag) {
+              window.gtag('event', 'link_clicked', params);
+            }
+
+          })
+        });
+      })
+    </script>
+  <script async nonce="" type="text/javascript" id="mini-profiler" src="/sp-preview-2026/mini-profiler-resources/includes.js" data-css-url="/mini-profiler-resources/includes.css?v=35a79b300ab5afa978cb59af0b05e059" data-version="35a79b300ab5afa978cb59af0b05e059" data-path="/mini-profiler-resources/" data-current-id="ewkpyrgr0g1v43b4b1c" data-ids="ewkpyrgr0g1v43b4b1c,mlynq6lsn5ml6srqdxia,kfwdogktu3ixcu6t9dbk,xbz7wkd8wv821wfy8n19,q6hlgdd3ku9gy3bbhasw,6xxmg0egbh698srkqnpe,mmpihlzbf93mwwesbiki,u42ntd8u56onevcyym2v,jwgcx2vvtq5ax7gcqjf3,6akesb9fxy7np9tpsjri,yc8qw8wjxxxhl70fsinp,x39tygh3q3vhr4bk2egc,cq8qj0umd54ihyjoc1ex,sg44uodg6r8adutevibk" data-horizontal-position="left" data-vertical-position="top" data-trivial="false" data-children="false" data-max-traces="20" data-controls="false" data-total-sql-count="false" data-authorized="true" data-toggle-shortcut="alt+p" data-start-hidden="false" data-collapse-results="true" data-html-container="body" data-hidden-custom-fields="" data-turbo-permanent="false"></script>
+<div style="position:fixed;left:50%;bottom:12px;transform:translateX(-50%);z-index:9999;background:#d4a847;color:#1b1203;font:700 12px Inter,system-ui,sans-serif;padding:6px 12px;border-radius:99px;box-shadow:0 6px 20px rgba(0,0,0,.4);pointer-events:none">Preview of the SwanPass redesign — not the live site</div></body>
+</html>

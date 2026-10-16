@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+<meta name="robots" content="noindex, nofollow, noarchive">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+    <meta name="author" content="Swanpass">
+    <meta name="referrer" content="same-origin">
+<script>
+  (function() {
+    const externalRel = ['nofollow', 'noreferrer', 'noopener'];
+
+    function protectExternalLink(link) {
+      const href = link.getAttribute('href');
+      if (!href) return;
+
+      let url;
+      try {
+        url = new URL(href, window.location.href);
+      } catch (_error) {
+        return;
+      }
+
+      if (!['http:', 'https:'].includes(url.protocol)) return;
+
+      const hostname = url.hostname.toLowerCase();
+      const isSwanpass = hostname === 'swanpass.com' || hostname.endsWith('.swanpass.com');
+      if (url.origin === window.location.origin || isSwanpass) return;
+
+      const rel = new Set((link.getAttribute('rel') || '').split(/\s+/).filter(Boolean));
+      externalRel.forEach(value => rel.add(value));
+      link.setAttribute('rel', Array.from(rel).join(' '));
+      link.setAttribute('referrerpolicy', 'no-referrer');
+    }
+
+    function protectLinks(root) {
+      if (root.nodeType !== Node.ELEMENT_NODE && root.nodeType !== Node.DOCUMENT_NODE) return;
+      if (root.matches && root.matches('a[href]')) protectExternalLink(root);
+      root.querySelectorAll('a[href]').forEach(protectExternalLink);
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+      protectLinks(document);
+
+      new MutationObserver(function(mutations) {
+        mutations.forEach(function(mutation) {
+          if (mutation.type === 'attributes') protectExternalLink(mutation.target);
+          mutation.addedNodes.forEach(protectLinks);
+        });
+      }).observe(document.documentElement, {
+        attributes: true,
+        attributeFilter: ['href'],
+        childList: true,
+        subtree: true
+      });
+    });
+  })();
+</script>
+
+    <title>Swanpass — Terms of Use</title>
+<meta name="description" content="The terms for using SwanPass.">
+<link rel="canonical" href="https://alexanderjoo-max.github.io/sp-preview-2026/terms-of-use">
+<meta property="og:title" content="More Bang For Your Baht">
+<meta property="og:description" content="More Bang For Your Baht. Thailand&#39;s largest selection of the best massage, soapy, go-go bars, gentlemen&#39;s clubs &amp; independent companions in Bangkok, Pattaya, Phuket &amp; more. Real reviews, hottest girls, amazing service. More Bang For Your Baht – Explore SwanPass now!">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="SwanPass">
+<meta property="og:image" content="https://swanpass.com/swanpass_logo_rev.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="More Bang For Your Baht">
+<meta name="twitter:description" content="More Bang For Your Baht. Thailand&#39;s largest selection of the best massage, soapy, go-go bars, gentlemen&#39;s clubs &amp; independent companions in Bangkok, Pattaya, Phuket &amp; more. Real reviews, hottest girls, amazing service. More Bang For Your Baht – Explore SwanPass now!">
+<meta name="twitter:image" content="https://swanpass.com/swanpass_logo_rev.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <meta name="csrf-param" content="authenticity_token" />
+<meta name="csrf-token" content="hU3k0tJPvuMPon7uxMWAhJ14TT4j7M8ArlifywlyVzCxaJDb2o_YAjgkdKqSgf5QVRZwWo9uxQf_eNtFVaCN9w" />
+    
+    <link rel="stylesheet" href="/sp-preview-2026/assets/sp-2c2595b6668beff10c19ec032211772699a1ba694534e703ec164e0320de66ee.css" data-turbo-track="reload" />
+    <link rel="stylesheet" href="/sp-preview-2026/assets/sp/legal-eb0add86539057ecc8398a53c8804492e53cfd503ba6eb423a7abb8a5100fec3.css" />
+  </head>
+  <body class="bd-logged-out" >
+    
+    <header class="hdr"><div class="wrap">
+  <button class="icon-btn hamb" data-drawer aria-label="Open menu"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01"/></svg></button>
+  <a class="logo notranslate" href="/sp-preview-2026/" aria-label="SwanPass home"><img class="logo-img" alt="SwanPass" src="/sp-preview-2026/swanpass_logo_rev.png" /></a>
+  <button class="loc-pill find-pill" data-open="search" aria-label="Change city or search"><span class="flag">🇹🇭</span><span class="t">Bangkok</span><span class="sep"></span><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg></button>
+  <nav class="nav">
+      <a href="/sp-preview-2026/listing/" class=""><span class="em">🔎</span>Explore</a>
+      <a href="/sp-preview-2026/map/" class=""><span class="em">🗺️</span>Map</a>
+      <a href="/sp-preview-2026/deals/" class=""><span class="em">🏷️</span>Deals</a>
+      <a href="/sp-preview-2026/best-places/" class=""><span class="em">🏆</span>Best</a>
+    <details class="nav-more"><summary class="">More <svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></summary>
+      <div class="nav-menu">
+          <a href="/sp-preview-2026/talent/" class=""><span class="em">👩</span>Staff</a>
+          <a href="/sp-preview-2026/blogs/" class=""><span class="em">📝</span>Guides</a>
+      </div>
+    </details>
+  </nav>
+  <div class="hdr-actions">
+    <a class="btn btn-ghost btn-sm desktop-only" href="/sp-preview-2026/add-listing/">➕ List your business</a>
+      <a class="btn btn-red btn-sm" href="/sp-preview-2026/users/sign_in/">Log in</a>
+  </div>
+</div></header>
+<div class="drawer-ov" data-drawer-close></div>
+<aside class="drawer" aria-label="Menu">
+  <div class="row between" style="margin-bottom:10px"><a class="logo" href="/sp-preview-2026/"><img class="logo-img" alt="SwanPass" src="/sp-preview-2026/swanpass_logo_rev.png" /></a><button class="icon-btn" data-drawer-close aria-label="Close"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M18 6 6 18M6 6l12 12"/></svg></button></div>
+  <button class="loc-pill" data-open="loc" style="width:100%;max-width:none;margin-bottom:8px"><span class="flag">🇹🇭</span><span class="t">Bangkok</span><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></button>
+    <a class="dlink " href="/sp-preview-2026/listing/"><span class="em">🔎</span>Explore</a>
+    <a class="dlink " href="/sp-preview-2026/map/"><span class="em">🗺️</span>Map</a>
+    <a class="dlink " href="/sp-preview-2026/deals/"><span class="em">🏷️</span>Deals</a>
+    <a class="dlink " href="/sp-preview-2026/best-places/"><span class="em">🏆</span>Best</a>
+    <a class="dlink " href="/sp-preview-2026/talent/"><span class="em">👩</span>Staff</a>
+    <a class="dlink " href="/sp-preview-2026/blogs/"><span class="em">📝</span>Guides</a>
+  <div class="dlabel">Categories</div>
+    <a class="dlink" href="/sp-preview-2026/listing/"><span class="em">🧼</span>Soapy</a>
+    <a class="dlink" href="/sp-preview-2026/listing/"><span class="em">💋</span>Massage</a>
+    <a class="dlink" href="/sp-preview-2026/listing/"><span class="em">📍</span>Red Light Districts</a>
+    <a class="dlink" href="/sp-preview-2026/listing/"><span class="em">❤️</span>Freelancers</a>
+    <a class="dlink" href="/sp-preview-2026/listing/"><span class="em">👯</span>Go-Go &amp; Strip</a>
+    <a class="dlink" href="/sp-preview-2026/listing/"><span class="em">💃</span>Gentlemen’s Clubs</a>
+  <div class="dlabel">You</div>
+  <a class="dlink" href="/sp-preview-2026/account">👤 My account</a><a class="dlink" href="/sp-preview-2026/account/favorites">❤️ Saved</a>
+  <div class="dlabel">Business</div>
+  <a class="dlink" href="/sp-preview-2026/add-listing/">➕ List your business</a><a class="dlink" href="/sp-preview-2026/blogs/">📝 Blog</a><a class="dlink" href="/sp-preview-2026/feedback">💬 Feedback</a>
+</aside>
+
+    <main>
+      <div class="legal-wrap legal-v1">
+  <div class="site-container container dynamic-content">
+
+  <div>
+
+    <h1>Terms of use</h1>
+    <p>Swanpass is a service that allows members to create unique personal profiles and directory listings online in
+      order to find and communicate with old and new friends and clients. By using the Swanpass Website (the "Website")
+      you agree to be bound by these Terms of Use (this "Agreement"), whether or not you register as a member
+      ("Member"). If you wish to become a Member, communicate with other Members and make use of the Swanpass services
+      (the "Service"), please read this Agreement and indicate your acceptance by following the instructions in the
+      Registration process.</p>
+    <p>This Agreement sets out the legally binding terms for your use of the Website and your Membership in the Service.
+      Swanpass may modify this Agreement from time to time and such modification shall be effective upon posting by
+      Swanpass on the Website. You agree to be bound to any changes to this Agreement when you use the Service after any
+      such modification is posted. This Agreement includes Swanpass's policy for acceptable use and content posted on
+      the Website, your rights, obligations and restrictions regarding your use of the Website and the Service and
+      Swanpass's Privacy Policy. You may also receive a copy of this Agreement by <a
+        href="mailto:swanpass@proton.me">contacting us.</a></p>
+    <p>Please choose carefully the information you post on Swanpass and that you provide to other Members. Your Swanpass
+      profile may not include any photographs that contain anything illegal, violent, or of offensive subject matter.
+      Information provided by other Swanpass Members (for instance, in their Profile or Directory Listing) may contain
+      inaccurate, inappropriate or offensive material, products or services and Swanpass assumes no responsibility or
+      liability for this material.</p>
+    <p>Swanpass reserves the right, in its sole discretion, to reject, refuse to post or remove any posting (including
+      email) by you, or to restrict, suspend, or terminate your access to all or any part of the Website and/or Services
+      at any time, for any or no reason, with or without prior notice, and without liability.</p>
+    <p>By participating in any offline Swanpass event, you agree to release and hold Swanpass harmless from any and all
+      losses, damages, rights, claims, and actions of any kind including, without limitation, personal injuries, death,
+      and property damage, either directly or indirectly related to or arising from your participation in any such
+      offline Swanpass event.</p>
+    <p><strong>1.  Eligibility.</strong> Membership in the Service is void where prohibited. By using the Website and
+      the Service, you represent and warrant that all registration information you submit is truthful and accurate and
+      that you agree to maintain the accuracy of such information. You further represent and warrant that you are 18
+      years of age or older and that your use of the Swanpass shall not violate any applicable law or regulation. Your
+      profile may be deleted without warning, if it is found that you are misrepresenting your age. Your Membership is
+      solely for your personal use, and you shall not authorize others to use your account, including your profile or
+      email address. You are solely responsible for all Content published or displayed through your account, including
+      any email messages, and for your interactions with other members.</p>
+    <p><strong>2.  Term/Fees.</strong> This Agreement shall remain in full force and effect while you use the Website,
+      the Service, and/or are a Member. You may terminate your membership at any time, for any reason by following the
+      instructions on the member Account page. Swanpass may terminate your membership for any reason, effective upon
+      sending notice to you at the email address you provide in your Membership application or such other email address
+      as you may subsequently provide to Swanpass. If Swanpass terminates your Membership in the Service because you
+      have breached the Agreement, you shall not be entitled to the refund of any unused portion of subscription fees.
+      Even after membership is terminated, this Agreement will remain in effect, including sections 4, 5, 7 and 9-14.
+      Swanpass's Terms of Use and/or subscription fees that were provided to you at registration may change from time to
+      time. By using the Service and by becoming a Member, you acknowledge that Swanpass reserves the right to charge
+      for the Service and has the right to terminate a Member's Membership should Member breach this Agreement or fail
+      to pay for the Service, as required by this Agreement.</p>
+    <p><strong>3.  Non Commercial Use by Members. </strong>The Website is for the personal use of Members only and may
+      not be used in connection with any commercial endeavors except those that are specifically endorsed or approved by
+      the management of Swanpass, such as listing your business in our Directory Listings. Illegal and/or unauthorized
+      use of the Website, including collecting usernames and/or email addresses of Members by electronic or other means
+      for the purpose of sending unsolicited email or unauthorized framing of or linking to the Website will be
+      investigated. Commercial advertisements, affiliate links, and other forms of solicitation may be removed from
+      member profiles without notice and may result in termination of membership privileges. Appropriate legal action
+      will be taken by Swanpass for any illegal or unauthorized use of the Website.</p>
+    <p><strong>4.  Proprietary Rights in Content on Swanpass. Swanpass owns and retains all proprietary rights in the
+        Website and the Service. The Website contains copyrighted material, trademarks, and other proprietary
+        information of Swanpass and its licensors. Except for that information which is in the public domain or for
+        which you have been given written permission, you may not copy, modify, publish, transmit, distribute, perform,
+        display, or sell any such proprietary information.</p>
+    <p><strong>5.  Content Posted on the Site.</strong></p>
+    <p><strong>6.</strong>  You understand and agree that Swanpass may review and delete any content, messages, reviews,
+      listing questions and answers, photos, directory listings or profiles (collectively, "Content") that in the sole
+      judgment of Swanpass violate this Agreement or which may be offensive, illegal or violate the rights, harm, or
+      threaten the safety of any Member.</p>
+    <p><strong>7.</strong>  You are solely responsible for the Content that you publish or display (hereinafter, "post")
+      on the Service or any material or information that you transmit to other Members.</p>
+    <p><strong>8.</strong>  By posting any Content to the public areas of the Website, you hereby grant to Swanpass the
+      non-exclusive, fully paid, worldwide license to use, publicly perform and display such Content on the Website.
+      This license will terminate at the time you remove such Content from the Website. You represent and warrant that:
+      (i) you own the Content posted by you on the Website or otherwise have the right to grant the license set forth in
+      this section, and (ii) your Content does not violate the privacy rights, publicity rights, copyright rights, or
+      other intellectual property rights of any person. You agree to pay for all royalties and fees owing any person by
+      reason of any Content you post on the Website. <strong>Swanpass reserves the right to investigate and take
+        appropriate legal action in its sole discretion against anyone who violates this provision, including without
+        limitation, removing the offending communication from the Service, terminating the membership of such violators,
+        securing funds up to the equivalent of 100 000 EUR for possible subsequent claims.</strong></p>
+    <p><strong>9.</strong>  The following is a partial list of the kind of Content that is illegal or prohibited on the
+      Website. Prohibited Content includes Content that:</p>
+    <p><strong>10.</strong>  Displays full frontal nudity, genitalia or sexually explicit conduct;</p>
+    <p><strong>11.</strong>  is patently offensive and promotes racism, bigotry, hatred or physical harm of any kind
+      against any group or individual;</p>
+    <p><strong>12.</strong>  harasses or advocates harassment of another person;</p>
+    <p><strong>13.</strong>  involves the transmission of "junk mail", "chain letters," or unsolicited mass mailing or
+      "spamming";</p>
+    <p><strong>14.</strong>  promotes information that you know is false or misleading or promotes illegal activities or
+      conduct that is abusive, threatening, obscene, defamatory or libelous;</p>
+    <p><strong>15.</strong>  promotes an illegal or unauthorized copy of another person's copyrighted work, such as
+      providing pirated computer programs or links to them, providing information to circumvent manufacture-installed
+      copy-protect devices, or providing pirated music or links to pirated music files;</p>
+    <p><strong>16.</strong>  contains restricted or password only access pages or hidden pages or images (those not
+      linked to or from another accessible page);</p>
+    <p><strong>17.</strong>  provides material that displays people under the age of 18, or solicits personal
+      information from anyone under 18;</p>
+    <p><strong>18.</strong>  provides instructional information about illegal activities such as making or buying
+      illegal weapons, violating someone's privacy, or providing or creating computer viruses;</p>
+    <p><strong>19.</strong>  solicits passwords or personal identifying information for commercial or unlawful purposes
+      from other users;</p>
+    <p><strong>20.</strong>  involves commercial activities and/or sales without our prior written consent such as
+      contests, sweepstakes, barter, advertising, or pyramid schemes;</p>
+    <p><strong>21.</strong>  for directory listings, uses any unfair, misleading or deceptive content intended to draw
+      traffic to the profile.</p>
+    <p><strong>22.</strong>  You must use the Service in a manner consistent with any and all applicable laws and
+      regulations.</p>
+    <p><strong>23.</strong>  You may not include in your Member profile any telephone numbers, street addresses, last
+      names, URLs or email addresses.</p>
+    <p><strong>24.</strong>  You may not engage in advertising to, or solicitation of, any Member to buy or sell any
+      products or services through the Service. You may not transmit any chain letters or junk email to other Members.
+      Although Swanpass cannot monitor the conduct of its Members off the Website, it is also a violation of these rules
+      to use any information obtained from the Service in order to harass, abuse, or harm another person, or in order to
+      contact, advertise to, solicit, or sell to any Member without their prior explicit consent. <strong>Swanpass
+        reserves the right to investigate and take appropriate legal action in its sole discretion against anyone who
+        violates the above, including without limitation, removing the offending communication from the Service,
+        terminating the membership of such violators, securing funds up to the equivalent of $100 000 for possible
+        subsequent claims.</strong> Moreover to protect our Members, Swanpass reserves the right to restrict the number
+      of emails which a Member may send to other Members in any 24-hour period to a number which Swanpass deems
+      appropriate in its sole discretion.</p>
+    <p><strong>25.</strong>  You may not cover or obscure the banner advertisements on your personal profile page, or
+      any page via HTML/CSS or any other means.</p>
+    <p><strong>26.</strong>  Any automated use of the system, such as using scripts to add friends, is prohibited.</p>
+    <p><strong>27.</strong>  You may not engage third parties to post fake reviews, comments or discussion on the site,
+      or post untruthful content yourself</p>
+    <p><strong>28.</strong>  You may not attempt to impersonate another user or person who is not a member of Swanpass.
+    </p>
+    <p><strong>29.</strong>  You may not use the account, username, or password of another Member at any time nor may
+      you disclose your password to any third party or permit any third party to access your account.</p>
+    <p><strong>30.</strong>  You may not sell or otherwise transfer your profile or directory listing.</p>
+    <p><strong>31.</strong>  You understand and accept that the Swanpass makes no representation as the effectiveness or
+      otherwise of any Advertising</p>
+    <p><strong>32.</strong>  You agree that Swanpass has no responsibility to any Advertiser except for the delivery of
+      the Advertising and the maximum liability with each individual Advertiser in the case of non-delivery cannot
+      exceed the cost of the non-delivered Advertising.</p>
+    <p><strong>33.  Copyright Policy.</strong> You may not post, distribute, or reproduce in any way any copyrighted
+      material, trademarks, or other proprietary information without obtaining the prior written consent of the owner of
+      such proprietary rights. It is the policy of Swanpass to terminate membership privileges of any member who
+      repeatedly infringes copyright upon prompt notification to Swanpass by the copyright owner or the copyright
+      owner's legal agent. Without limiting the foregoing, if you believe that your work has been copied and posted on
+      the Service in a way that constitutes copyright infringement, please provide our Copyright Agent with the
+      following information: an electronic or physical signature of the person authorized to act on behalf of the owner
+      of the copyright interest; a description of the copyrighted work that you claim has been infringed; a description
+      of where the material that you claim is infringing is located on the Website; your address, telephone number, and
+      email address; a written statement by you that you have a good faith belief that the disputed use is not
+      authorized by the copyright owner, its agent, or the law; a statement by you, made under penalty of perjury, that
+      the above information in your notice is accurate and that you are the copyright owner or authorized to act on the
+      copyright owner's behalf. Swanpass's Copyright Agent for notice of claims of copyright infringement can be reached
+      using our contact form</p>
+    <p><strong>34.</strong>  Anti-cheating Policy. Using any unauthorized third party programs, including but not
+      limited to "mods", "hacks", "cheats", "scripts", "bots" and automation programs, that interact with Swanpass in
+      any way, for any purpose, including, without limitation, any unauthorized third party programs that intercept,
+      emulate, or redirect any communication between Swanpass, is not allowed. We will take appropriate disciplinary
+      measures including Account termination and deletion to protect the integrity and spirit of Swanpass if we observe
+      the prohibited activity. We may additionally charge the appropriate amount in EUR for the possible damages the
+      prohibited activity might have caused to our business.</p>
+    <p><strong>35.</strong>  Refund Policy. This section is to explain when you can request a refund with respect to
+      advertising Services acquired from Swanpass.</p>
+    <p><strong>36.</strong>  Unless this section specifically provides for a refund, all fees for all advertising
+      Services are non-refundable, in whole or in part, even if your advertisement is suspended, cancelled or
+      transferred prior to the end of the Service subscription.</p>
+    <p><strong>37.</strong>  New advertising Services may be refundable, at the sole discretion of Swanpass, if you
+      cancel the Service for a valid reason and the cancellation is processed within 3 days (72 hours) after Service
+      subscription has been started.</p>
+    <p><strong>38.</strong>  In no event is the same Service eligible for more than one refund.</p>
+    <p><strong>39.</strong>  Service(s) must be cancelled before we can issue a refund.</p>
+    <p><strong>40.</strong>  No refund will be made if your Service(s) are suspended or terminated for cause.</p>
+    <p><strong>41.</strong>  If you are eligible for a refund after the Service subscription started we may deduct the
+      fees for the time the Service subscription was active from the refund amount.</p>
+    <p><strong>42.</strong>  Once you have purchased credits, there is no facility for a refund. Once credits have been
+      applied to a specific listing, this operation cannot be reversed. Any deleted listings will automatically lose any
+      premium or featured time remaining on them.</p>
+    <p><strong>43.</strong>  All refunds are processed in EUR: you, the customer, bear sole responsibility for any
+      fluctuations in the exchange rate(s) between the time of payment and the time of refund.</p>
+    <p><strong>44.</strong>  Unless you request otherwise, refunds will be credited to your account balance. Purchases
+      made using Swanpass account funds can only be refunded as account credit. Purchases made by credit card may be
+      refundable to the source of payment. Swanpass is not responsible for any additional charges imposed by your credit
+      card company in the case of refund.</p>
+    <p><strong>45.</strong>  Any processing fee(s) will be deducted from a refund.</p>
+    <p><strong>46.</strong>  If you believe you are eligible for a refund, send us a message using our contact form.
+      Refund requests will not be reviewed unless you include the following information:</p>
+    <p><strong>47.</strong>  Reason of the refund (why you are asking for a refund);</p>
+    <p><strong>48.</strong>  Transaction identifying information (e.g. account username, order amount, order date); and
+    </p>
+    <p><strong>49.</strong>  Any additional information the Swanpass team asks for in order to process your refund
+      request.</p>
+    <p><strong>50.  Member Disputes.</strong> You are solely responsible for your interactions with other Swanpass
+      Members. Swanpass reserves the right, but has no obligation, to monitor disputes between you and other Members.
+    </p>
+    <p><strong>51.  Privacy. Use of the Website and/or the Service is also governed by our Privacy Policy and GDPR
+        policy.</p>
+    <p><strong>52.  Disclaimers.</strong> Swanpass is not responsible for any incorrect or inaccurate Content posted on
+      the Website or in connection with the Service provided, whether caused by users of the Website, Members or by any
+      of the equipment or programming associated with or utilized in the Service. Swanpass is not responsible for the
+      conduct, whether online or offline, of any user of the Website or Member of the Service. Swanpass assumes no
+      responsibility for any error, omission, interruption, deletion, defect, delay in operation or transmission,
+      communications line failure, theft or destruction or unauthorized access to, or alteration of, any user or Member
+      communication. Swanpass is not responsible for any problems or technical malfunction of any telephone network or
+      lines, computer online systems, servers or providers, computer equipment, software, failure of any email or
+      players due to technical problems or traffic congestion on the Internet or at any Website or combination thereof,
+      including any injury or damage to users and/or Members or to any person's computer related to or resulting from
+      participation or downloading materials in connection with the Website and/or in connection with the Service. Under
+      no circumstances shall Swanpass be responsible for any loss or damage, including personal injury or death,
+      resulting from use of the Website or the Service or from any Content posted on the Website or transmitted to
+      Members, or any interactions between users of the Website, whether online or offline. The Website and the Service
+      are provided "AS-IS" and Swanpass expressly disclaims any warranty of fitness for a particular purpose or
+      non-infringement. Swanpass cannot guarantee and does not promise any specific results from use of the Website
+      and/or the Service.</p>
+    <p><strong>53.  Limitation on Liability.</strong> IN NO EVENT SHALL Swanpass BE LIABLE TO YOU OR ANY THIRD PARTY FOR
+      ANY INDIRECT, CONSEQUENTIAL, EXEMPLARY, INCIDENTAL, SPECIAL OR PUNITIVE DAMAGES, INCLUDING LOST PROFIT DAMAGES
+      ARISING FROM YOUR USE OF THE WEBSITE OR THE SERVICE, EVEN IF Swanpass HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH
+      DAMAGES. NOTWITHSTANDING ANYTHING TO THE CONTRARY CONTAINED HEREIN, Swanpass's AGGREGATE LIABILITY TO YOU FOR ANY
+      CAUSE WHATSOEVER AND REGARDLESS OF THE FORM OF THE ACTION, WILL AT ALL TIMES BE LIMITED TO AMOUNT PAID, IF ANY, BY
+      YOU TO Swanpass FOR THE SERVICE DURING THE TERM OF MEMBERSHIP.</p>
+    <p><strong>54.  Indemnity.</strong> You agree to indemnify and hold Swanpass, its subsidiaries, affiliates,
+      officers, agents, and other partners and employees, harmless from any loss, liability, claim, or demand, including
+      reasonable attorneys' fees, made by any third party due to or arising out of your use of the Service in violation
+      of this Agreement and/or arising from a breach of this Agreement and/or any breach of your representations and
+      warranties set forth above.</p>
+    <p><strong>55.  Other.</strong> This Agreement is accepted upon your use of the Website and is further affirmed by
+      you becoming a Member of the Service. This Agreement constitutes the entire agreement between you and Swanpass
+      regarding the use of the Website and/or the Service. The failure of Swanpass to exercise or enforce any right or
+      provision of this Agreement shall not operate as a waiver of such right or provision. The section titles in this
+      Agreement are for convenience only and have no legal or contractual effect. Please <a
+        href="mailto:swanpass@proton.me">contact us</a> with any questions regarding this Agreement. I HAVE READ THIS
+      AGREEMENT AND AGREE TO ALL OF THE PROVISIONS CONTAINED ABOVE.</p>
+    <p><strong>56.  For buying via Credit or Debit Cards:</strong> we use trusted, authorized processing gateways and
+      payment service providers. In other words credit and debit card payments on our site are fully secured. We don't
+      store your data and we do not see your complete credit card number. On your card statement the following text will
+      appear: "Swanpass". Your bank cannot see the purpose of payment. Some banks, credit or debit card issuers may
+      charge you an international processing fee. This international service fee is controlled and charged by your bank,
+      or card issuer not by Swanpass or our payment processors.</p>
+    <p><strong>57.  Compliance with 18 U.S. Code 2257 regulation:</strong> The owners and operators of this website are
+      not the producer (as the term is defined in 18 USC Section 2257) of any of the visual content contained in this
+      website. Swanpass does not allow portrayal of sexually explicit conduct, full frontal nudity or genitalia. All
+      content is user submitted and is subject to Swanpass's Terms of Use, specifically section 5. Therefore content
+      which follows our Terms of Use is exempt from the provision of 18 USC 2257. In the case of user violating our
+      terms of service, posting sexually explicit material, the content will be removed immediately.</p>
+    <p><strong>58.  Service provider</strong>
+      <br />
+      Swanpass is owned and operated by:
+      <br />
+      Annex Avenue Holdings LLC
+      <br />
+      30 N Gould St Ste N
+      <br />
+      Sheridan, WY 82801
+      <br />
+      United States
+    </p>
+
+  </div>
+</div>
+</div>
+
+    </main>
+    <footer class="ftr"><div class="wrap">
+  <div class="ftr-grid">
+    <div><a class="logo" href="/sp-preview-2026/"><img class="logo-img" alt="SwanPass" src="/sp-preview-2026/swanpass_logo_rev.png" /></a><p class="muted" style="max-width:34ch;margin-top:12px">The after-dark guide to Asia. Real venues, real prices, exclusive SwanPass deals.</p>
+      <div class="row" style="margin-top:16px"><button class="btn btn-ghost btn-sm" data-pick="lang"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a14 14 0 0 1 0 18M12 3a14 14 0 0 0 0 18"/></svg> Language</button><button class="btn btn-ghost btn-sm" data-pick="cur">$ USD</button></div></div>
+    <div><h4>Cities</h4><ul>
+        <li><a href="/sp-preview-2026/cities/bangkok/">Bangkok</a></li>
+        <li><a href="/sp-preview-2026/cities/hochiminh/">Ho Chi Minh City</a></li>
+        <li><a href="/sp-preview-2026/cities/pattaya/">Pattaya</a></li>
+        <li><a href="/sp-preview-2026/cities/chiang-mai/">Chiang Mai</a></li>
+        <li><a href="/sp-preview-2026/cities/hanoi/">Hanoi</a></li>
+        <li><a href="/sp-preview-2026/cities/bali/">Bali</a></li>
+        <li><a href="/sp-preview-2026/cities/jakarta/">Jakarta</a></li>
+        <li><a href="/sp-preview-2026/cities/phnompenh/">Phnom Penh</a></li>
+    </ul></div>
+    <div><h4>Categories</h4><ul>
+        <li><a href="/sp-preview-2026/listing/">Soapy</a></li>
+        <li><a href="/sp-preview-2026/listing/">Massage</a></li>
+        <li><a href="/sp-preview-2026/listing/">Red Light Districts</a></li>
+        <li><a href="/sp-preview-2026/listing/">Freelancers</a></li>
+        <li><a href="/sp-preview-2026/listing/">Go-Go &amp; Strip</a></li>
+        <li><a href="/sp-preview-2026/listing/">Gentlemen’s Clubs</a></li>
+    </ul></div>
+    <div><h4>SwanPass</h4><ul><li><a href="/sp-preview-2026/deals/">Deals</a></li><li><a href="/sp-preview-2026/best-places/">Best of 2026</a></li><li><a href="/sp-preview-2026/blogs/">Guides &amp; articles</a></li><li><a href="/sp-preview-2026/about">About</a></li></ul></div>
+    <div><h4>Business</h4><ul><li><a href="/sp-preview-2026/add-listing/"><b>➕ List your business</b></a></li><li><a href="/sp-preview-2026/add-listing/">Claim your venue</a></li><li><a href="/sp-preview-2026/add-listing/">Plans &amp; pricing</a></li><li><a href="/sp-preview-2026/feedback">Report a listing</a></li></ul>
+      <h4 style="margin-top:18px">Contact</h4><ul><li><a href="mailto:hello@swanpass.com">✉️ hello@swanpass.com</a></li><li><a href="https://line.me/R/ti/p/@swanpass" target="_blank" rel="noopener">💬 LINE: @swanpass</a></li></ul></div>
+  </div>
+  <div class="legal"><span>© 2026 SwanPass. Adults 18+ only. Listings are provided by venues and verified where marked.</span><span><a href="/sp-preview-2026/privacy-policy/">Privacy</a> · <a href="/sp-preview-2026/terms-of-use/">Terms</a> · <a href="/sp-preview-2026/community-guidelines/">Community guidelines</a> · <a href="/sp-preview-2026/privacy-policy/#cookies">Cookies</a> · <a href="#" data-cookie-settings>Cookie settings</a></span></div>
+</div></footer>
+
+    <nav class="tabbar" aria-label="Main">
+    <a href="/sp-preview-2026/listing/" class=""><span class="em">🔎</span>Explore</a>
+    <a href="/sp-preview-2026/map/" class=""><span class="em">🗺️</span>Map</a>
+    <a href="/sp-preview-2026/deals/" class=""><span class="em">🏷️</span>Deals</a>
+    <a href="/sp-preview-2026/best-places/" class=""><span class="em">🏆</span>Best</a>
+  <a href="/sp-preview-2026/account" class=""><span class="em">👤</span>Account</a>
+</nav>
+
+    <div class="agegate" id="agegate" role="dialog" aria-modal="true" aria-labelledby="agegate-title"><div class="agegate-card">
+  <div class="logo"><img class="logo-img" alt="SwanPass" src="/sp-preview-2026/swanpass_logo_rev.png" /></div>
+  <h2 class="display" id="agegate-title">Adults <em>only</em></h2>
+  <p class="muted">SwanPass is a directory of adult nightlife venues in Southeast Asia. It includes photos and descriptions of adult entertainment.</p>
+  <div class="agegate-terms">
+    <b>By entering, you confirm that:</b>
+    <ul>
+      <li>You are at least 18 years old, and at least the age of majority where you live and where you are now.</li>
+      <li>Viewing adult content is legal where you are, and you are choosing to see it.</li>
+      <li>You will not let anyone under 18 see this site.</li>
+      <li>You agree to our <a href="/sp-preview-2026/terms-of-use/">Terms of Use</a> and <a href="/sp-preview-2026/privacy-policy/">Privacy Policy</a>.</li>
+    </ul>
+  </div>
+  <div class="agegate-btns"><a class="btn btn-ghost" href="https://www.google.com" rel="nofollow noreferrer noopener">Leave</a><button class="btn btn-red" id="age-yes">I'm 18 or older — enter</button></div>
+  <p class="agegate-fine">SwanPass lists venues and does not sell, arrange or take payment for any service. Venues are responsible for following local law. Explicit photos are blurred until you tap them. We remember your answer for 24 hours with one cookie.</p>
+</div></div>
+<script>if (/(?:^|; )ageOk=/.test(document.cookie)) document.getElementById('agegate').remove();</script>
+
+    <script>window.SP = {"countries":[{"code":"th","name":"Thailand","flag":"🇹🇭","count":592,"soon":false},{"code":"vn","name":"Vietnam","flag":"🇻🇳","count":160,"soon":false},{"code":"id","name":"Indonesia","flag":"🇮🇩","count":68,"soon":false},{"code":"kh","name":"Cambodia","flag":"🇰🇭","count":25,"soon":false},{"code":"sg","name":"Singapore","flag":"🇸🇬","count":20,"soon":false},{"code":"my","name":"Malaysia","flag":"🇲🇾","count":12,"soon":false},{"code":"ph","name":"Philippines","flag":"🇵🇭","count":0,"soon":true},{"code":"jp","name":"Japan","flag":"🇯🇵","count":0,"soon":true},{"code":"hk","name":"Hong Kong","flag":"🇭🇰","count":0,"soon":true},{"code":"mo","name":"Macau","flag":"🇲🇴","count":0,"soon":true}],"cities":[{"slug":"bangkok","name":"Bangkok","country":"th","count":353,"deals":36,"img":"https://images.swanpass.com/uploads/region/image/1/bangkok-bg.webp","lat":13.7539,"lng":100.5614},{"slug":"phuket","name":"Phuket","country":"th","count":23,"deals":0,"img":"https://images.swanpass.com/uploads/region/image/4/phuket-bg.webp","lat":8.1384,"lng":98.4266},{"slug":"chiang-mai","name":"Chiang Mai","country":"th","count":40,"deals":0,"img":"https://images.swanpass.com/uploads/region/image/2/chiang-mai-bg.webp","lat":18.7891,"lng":98.9955},{"slug":"pattaya","name":"Pattaya","country":"th","count":125,"deals":0,"img":"https://images.swanpass.com/uploads/region/image/3/pattaya-bg.webp","lat":12.9351,"lng":100.8845},{"slug":"hochiminh","name":"Ho Chi Minh City","country":"vn","count":125,"deals":0,"img":"https://images.swanpass.com/uploads/region/image/27/Ho_Chi_Minh_city__39514086172_.jpg","lat":10.788,"lng":106.6712},{"slug":"hanoi","name":"Hanoi","country":"vn","count":35,"deals":0,"img":"https://images.swanpass.com/uploads/region/image/28/Hanoi_Skyline_-_NKS.jpg","lat":21.0164,"lng":105.8215},{"slug":"bali","name":"Bali","country":"id","count":29,"deals":0,"img":"https://images.swanpass.com/uploads/region/image/31/Bali__Indonesia__50368691146_.jpg","lat":-8.6664,"lng":115.1914},{"slug":"jakarta","name":"Jakarta","country":"id","count":28,"deals":0,"img":"https://images.swanpass.com/uploads/region/image/32/Jakarta_Skyline_Part_2.jpg","lat":-6.1758,"lng":106.8481},{"slug":"kualalumpur","name":"Kuala Lumpur","country":"my","count":12,"deals":0,"img":"https://images.swanpass.com/uploads/region/image/33/images.jpeg","lat":3.1307,"lng":101.7078},{"slug":"surabaya","name":"Surabaya","country":"id","count":6,"deals":0,"img":"https://images.swanpass.com/uploads/region/image/34/9f33b74d-city-6498-166ef0568cc.jpg","lat":-7.285,"lng":112.7301},{"slug":"batam","name":"Batam","country":"id","count":5,"deals":0,"img":"https://images.swanpass.com/uploads/region/image/35/batam.jpg","lat":1.1457,"lng":104.0084},{"slug":"phnompenh","name":"Phnom Penh","country":"kh","count":25,"deals":0,"img":"https://images.swanpass.com/uploads/region/image/36/Phnom_Penh.jpeg","lat":11.57,"lng":104.9275},{"slug":"singapore","name":"Singapore","country":"sg","count":20,"deals":0,"img":"https://images.swanpass.com/uploads/region/image/37/singapore.jpg","lat":1.3051,"lng":103.8542},{"slug":"hua-hin","name":"Hua Hin","country":"th","count":8,"deals":0,"img":"https://images.swanpass.com/uploads/region/image/25/Hua_Hin_1.jpg","lat":12.5706,"lng":99.9576},{"slug":"kanchanaburi","name":"Kanchanaburi","country":"th","count":1,"deals":0,"img":"https://images.swanpass.com/uploads/region/image/21/Kanchanaburi-001.jpg","lat":14.0281,"lng":99.5524},{"slug":"khonkaen","name":"Khon Kaen","country":"th","count":10,"deals":0,"img":"https://images.swanpass.com/uploads/region/image/14/Khon_Kaen_City_from_Above.jpg","lat":16.4315,"lng":102.8289},{"slug":"samui","name":"Ko Samui","country":"th","count":8,"deals":0,"img":"https://images.swanpass.com/uploads/region/image/5/samui.jpeg","lat":9.5213,"lng":100.0555},{"slug":"krabi","name":"Krabi","country":"th","count":3,"deals":0,"img":"https://images.swanpass.com/uploads/region/image/24/Ao_Nang__Mueang_Krabi_District__Krabi__Thailand_-_panoramio__10_.jpg","lat":8.0681,"lng":98.8802},{"slug":"korat","name":"Nakhon Ratchasima (Korat)","country":"th","count":7,"deals":0,"img":"https://images.swanpass.com/uploads/region/image/15/Square_-_panoramio__8_.jpg","lat":14.9671,"lng":102.0861},{"slug":"phitsanulok","name":"Phitsanulok","country":"th","count":4,"deals":0,"img":"https://images.swanpass.com/uploads/region/image/16/Wat_Phra_Si_Rattana_Mahathat_-_Phitsanulok.jpg","lat":16.5411,"lng":100.2202},{"slug":"ratchaburi","name":"Ratchaburi","country":"th","count":1,"deals":0,"img":"https://images.swanpass.com/uploads/region/image/22/Ratchaburi-limestone84.jpg","lat":13.5498,"lng":99.8137},{"slug":"sriracha","name":"Sri Racha","country":"th","count":1,"deals":0,"img":"https://images.swanpass.com/uploads/region/image/23/SiRache-CentralSiRacha.jpg","lat":13.2055,"lng":100.9416},{"slug":"ubon-ratchathani","name":"Ubon Ratchathani","country":"th","count":3,"deals":0,"img":"https://images.swanpass.com/uploads/region/image/18/Ubon_Ratchathani_train_station_01.jpg","lat":15.2329,"lng":104.8578},{"slug":"udon-thani","name":"Udon Thani","country":"th","count":5,"deals":0,"img":"https://images.swanpass.com/uploads/region/image/6/Samlors_in_Udon_Thani.jpg","lat":17.4023,"lng":102.7891}],"contact":{"line":"@swanpass","lineUrl":"https://line.me/R/ti/p/@swanpass","email":"hello@swanpass.com"},"tick":"\u003csvg class=\"verified-tick\" viewBox=\"0 0 24 24\" aria-label=\"Verified\"\u003e\u003cpath fill=\"currentColor\" d=\"M12 1.5 14.6 4l3.6-.4.9 3.5 3.2 1.8-1.4 3.3 1.4 3.3-3.2 1.8-.9 3.5-3.6-.4L12 22.5 9.4 20l-3.6.4-.9-3.5-3.2-1.8L3.1 12 1.7 8.7l3.2-1.8.9-3.5 3.6.4L12 1.5Z\"/\u003e\u003cpath d=\"m8 12 3 3 5-6\" stroke=\"#0b090e\" stroke-width=\"2.2\" fill=\"none\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/\u003e\u003c/svg\u003e","icons":{"search":"\u003ccircle cx=\"11\" cy=\"11\" r=\"7\"/\u003e\u003cpath d=\"m20 20-3.5-3.5\"/\u003e","pin":"\u003cpath d=\"M12 21s-7-6.2-7-11.5A7 7 0 0 1 19 9.5C19 14.8 12 21 12 21Z\"/\u003e\u003ccircle cx=\"12\" cy=\"9.5\" r=\"2.5\"/\u003e","chevron":"\u003cpath d=\"m6 9 6 6 6-6\"/\u003e","right":"\u003cpath d=\"m9 6 6 6-6 6\"/\u003e","left":"\u003cpath d=\"m15 6-6 6 6 6\"/\u003e","close":"\u003cpath d=\"M18 6 6 18M6 6l12 12\"/\u003e","heart":"\u003cpath d=\"M12 20s-7.5-4.6-9.3-9.2C1.4 7.4 3.6 4 7 4c2 0 3.4 1.1 5 3 1.6-1.9 3-3 5-3 3.4 0 5.6 3.4 4.3 6.8C19.5 15.4 12 20 12 20Z\"/\u003e","tag":"\u003cpath d=\"M20.6 13.4 13.4 20.6a2 2 0 0 1-2.8 0L3 13V3h10l7.6 7.6a2 2 0 0 1 0 2.8Z\"/\u003e\u003ccircle cx=\"7.5\" cy=\"7.5\" r=\"1.5\"/\u003e","map":"\u003cpath d=\"m9 4-6 2.5v13.5l6-2.5 6 2.5 6-2.5V4l-6 2.5L9 4Z\"/\u003e\u003cpath d=\"M9 4v13.5M15 6.5V20\"/\u003e","compass":"\u003ccircle cx=\"12\" cy=\"12\" r=\"9\"/\u003e\u003cpath d=\"m15.5 8.5-2 5-5 2 2-5 5-2Z\"/\u003e","trophy":"\u003cpath d=\"M8 21h8M12 17v4M7 4h10v5a5 5 0 0 1-10 0V4Z\"/\u003e\u003cpath d=\"M17 5h3v2a3 3 0 0 1-3 3M7 5H4v2a3 3 0 0 0 3 3\"/\u003e","user":"\u003ccircle cx=\"12\" cy=\"8\" r=\"4\"/\u003e\u003cpath d=\"M4 21a8 8 0 0 1 16 0\"/\u003e","users":"\u003ccircle cx=\"9\" cy=\"8\" r=\"3.5\"/\u003e\u003cpath d=\"M2.5 20a6.5 6.5 0 0 1 13 0\"/\u003e\u003cpath d=\"M16 4.5a3.5 3.5 0 0 1 0 7M18 14a6.5 6.5 0 0 1 3.5 6\"/\u003e","bolt":"\u003cpath d=\"M13 2 4 14h7l-1 8 9-12h-7l1-8Z\"/\u003e","flame":"\u003cpath d=\"M12 22a7 7 0 0 0 7-7c0-4-3-6-4-10-2 2-3 4-3 6-1-1-2-2-2-4-2 2-5 5-5 8a7 7 0 0 0 7 7Z\"/\u003e","sparkle":"\u003cpath d=\"M12 3v4M12 17v4M3 12h4M17 12h4M6 6l2.5 2.5M15.5 15.5 18 18M6 18l2.5-2.5M15.5 8.5 18 6\"/\u003e","locate":"\u003ccircle cx=\"12\" cy=\"12\" r=\"4\"/\u003e\u003cpath d=\"M12 2v3M12 19v3M2 12h3M19 12h3\"/\u003e","filter":"\u003cpath d=\"M4 6h16M7 12h10M10 18h4\"/\u003e","phone":"\u003cpath d=\"M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2Z\"/\u003e","chat":"\u003cpath d=\"M21 12a8 8 0 0 1-11.6 7.1L4 20l1-4.6A8 8 0 1 1 21 12Z\"/\u003e","route":"\u003ccircle cx=\"6\" cy=\"19\" r=\"2.5\"/\u003e\u003ccircle cx=\"18\" cy=\"5\" r=\"2.5\"/\u003e\u003cpath d=\"M8.5 19H16a3.5 3.5 0 0 0 0-7H8a3.5 3.5 0 0 1 0-7h7.5\"/\u003e","share":"\u003cpath d=\"M12 3v13M7 8l5-5 5 5\"/\u003e\u003cpath d=\"M5 13v6a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-6\"/\u003e","clock":"\u003ccircle cx=\"12\" cy=\"12\" r=\"9\"/\u003e\u003cpath d=\"M12 7v5l3 2\"/\u003e","check":"\u003cpath d=\"m5 12 5 5L20 7\"/\u003e","globe":"\u003ccircle cx=\"12\" cy=\"12\" r=\"9\"/\u003e\u003cpath d=\"M3 12h18M12 3a14 14 0 0 1 0 18M12 3a14 14 0 0 0 0 18\"/\u003e","eye":"\u003cpath d=\"M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12Z\"/\u003e\u003ccircle cx=\"12\" cy=\"12\" r=\"3\"/\u003e","eyeoff":"\u003cpath d=\"M3 3l18 18M10.6 5.1A10 10 0 0 1 12 5c6.5 0 10 7 10 7a17 17 0 0 1-3 3.9M6.6 6.6C3.8 8.4 2 12 2 12s3.5 7 10 7c1.7 0 3.2-.5 4.5-1.1\"/\u003e\u003cpath d=\"M9.9 9.9a3 3 0 0 0 4.2 4.2\"/\u003e","grid":"\u003crect x=\"3\" y=\"3\" width=\"7\" height=\"7\" rx=\"1.5\"/\u003e\u003crect x=\"14\" y=\"3\" width=\"7\" height=\"7\" rx=\"1.5\"/\u003e\u003crect x=\"3\" y=\"14\" width=\"7\" height=\"7\" rx=\"1.5\"/\u003e\u003crect x=\"14\" y=\"14\" width=\"7\" height=\"7\" rx=\"1.5\"/\u003e","list":"\u003cpath d=\"M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01\"/\u003e","star":"\u003cpath d=\"m12 2.8 2.8 5.8 6.4.9-4.6 4.5 1.1 6.3L12 17.3l-5.7 3 1.1-6.3L2.8 9.5l6.4-.9L12 2.8Z\"/\u003e","plus":"\u003cpath d=\"M12 5v14M5 12h14\"/\u003e","edit":"\u003cpath d=\"M4 20h4L19 9l-4-4L4 16v4Z\"/\u003e\u003cpath d=\"m13.5 6.5 4 4\"/\u003e","trash":"\u003cpath d=\"M4 7h16M10 11v6M14 11v6M6 7l1 13h10l1-13M9 7V4h6v3\"/\u003e","drag":"\u003ccircle cx=\"9\" cy=\"6\" r=\"1\"/\u003e\u003ccircle cx=\"15\" cy=\"6\" r=\"1\"/\u003e\u003ccircle cx=\"9\" cy=\"12\" r=\"1\"/\u003e\u003ccircle cx=\"15\" cy=\"12\" r=\"1\"/\u003e\u003ccircle cx=\"9\" cy=\"18\" r=\"1\"/\u003e\u003ccircle cx=\"15\" cy=\"18\" r=\"1\"/\u003e","image":"\u003crect x=\"3\" y=\"4\" width=\"18\" height=\"16\" rx=\"2\"/\u003e\u003ccircle cx=\"9\" cy=\"10\" r=\"2\"/\u003e\u003cpath d=\"m21 16-5-5-9 9\"/\u003e","home":"\u003cpath d=\"M3 11 12 4l9 7v9a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1v-9Z\"/\u003e","chart":"\u003cpath d=\"M4 20V10M10 20V4M16 20v-7M22 20H2\"/\u003e","inbox":"\u003cpath d=\"M3 13h5l1.5 3h5L16 13h5\"/\u003e\u003cpath d=\"M5 5h14l2 8v6a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1v-6l2-8Z\"/\u003e","settings":"\u003ccircle cx=\"12\" cy=\"12\" r=\"3\"/\u003e\u003cpath d=\"M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1Z\"/\u003e","ticket":"\u003cpath d=\"M3 9V6a1 1 0 0 1 1-1h16a1 1 0 0 1 1 1v3a3 3 0 0 0 0 6v3a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1v-3a3 3 0 0 0 0-6Z\"/\u003e\u003cpath d=\"M14 5v14\" stroke-dasharray=\"2 2\"/\u003e","bell":"\u003cpath d=\"M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9\"/\u003e\u003cpath d=\"M10 21a2 2 0 0 0 4 0\"/\u003e","shield":"\u003cpath d=\"M12 3 4 6v6c0 5 3.5 8 8 9 4.5-1 8-4 8-9V6l-8-3Z\"/\u003e\u003cpath d=\"m9 12 2 2 4-4\"/\u003e","upload":"\u003cpath d=\"M12 16V4M7 9l5-5 5 5\"/\u003e\u003cpath d=\"M4 16v3a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-3\"/\u003e","copy":"\u003crect x=\"8\" y=\"8\" width=\"13\" height=\"13\" rx=\"2\"/\u003e\u003cpath d=\"M16 8V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h3\"/\u003e","wand":"\u003cpath d=\"m15 4 5 5L9 20l-5-5L15 4Z\"/\u003e\u003cpath d=\"M19 2v3M17.5 3.5h3M5 3v2M4 4h2\"/\u003e"},"signedIn":false,"currencies":{"USD":["$",33.7],"GBP":["£",44.5],"EUR":["€",37.7],"AUD":["A$",22.1],"CAD":["C$",24.6],"NONE":["฿",0]},"homeCity":"bangkok"};</script>
+    <script src="/sp-preview-2026/assets/sp_ui-99a66112459074f54b8717689d62ebd050cc023b3ed528dfcddd1b60e00ff88b.js" defer="defer"></script>
+    
+  <script async nonce="" type="text/javascript" id="mini-profiler" src="/sp-preview-2026/mini-profiler-resources/includes.js" data-css-url="/mini-profiler-resources/includes.css?v=35a79b300ab5afa978cb59af0b05e059" data-version="35a79b300ab5afa978cb59af0b05e059" data-path="/mini-profiler-resources/" data-current-id="cq8qj0umd54ihyjoc1ex" data-ids="cq8qj0umd54ihyjoc1ex,mlynq6lsn5ml6srqdxia,kfwdogktu3ixcu6t9dbk,xbz7wkd8wv821wfy8n19,q6hlgdd3ku9gy3bbhasw,6xxmg0egbh698srkqnpe,mmpihlzbf93mwwesbiki,u42ntd8u56onevcyym2v,jwgcx2vvtq5ax7gcqjf3,6akesb9fxy7np9tpsjri,yc8qw8wjxxxhl70fsinp,x39tygh3q3vhr4bk2egc" data-horizontal-position="left" data-vertical-position="top" data-trivial="false" data-children="false" data-max-traces="20" data-controls="false" data-total-sql-count="false" data-authorized="true" data-toggle-shortcut="alt+p" data-start-hidden="false" data-collapse-results="true" data-html-container="body" data-hidden-custom-fields="" data-turbo-permanent="false"></script>
+<div style="position:fixed;left:50%;bottom:12px;transform:translateX(-50%);z-index:9999;background:#d4a847;color:#1b1203;font:700 12px Inter,system-ui,sans-serif;padding:6px 12px;border-radius:99px;box-shadow:0 6px 20px rgba(0,0,0,.4);pointer-events:none">Preview of the SwanPass redesign — not the live site</div></body>
+</html>
