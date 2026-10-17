@@ -7,9 +7,10 @@
   if (!U || !D || !window.L) return;
   var $ = U.$, $$ = U.$$, esc = U.esc, icon = U.icon, TICK = (window.SP || {}).tick || '';
   var STAR = '<svg class="star" viewBox="0 0 24 24" aria-hidden="true"><path d="m12 2.8 2.8 5.8 6.4.9-4.6 4.5 1.1 6.3L12 17.3l-5.7 3 1.1-6.3L2.8 9.5l6.4-.9L12 2.8Z"/></svg>';
-  var map = L.map('map', { zoomControl: false }).setView([13.735, 100.565], 13);
+  var map = L.map('map', { zoomControl: false, maxZoom: 16 }).setView([13.735, 100.565], 13);
   L.control.zoom({ position: 'bottomright' }).addTo(map);
-  L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', { attribution: '© OpenStreetMap © CARTO', subdomains: 'abcd', maxZoom: 20 }).addTo(map);
+  L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Dark_Gray_Base/MapServer/tile/{z}/{y}/{x}', { attribution: 'Map © Esri', maxZoom: 16 }).addTo(map);
+    L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Dark_Gray_Reference/MapServer/tile/{z}/{y}/{x}', { maxZoom: 16 }).addTo(map);
   var cluster = L.markerClusterGroup({ showCoverageOnHover: false, maxClusterRadius: 46 });
   var top = L.layerGroup();
   map.addLayer(cluster); map.addLayer(top);

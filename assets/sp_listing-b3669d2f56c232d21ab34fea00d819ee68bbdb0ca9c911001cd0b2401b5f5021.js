@@ -284,8 +284,9 @@
   function initMap() {
     var el = $('#pdp-map'); if (!el || !window.L) return;
     var lat = +el.dataset.lat, lng = +el.dataset.lng;
-    var map = L.map(el, { scrollWheelZoom: false, zoomControl: false }).setView([lat, lng], 16);
-    L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', { attribution: '© OpenStreetMap © CARTO', subdomains: 'abcd', maxZoom: 20 }).addTo(map);
+    var map = L.map(el, { scrollWheelZoom: false, zoomControl: false, maxZoom: 16 }).setView([lat, lng], 16);
+    L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Dark_Gray_Base/MapServer/tile/{z}/{y}/{x}', { attribution: 'Map © Esri', maxZoom: 16 }).addTo(map);
+    L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Dark_Gray_Reference/MapServer/tile/{z}/{y}/{x}', { maxZoom: 16 }).addTo(map);
     L.marker([lat, lng], { icon: L.divIcon({ className: '', html: '<div style="width:46px;height:46px;border-radius:50%;border:3px solid var(--red);overflow:hidden;box-shadow:0 0 0 6px rgba(255,59,82,.25);background:var(--surface-2)">' + (el.dataset.img ? '<img src="' + esc(el.dataset.img) + '" style="width:100%;height:100%;object-fit:cover">' : '') + '</div>', iconSize: [46, 46], iconAnchor: [23, 23] }) }).addTo(map);
   }
   if (window.L) initMap(); else window.addEventListener('load', initMap);
