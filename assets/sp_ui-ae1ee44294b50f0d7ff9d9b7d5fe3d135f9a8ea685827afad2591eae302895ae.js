@@ -41,7 +41,9 @@
 
   /* After picking a place: list pages stay put and reload for the new place; everywhere else goes to the place page. */
   function goPlace(loc) {
-    if (document.body.dataset.spStay === '1') {
+    var stay = document.body.dataset.spStay;
+    if (stay === 'reload') { location.reload(); return; } /* page filters itself from the cookie (Guides) */
+    if (stay === '1') {
       /* list-type pages stay put and show the chosen place; the place is in the address so links can be shared */
       if (window.spStayUrl) { location.href = window.spStayUrl(loc); return; }
       var q = loc.city ? '?city=' + encodeURIComponent(loc.city) : loc.country ? '?city=&country=' + encodeURIComponent(loc.country) : '?city=';
