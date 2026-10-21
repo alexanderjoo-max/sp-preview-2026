@@ -1049,3 +1049,6 @@ font { background: none !important; box-shadow: none !important; }
 .sort-pick select:focus-visible { outline: 2px solid var(--red); outline-offset: 2px; }
 .sort-pick .ico { position: absolute; right: 11px; width: 12px; height: 12px; pointer-events: none; color: var(--text-2); }
 .sort-pick option { background: var(--surface); color: var(--text); }
+
+/* Explore's title is the page title: same size as other page titles */
+.results-head h1.page-title { font-size: var(--fs-hero); }

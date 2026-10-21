@@ -217,9 +217,12 @@
   }
 
   /* ---------- footer pickers: language (page translator) + currency ---------- */
-  var LANGS = [['en', '🇬🇧', 'English'], ['de', '🇩🇪', 'Deutsch'], ['fr', '🇫🇷', 'Français'], ['es', '🇪🇸', 'Español'], ['ru', '🇷🇺', 'Русский'], ['zh-CN', '🇨🇳', '中文'], ['ja', '🇯🇵', '日本語'], ['ko', '🇰🇷', '한국어'], ['th', '🇹🇭', 'ไทย'], ['vi', '🇻🇳', 'Tiếng Việt']];
+  var LANGS = [['en', '🇬🇧', 'English'], ['de', '🇩🇪', 'Deutsch'], ['fr', '🇫🇷', 'Français'], ['es', '🇪🇸', 'Español'], ['ru', '🇷🇺', 'Русский'], ['zh-CN', '🇨🇳', '简体中文'], ['zh-TW', '🇹🇼', '繁體中文'], ['ja', '🇯🇵', '日本語'], ['ko', '🇰🇷', '한국어'], ['th', '🇹🇭', 'ไทย'], ['vi', '🇻🇳', 'Tiếng Việt']];
   var CUR = SP.currencies || {};
   function getLang() { var m = (getCookie('googtrans') || '').match(/^\/en\/(.+)$/); return m ? m[1] : 'en'; }
+  /* menu drawer's language button shows the picked language (also on the static preview, which has no server) */
+  (function () { var cur = LANGS.filter(function (l) { return l[0] === getLang(); })[0]; if (!cur) return;
+    document.querySelectorAll('.dprefs [data-pick="lang"]').forEach(function (b) { b.innerHTML = '<span class="em">' + cur[1] + '</span><span><small>Language</small>' + cur[2] + '</span>'; }); })();
   function setLang(code) {
     var expire = code === 'en' ? 'expires=Thu, 01 Jan 1970 00:00:00 GMT;' : '';
     document.cookie = 'googtrans=/en/' + code + ';path=/;' + expire;
