@@ -1,0 +1,36 @@
+.ab-hero { padding: 44px 0 30px; border-bottom: 1px solid var(--line); background: radial-gradient(700px 300px at 10% 0%, rgba(232, 20, 42, .18), transparent), radial-gradient(600px 260px at 95% 0%, rgba(212, 168, 71, .12), transparent); }
+.ab-hero h1 { font-size: clamp(32px, 5vw, 56px); margin-top: 10px; max-width: 22ch; }
+.ab-hero .lede { max-width: 60ch; margin-top: 12px; }
+.ab-stats { display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; margin-top: 26px; }
+.ab-stats div { padding: 14px 16px; border-radius: 12px; background: var(--surface); border: 1px solid var(--line); }
+.ab-stats b { display: block; font-size: 26px; font-weight: 900; line-height: 1.1; }
+.ab-stats span { font-size: 11px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); }
+.ab-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+.ab-grid > div { padding: 18px; border-radius: 14px; background: var(--surface); border: 1px solid var(--line); }
+.ab-grid .em { font-size: 24px; display: block; margin-bottom: 8px; }
+.ab-grid h3 { margin-bottom: 6px; }
+.ab-grid p { margin: 0; color: var(--text-2); font-size: 14.5px; line-height: 1.5; }
+.ab-quotes { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+.ab-quotes figure { margin: 0; padding: 20px; border-radius: 14px; background: var(--surface); border: 1px solid var(--line); display: flex; flex-direction: column; justify-content: space-between; gap: 14px; }
+.ab-quotes blockquote { margin: 0; font-size: 16px; line-height: 1.5; }
+.ab-quotes figcaption { font-size: 13px; font-weight: 700; color: var(--muted); }
+.ab-honest { padding: 20px; border-radius: 14px; border: 1px solid var(--line); background: var(--bg-2); display: grid; gap: 10px; }
+.ab-honest p { margin: 0; color: var(--text-2); line-height: 1.55; }
+.ab-honest a { color: var(--text); text-decoration: underline; text-underline-offset: 3px; }
+.ab-honest a:hover { color: var(--red); }
+.ab-cta { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.ab-cta > div { padding: 22px; border-radius: 14px; border: 1px solid var(--line); background: var(--surface); }
+.ab-cta p { color: var(--text-2); margin: 6px 0 14px; }
+.ab-cta .row { gap: 8px; flex-wrap: wrap; }
+@media (max-width: 900px) { .ab-stats { gap: 8px; } .ab-stats div { padding: 12px 14px; } .ab-stats b { font-size: 22px; } .ab-grid { grid-template-columns: 1fr 1fr; } .ab-quotes figure { padding: 16px; } .ab-quotes blockquote { font-size: 15px; } }
+@media (max-width: 600px) {
+  .ab-hero { padding: 30px 0 24px; }
+  .ab-stats { grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 20px; }
+  .ab-stats div:last-child { grid-column: 1 / -1; }
+  .ab-grid, .ab-quotes, .ab-cta { grid-template-columns: 1fr; gap: 8px; }
+  .ab-grid > div { display: grid; grid-template-columns: 30px 1fr; column-gap: 12px; padding: 14px 16px; }
+  .ab-grid .em { grid-row: 1 / 3; margin: 0; font-size: 22px; }
+  .ab-grid h3 { margin-bottom: 2px; font-size: 16px; }
+  .ab-quotes figure { padding: 16px; }
+  .ab-quotes blockquote { font-size: 15px; }
+}
