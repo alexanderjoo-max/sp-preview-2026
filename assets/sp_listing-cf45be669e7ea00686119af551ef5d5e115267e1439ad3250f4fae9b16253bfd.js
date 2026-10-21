@@ -91,6 +91,17 @@
     if (window.dataLayer) window.dataLayer.push({ event: 'venue_contact', channel: ch, venue: P.slug });
     track(ch);
   });
+  /* QR codes (shops that send a QR for LINE / WhatsApp / WeChat…): show it big, with a save button for phones */
+  document.addEventListener('click', function (e) {
+    var b = e.target.closest('[data-qr]'); if (!b) return;
+    e.preventDefault();
+    var src = b.dataset.qr, label = b.dataset.qrLabel || 'QR';
+    U.openModal('qr-modal', '<div class="modal-head"><h3 style="flex:1">' + U.esc(label) + ' QR code</h3><button class="icon-btn" data-close aria-label="Close">' + U.icon('close') + '</button></div>' +
+      '<div class="modal-body qr-modal"><img src="' + U.esc(src) + '" alt="' + U.esc(label) + ' QR code">' +
+      '<p class="muted">Scan it with your phone camera or the ' + U.esc(label) + ' app. On a phone: save the image, then open it from ' + U.esc(label) + '’s QR scanner.</p>' +
+      '<a class="btn btn-ghost btn-block" href="' + U.esc(src) + '" download target="_blank" rel="noopener">Save image</a></div>');
+    track(label.toLowerCase().replace(/[^a-z]/g, '').replace('kakaotalk', 'kakao')); /* counts as a contact tap for that app */
+  });
   /* owner dashboard counts (no personal data) */
   function track(kind) {
     var url = '/sp-preview-2026/listing/' + P.slug + '/event?kind=' + encodeURIComponent(kind);

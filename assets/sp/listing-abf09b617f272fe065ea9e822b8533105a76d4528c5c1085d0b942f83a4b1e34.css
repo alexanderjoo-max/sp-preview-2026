@@ -128,3 +128,12 @@
 .btn-line-app .brand-ico, .btn-wa .brand-ico, .btn-tg .brand-ico { color: currentColor; }
 .btn-tg { background: #26a5e4; color: #fff; }
 .btn-tg:hover { background: #1f93cc; }
+/* contact: QR code button next to a chat app, QR popup, photos inside the About text */
+.ct-row { display: flex; gap: 6px; }
+.ct-row > .btn-block { flex: 1; min-width: 0; }
+.ct-row .ct-qr { flex: none; gap: 5px; padding: 0 12px; }
+.ct-qr .ico, [data-qr] .ico { width: 15px; height: 15px; }
+.qr-modal { display: grid; gap: 12px; justify-items: center; text-align: center; }
+.qr-modal img { width: min(100%, 300px); aspect-ratio: 1; object-fit: contain; border-radius: 12px; background: #fff; padding: 8px; }
+.qr-modal p { margin: 0; font-size: 13px; }
+.about-text img { display: block; max-width: min(100%, 360px); height: auto; border-radius: 12px; margin: 10px 0; }
