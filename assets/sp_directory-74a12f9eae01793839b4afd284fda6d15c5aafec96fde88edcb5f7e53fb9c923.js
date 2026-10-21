@@ -38,7 +38,7 @@
       [['#d-cats'], ['#d-filters'], ['.dir > section']].forEach(function (sel) {
         var a = $(sel[0]), b = doc.querySelector(sel[0]); if (a && b) a.innerHTML = b.innerHTML;
       });
-      var fc = doc.querySelector('#d-fcount'); if (fc) $('#d-fcount').textContent = fc.textContent;
+      var fc = doc.querySelector('#d-fcount'), mine = $('#d-fcount'); if (fc && mine) mine.textContent = fc.textContent;
       aside.querySelectorAll('.fgroup').forEach(function (d, i) { if (closed[i]) d.open = false; });
       aside.classList.toggle('f-all', showAll); aside.scrollTop = top;
       if (staged()) aside.querySelectorAll('input, select, button[name]').forEach(function (i) { i.setAttribute('form', form.id); });

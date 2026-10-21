@@ -643,7 +643,6 @@ body.drawer-open .drawer-ov { opacity: 1; pointer-events: auto; }
 .nav .em { font-size: 13px; }
 
 /* Explore: categories live in the sidebar on desktop; pill row only on mobile */
-@media (min-width: 1101px) { .cat-subbar { display: none; } }
 
 /* prices in the visitor's currency */
 .approx, .card-price .ap { color: var(--muted); font-weight: 500; font-size: .85em; }
@@ -748,12 +747,6 @@ body.drawer-open .drawer-ov { opacity: 1; pointer-events: auto; }
 @media (max-width: 720px) { .gal-grid { grid-template-columns: repeat(3, 1fr); gap: 3px; padding: 4px 4px calc(10px + var(--sab)); } .gal-th { border-radius: 4px; } .gal-nav { display: none; } .gal-slide { padding: 0; } .gal-slide img { border-radius: 0; } .gal-head { padding: 8px 10px; } }
 
 /* Category chips vs Filters button: chips scroll and fade out at the edge; a divider + solid button keep Filters clearly separate */
-.cat-subbar .wrap { gap: 0; }
-.cat-subbar #d-cats { flex-wrap: nowrap; overflow-x: auto; scrollbar-width: none; padding-right: 24px; -webkit-mask-image: linear-gradient(90deg, #000 calc(100% - 28px), transparent); mask-image: linear-gradient(90deg, #000 calc(100% - 28px), transparent); }
-.cat-subbar #d-cats::-webkit-scrollbar { display: none; }
-.cat-subbar #d-open-filters { flex: none; position: relative; margin-left: 10px; padding-left: 14px; border-radius: 10px; background: var(--surface-2); border: 1px solid var(--line-2); font-weight: 700; }
-.cat-subbar #d-open-filters::before { content: ''; position: absolute; left: -11px; top: 6px; bottom: 6px; width: 1px; background: var(--line-2); }
-.cat-subbar #d-fcount:not(:empty) { display: inline-grid; place-items: center; min-width: 18px; height: 18px; padding: 0 5px; border-radius: 9px; background: var(--red); color: #fff; font-size: 11px; }
 
 /* booking buttons (plain links via /go redirect; affiliate later) */
 .btn-agoda { background: #fff; color: #111; font-weight: 700; }
@@ -952,7 +945,6 @@ h2.display, .sec-head h2.display { font-size: var(--fs-section); letter-spacing:
   #d-sheet .seg button { height: 42px; font-size: 14px; }
   #d-sheet .sheet-foot { position: sticky; bottom: 0; }
 }
-@media (max-width: 1100px) { .cat-subbar #d-open-filters { display: none; } }
 .dir > section { min-width: 0; }
 /* phone sheet: quick decisions first, long location lists last */
 #d-sheet .filters { display: flex; flex-direction: column; }
@@ -989,7 +981,7 @@ h2.display, .sec-head h2.display { font-size: var(--fs-section); letter-spacing:
 .deal-head .muted { font-size: 13.5px; }
 .deal-ic { flex: none; width: 42px; height: 42px; border-radius: 12px; display: grid; place-items: center; background: rgba(34, 197, 94, .14); color: var(--deal); }
 .deal-ic .ico { width: 22px; height: 22px; }
-.deal-block .scroller { padding-left: 22px; padding-right: 22px; scroll-padding-left: 22px; }
+.deal-block .scroller { margin: 0; padding-left: 22px; padding-right: 22px; scroll-padding-left: 22px; }
 @media (max-width: 720px) {
   .deal-block { border-radius: 14px; padding: 16px 0 14px; }
   .deal-head { padding: 0 14px 14px; gap: 10px; align-items: flex-start; }

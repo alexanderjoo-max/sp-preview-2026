@@ -1,5 +1,5 @@
 .ab-hero { padding: 44px 0 30px; border-bottom: 1px solid var(--line); background: radial-gradient(700px 300px at 10% 0%, rgba(232, 20, 42, .18), transparent), radial-gradient(600px 260px at 95% 0%, rgba(212, 168, 71, .12), transparent); }
-.ab-hero h1 { font-size: clamp(32px, 5vw, 56px); margin-top: 10px; max-width: 22ch; }
+.ab-hero h1 { margin-top: 10px; max-width: 22ch; }
 .ab-hero .lede { max-width: 60ch; margin-top: 12px; }
 .ab-stats { display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; margin-top: 26px; }
 .ab-stats div { padding: 14px 16px; border-radius: 12px; background: var(--surface); border: 1px solid var(--line); }
