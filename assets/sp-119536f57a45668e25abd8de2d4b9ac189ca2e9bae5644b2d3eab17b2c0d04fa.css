@@ -1052,3 +1052,4 @@ font { background: none !important; box-shadow: none !important; }
 
 /* Explore's title is the page title: same size as other page titles */
 .results-head h1.page-title { font-size: var(--fs-hero); }
+@media (max-width: 480px) { .results-bar .sort-hint { display: none; } .results-bar { justify-content: flex-end; } }

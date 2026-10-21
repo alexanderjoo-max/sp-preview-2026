@@ -220,6 +220,10 @@
   var LANGS = [['en', '🇬🇧', 'English'], ['de', '🇩🇪', 'Deutsch'], ['fr', '🇫🇷', 'Français'], ['es', '🇪🇸', 'Español'], ['ru', '🇷🇺', 'Русский'], ['zh-CN', '🇨🇳', '简体中文'], ['zh-TW', '🇹🇼', '繁體中文'], ['ja', '🇯🇵', '日本語'], ['ko', '🇰🇷', '한국어'], ['th', '🇹🇭', 'ไทย'], ['vi', '🇻🇳', 'Tiếng Việt']];
   var CUR = SP.currencies || {};
   function getLang() { var m = (getCookie('googtrans') || '').match(/^\/en\/(.+)$/); return m ? m[1] : 'en'; }
+  /* price filter symbols follow the chosen currency ("Local only" = the country's own); the server draws them too, this covers the static preview */
+  (function () { var c = getCookie('sp_cur') || 'USD';
+    document.querySelectorAll('[data-psym]').forEach(function (e) { var host = e.closest('[data-local-sym]'), local = (host && host.dataset.localSym) || e.dataset.local || '฿';
+      var sym = c === 'NONE' || !CUR[c] ? local : CUR[c][0]; e.textContent = new Array(+e.dataset.psym + 1).join(sym); }); })();
   /* menu drawer's language button shows the picked language (also on the static preview, which has no server) */
   (function () { var cur = LANGS.filter(function (l) { return l[0] === getLang(); })[0]; if (!cur) return;
     document.querySelectorAll('.dprefs [data-pick="lang"]').forEach(function (b) { b.innerHTML = '<span class="em">' + cur[1] + '</span><span><small>Language</small>' + cur[2] + '</span>'; }); })();

@@ -61,7 +61,7 @@
   function withTierHeads(list) {
     var cur = -1, out = '';
     list.forEach(function (l) {
-      if (l.tier !== cur) { cur = l.tier; var n = list.filter(function (x) { return x.tier === cur; }).length; out += '<div class="tier-head">' + ['<span class="badge b-feat">★ Featured</span>', '<span class="badge b-ver">✓ Verified</span>', 'More venues'][cur] + '<small class="num">' + n + '</small></div>'; }
+      if (l.tier !== cur && l.tier > 0) { cur = l.tier; var n = list.filter(function (x) { return x.tier === cur; }).length; out += '<div class="tier-head">' + ['<span class="badge b-feat">★ Featured</span>', '<span class="badge b-ver">✓ Verified</span>', 'More venues'][cur] + '<small class="num">' + n + '</small></div>'; }
       out += rowcard(l);
     });
     return out;
@@ -99,6 +99,8 @@
   var box = function (n) { return panel.querySelector('input[name="' + n + '"]'); };
   /* the panel moves into the sheet, so look things up in the panel, not the form */
   var sticky = function (n) { return panel.querySelector('input[data-sticky][name="' + n + '"]'); };
+  var priceSym = function () { var m = document.cookie.match(/(?:^|;\s*)sp_cur=([^;]+)/), c = m ? decodeURIComponent(m[1]) : 'USD', cur = (window.SP && SP.currencies) || {};
+    return c === 'NONE' || !cur[c] ? (D.localSym || '฿') : cur[c][0]; };
   var priceVal = function () { var h = sticky('price'); return h ? +h.value : 0; };
   var rateVal = function () { var h = sticky('rating'); return h ? +h.value : 0; };
   function query() {
@@ -123,7 +125,7 @@
       '<button type="button" class="chip mobile-only" id="toggle-list">' + icon('list') + ' List</button>' +
       '<button type="button" class="chip chip-filters ' + (n ? 'on' : '') + '" data-m-sheet>' + icon('filter') + ' Filters' + (n ? ' <span class="qn">' + n + '</span>' : '') + '</button>' +
       QUICK.filter(function (q) { return box(q[0]); }).map(function (q) { return '<button type="button" class="chip ' + (box(q[0]).checked ? 'on' : '') + '" data-m-quick="' + q[0] + '">' + q[1] + '</button>'; }).join('') +
-      '<button type="button" class="chip ' + (priceVal() ? 'on' : '') + '" data-m-sheet>' + (priceVal() ? ['', '฿', '฿฿', '฿฿฿'][priceVal()] : 'Price') + ' ' + icon('chevron') + '</button>' +
+      '<button type="button" class="chip ' + (priceVal() ? 'on' : '') + '" data-m-sheet>' + (priceVal() ? new Array(priceVal() + 1).join(priceSym()) : 'Price') + ' ' + icon('chevron') + '</button>' +
       '<button type="button" class="chip ' + (rateVal() ? 'on' : '') + '" data-m-sheet>' + (rateVal() ? '★ ' + rateVal() + '+' : 'Rating') + ' ' + icon('chevron') + '</button>' +
       '<span class="bar-sep"></span><button type="button" class="chip ' + (!anyCat ? 'on' : '') + '" data-m-cat="">All</button>' +
       cats.map(function (c) { return '<button type="button" class="chip ' + (c.on ? 'on' : '') + '" data-m-cat="' + esc(c.slug) + '">' + esc(c.label) + '</button>'; }).join('');
