@@ -3,14 +3,13 @@
 .place-hero::before { content: ''; position: absolute; inset: 0; z-index: -1; background: linear-gradient(90deg, var(--bg) 25%, rgba(11, 9, 14, .55)), linear-gradient(transparent 60%, var(--bg)); }
 .place-hero h1 { font-size: var(--fs-hero); margin: 8px 0 12px; }
 .place-hero .lede { margin-bottom: 26px; }
-.cat-links { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; max-width: 980px; }
-.cat-links a { display: flex; align-items: center; gap: 8px; height: 42px; padding: 0 14px; border-radius: 12px; background: rgba(255, 255, 255, .04); border: 1px solid var(--line); font-weight: 500; font-size: 14px; min-width: 0; }
+.cat-links { display: flex; flex-wrap: wrap; gap: 8px; max-width: 980px; }
+.cat-links a { display: inline-flex; align-items: center; gap: 6px; height: 34px; padding: 0 13px; border-radius: 999px; background: rgba(255, 255, 255, .04); border: 1px solid var(--line); font-weight: 600; font-size: 13.5px; white-space: nowrap; transition: .15s; }
 .cat-links a:hover { border-color: var(--line-2); background: var(--surface); }
-.cat-links a .em { font-size: 16px; flex: none; }
-.cat-links a span { flex: 1; min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.cat-links a b { color: var(--muted); font-weight: 500; flex: none; }
-@media (max-width: 900px) { .cat-links { grid-template-columns: repeat(3, 1fr); } }
-@media (max-width: 560px) { .cat-links { grid-template-columns: 1fr 1fr; gap: 6px; } .cat-links a { height: 40px; padding: 0 10px; font-size: 13px; } }
+.cat-links a.on { border-color: var(--red); background: rgba(232, 20, 42, .12); }
+.cat-links a .em { font-size: 14px; flex: none; }
+.cat-links a b { color: var(--muted); font-weight: 600; font-size: 12px; flex: none; font-variant-numeric: tabular-nums; }
+@media (max-width: 560px) { .cat-links { gap: 6px; } .cat-links a { height: 32px; padding: 0 11px; font-size: 13px; } }
 .two { display: grid; grid-template-columns: 1fr 380px; gap: 36px; align-items: start; }
 .seo-card { padding: 16px; border-radius: var(--r); background: #fff7e6; color: #1b1203; font-size: 12.5px; line-height: 1.5; }
 .seo-card b { display: block; font-size: 11px; letter-spacing: .1em; text-transform: uppercase; margin: 10px 0 2px; color: #8a5a00; }
