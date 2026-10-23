@@ -1053,3 +1053,21 @@ font { background: none !important; box-shadow: none !important; }
 /* Explore's title is the page title: same size as other page titles */
 .results-head h1.page-title { font-size: var(--fs-hero); }
 @media (max-width: 480px) { .results-bar .sort-hint { display: none; } .results-bar { justify-content: flex-end; } }
+/* header: the wordmark's "p" descender makes the logo look high when its box is centred — nudge it to the optical centre */
+.hdr .logo img.logo-img { transform: translateY(8%); }
+/* location picker: country name, venue count and the "Home" chip wrap as one row with real spacing */
+.cpane-head > div { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 10px; }
+.cpane-head > div .muted { margin-left: -6px; }
+.cpane-head .chome { margin: 0; }
+/* plans: "Compare all features" fits the phone width (no sideways scroll) */
+@media (max-width: 600px) {
+  .cmp table { min-width: 0; table-layout: fixed; font-size: 12.5px; }
+  .cmp th:not(:first-child), .cmp td:not(:first-child) { width: 64px; padding: 8px 2px; }
+  .cmp th:first-child, .cmp td:first-child { padding: 8px 10px; }
+  .cmp th { font-size: 11.5px; }
+}
+/* phones: the city button shrinks (name ends in "…") instead of pushing past the screen edge */
+@media (max-width: 480px) {
+  .hdr .find-pill { flex: 0 1 auto; min-width: 0; margin-left: auto; }
+  .hdr .find-pill .t { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+}
